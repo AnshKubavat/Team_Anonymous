@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import { fetchProfile } from "./features/userSlice";
 import ProfilePage from "./Pages/SellerProfile/Profile";
 import AddSeller from "./Pages/AddSeller/AddSeller";
-import Navbar from "./components/NavBar";
+import Navbar from "./components/Navbar";
 import BusinessPage from "./Pages/Business/BusinessPage";
 import Mybusiness from "./Pages/SellerDashboard/MyBusiness";
 // import PrivateRoute from "./components/PrivateRoute";

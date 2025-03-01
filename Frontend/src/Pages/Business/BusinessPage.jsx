@@ -1,41 +1,71 @@
-import { useState } from 'react';
-import BusinessDescription from './BusinessDescription';
-import ProductList from './ProductList';
-import ReviewSection from './ReviewSection';
-import ServiceSection from './ServiceSection';
+import { useEffect, useState } from "react";
+import BusinessDescription from "./BusinessDescription";
+import ProductList from "./ProductList";
+import ReviewSection from "./ReviewSection";
+import ServiceSection from "./ServiceSection";
+import axiosClient from "../../utils/axiosClient";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const BusinessPage = () => {
-  const [activeTab, setActiveTab] = useState('product');
+  const [activeTab, setActiveTab] = useState("product");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State to manage sidebar visibility
-  const [business, setBusiness] = useState({
-    name: 'Sample Business',
-    description: 'This is a sample business description.',
-    city: 'Sample City',
-    image: '../../../assets/userlogo.jpg',
-    category: 'Sample Category',
-    address: '123 Sample St, Sample City',
-    facility: 'Service',
-  });
+  const [business, setBusiness] = useState(null);
+  const { id } = useParams();
+
+  useEffect(() => {
+    fetchSellerDetail();
+  }, [business]);
+
+  const fetchSellerDetail = async () => {
+    try {
+      const { data } = await axiosClient(`/business/${id}`);
+      if (data.success) {
+        setBusiness(data.message);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message || "Please try again later");
+    }
+  };
+
   const [products, setProducts] = useState([
-    { id: 1, image: "../../assets/userlogo.jpg", title: "Laptop", price: "$1000" },
-    { id: 2, image: "../../assets/nearbygo_logo.webp", title: "Smartphone", price: "$500" },
-    { id: 3, image: "../../assets/nearbygo_logo.webp", title: "Tablet", price: "$700" }
+    {
+      id: 1,
+      image: "../../assets/userlogo.jpg",
+      title: "Laptop",
+      price: "$1000",
+    },
+    {
+      id: 2,
+      image: "../../assets/nearbygo_logo.webp",
+      title: "Smartphone",
+      price: "$500",
+    },
+    {
+      id: 3,
+      image: "../../assets/nearbygo_logo.webp",
+      title: "Tablet",
+      price: "$700",
+    },
   ]);
   const [reviews, setReviews] = useState([
-    { id: 1, rating: 4, comment: 'Great service!' },
-    { id: 2, rating: 5, comment: 'Excellent product!' },
+    { id: 1, rating: 4, comment: "Great service!" },
+    { id: 2, rating: 5, comment: "Excellent product!" },
   ]);
 
   const handleDeleteBusiness = () => {
-    alert('Business deleted');
+    alert("Business deleted");
   };
 
   const handleUpdateBusiness = () => {
-    alert('Business updated');
+    alert("Business updated");
   };
 
   const handleDeleteReview = (id) => {
-    setReviews(reviews.filter(review => review.id !== id));
+    setReviews(reviews.filter((review) => review.id !== id));
   };
 
   const handleAddReview = (newReview) => {
@@ -46,15 +76,15 @@ const BusinessPage = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const handleBookService = () => {
-    
-  }
+  const handleBookService = () => {};
 
   return (
     <div className="w-full min-h-screen">
       {/* Hamburger Menu Button for Mobile */}
       <button
-        className= {`md:hidden fixed ${isSidebarOpen ? "left-30" : "top-20"} z-50 p-2  text-black rounded font-bold text-2xl`}
+        className={`md:hidden fixed ${
+          isSidebarOpen ? "left-30" : "top-20"
+        } z-50 p-2  text-black rounded font-bold text-2xl`}
         onClick={toggleSidebar}
       >
         ☰
@@ -64,41 +94,57 @@ const BusinessPage = () => {
         {/* Sidebar */}
         <div
           className={`md:w-1/4 bg-gray-300 p-6 rounded-l-lg transform transition-transform duration-300 ease-in-out ${
-            isSidebarOpen ? 'translate-x-0 pt-14' : '-translate-x-full'
+            isSidebarOpen ? "translate-x-0 pt-14" : "-translate-x-full"
           } md:translate-x-0 fixed md:relative h-screen z-40`}
         >
           <ul className="space-y-4">
             <li
-              className={`cursor-pointer px-4 py-2 rounded ${activeTab === 'product' ? 'bg-blue-500 text-white' : 'bg-gray-400'}`}
+              className={`cursor-pointer px-4 py-2 rounded ${
+                activeTab === "product"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-400"
+              }`}
               onClick={() => {
-                setActiveTab('product');
+                setActiveTab("product");
                 setIsSidebarOpen(false); // Close sidebar on mobile after selecting a tab
               }}
             >
               Product
             </li>
             <li
-              className={`cursor-pointer px-4 py-2 rounded ${activeTab === 'description' ? 'bg-blue-500 text-white' : 'bg-gray-400'}`}
+              className={`cursor-pointer px-4 py-2 rounded ${
+                activeTab === "description"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-400"
+              }`}
               onClick={() => {
-                setActiveTab('description');
+                setActiveTab("description");
                 setIsSidebarOpen(false); // Close sidebar on mobile after selecting a tab
               }}
             >
               Description
             </li>
             <li
-              className={`cursor-pointer px-4 py-2 rounded ${activeTab === 'review' ? 'bg-blue-500 text-white' : 'bg-gray-400'}`}
+              className={`cursor-pointer px-4 py-2 rounded ${
+                activeTab === "review"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-400"
+              }`}
               onClick={() => {
-                setActiveTab('review');
+                setActiveTab("review");
                 setIsSidebarOpen(false); // Close sidebar on mobile after selecting a tab
               }}
             >
               Review
             </li>
             <li
-              className={`cursor-pointer px-4 py-2 rounded ${activeTab === 'service' ? 'bg-blue-500 text-white' : 'bg-gray-400'}`}
+              className={`cursor-pointer px-4 py-2 rounded ${
+                activeTab === "service"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-400"
+              }`}
               onClick={() => {
-                setActiveTab('service');
+                setActiveTab("service");
                 setIsSidebarOpen(false); // Close sidebar on mobile after selecting a tab
               }}
             >
@@ -108,26 +154,30 @@ const BusinessPage = () => {
         </div>
 
         {/* Content Section */}
-        <div className={`w-full md:w-3/4  max-h-screen overflow-y-auto p-8 ${isSidebarOpen && "pt-10"}`}> 
-          {activeTab === 'product' && <ProductList products={products} />}
-          {activeTab === 'description' && (
+        <div
+          className={`w-full md:w-3/4  max-h-screen overflow-y-auto p-8 ${
+            isSidebarOpen && "pt-10"
+          }`}
+        >
+          {activeTab === "product" && <ProductList products={products} />}
+          {activeTab === "description" && (
             <BusinessDescription
               business={business}
               onDelete={handleDeleteBusiness}
               onUpdate={handleUpdateBusiness}
             />
           )}
-          {activeTab === 'review' && (
+          {activeTab === "review" && (
             <ReviewSection
               reviews={reviews}
               onDeleteReview={handleDeleteReview}
               onAddReview={handleAddReview}
             />
           )}
-           {activeTab === 'service' && (
+          {activeTab === "service" && (
             <ServiceSection
-            business={business}
-            bookService={handleBookService}
+              business={business}
+              bookService={handleBookService}
             />
           )}
         </div>
