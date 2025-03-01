@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-import React from 'react'
-
-const Layout = () => {
-  return (
-    <div>Layout</div>
-  )
-}
-
-export default Layout
-=======
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./Pages/Login/Login";
 import Signup from "./Pages/Signup/Signup";
@@ -39,4 +28,3 @@ const Layout = () => {
 }
 
 export default Layout
->>>>>>> b63356f186e5fab08a4091977206cad380cea179
