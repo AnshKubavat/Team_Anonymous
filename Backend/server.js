@@ -9,9 +9,9 @@ import connectCloudinary from "./config/cloudinary.js";
 import userRouter from "./routes/user.route.js";
 import useCityRouter from "./routes/useCity.route.js";
 import businessRouter from "./routes/business.route.js";
+import serviceRouter from "./routes/service.route.js";
 
 import { authUser } from "./middlewares/auth.middleware.js";
-
 
 const PORT = process.env.PORT || 3000;
 
@@ -26,13 +26,11 @@ app.use(
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-
 //All routes
 app.use("/user", userRouter);
 app.use("/api", useCityRouter);
 app.use("/business", authUser, businessRouter);
-
-
+app.use("/service", authUser, serviceRouter);
 
 //server start
 app.listen(PORT, () => {
