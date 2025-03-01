@@ -1,6 +1,6 @@
 import AllContacts from "./components/AllContacts";
 import AllBusinesses from "./components/AllBusinesses";
-import AllUsers from "./components/AllUsers";
+import DeletedBusinesses from "./components/DeletedBusinesses";
 import DashBoard from "./components/DashBoard";
 import SideBar from "./components/SideBar";
 import { Route, Routes } from "react-router-dom";
@@ -24,7 +24,7 @@ const Admin = () => {
 
               <Route path="/allbusinesses" element={<AllBusinesses />} />
 
-              <Route path="/allusers" element={<AllUsers />} />
+              <Route path="/deletedbusinesses" element={<DeletedBusinesses />} />
 
             </Routes>
           </div>

@@ -5,7 +5,7 @@ import axiosClient from "../../../utils/axiosClient";
 import { toast } from "react-toastify";
 import ReactPaginate from "react-paginate";
 import { cities,categories } from "../../../assets/assets";
-const AllBusinesses = () => {
+const DeletedBusinesses = () => {
   const [cityDropdown, setCityDropdown] = useState(false);
   const [categoryDropdown, setCategoryDropdown] = useState(false);
   const [citySearch, setCitySearch] = useState("");
@@ -84,18 +84,7 @@ const AllBusinesses = () => {
   );
 
 
-  const handleDelete = async (id) => {
-    try {
-      const { data } = await axiosClient.delete(`/business/${id}`);
-      if (data?.success) {
-        toast.success(data.message);
-        fetchAllBusinesses();
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(error.message);
-    }
-  };
+ 
 
   return (
     <div  className="min-h-[800px] overflow-y-auto bg-gray-100 p-6  flex flex-col gap-6">
@@ -104,7 +93,7 @@ const AllBusinesses = () => {
         {/* City Dropdown with Search */}
         <div className="relative">
           <button
-            className="flex cursor-pointer items-center text-gray-700 font-medium px-4 py-2 border border-gray-300 rounded-lg bg-white gap-2 w-70 md:w-80 "
+            className="flex items-center text-gray-700 font-medium px-4 py-2 border border-gray-300 rounded-lg bg-white gap-2 w-80 "
             onClick={handleCityDropdownClick}
           >
             <MapPin size={18} className="text-black " />{" "}
@@ -112,7 +101,7 @@ const AllBusinesses = () => {
             <ChevronDown size={18} className="absolute right-3" />
           </button>
           {cityDropdown && (
-            <div className="absolute bg-white shadow-md rounded-lg  lg:w-98 mt-2  p-2 z-10 h-64 overflow-y-auto">
+            <div className="absolute bg-white shadow-md rounded-lg  lg:w-98 mt-2 w-72 p-2 z-10 h-64 overflow-y-auto">
               <input
                 type="text"
                 placeholder="Search city..."
@@ -143,7 +132,7 @@ const AllBusinesses = () => {
         {/* Category Dropdown with Search */}
         <div className="relative">
           <button
-            className="flex items-center text-gray-700 font-medium px-4 py-2 border border-gray-300 rounded-lg bg-white gap-2  w-70 sm:w-80"
+            className="flex items-center text-gray-700 font-medium px-4 py-2 border border-gray-300 rounded-lg bg-white gap-2  w-72 lg:w-80"
             onClick={handleCategoryDropdownClick}
           >
             <Tag size={18} className="text-black" />{" "}
@@ -182,13 +171,13 @@ const AllBusinesses = () => {
 
       {/* Total Sellers Count */}
       <div className="bg-white shadow-lg  p-4 rounded-xl w-fit text-lg font-bold text-center">
-        Total Businesses: {filteredSellers.length}
+        Total Deleted Businesses: {filteredSellers.length}
       </div>
 
       {/* Seller Details Table */}
       <div className=" bg-gray-100   flex flex-col gap-6">
       <div className="bg-white shadow-lg p-6  overflow-x-auto  rounded-xl w-full">
-        <h2 className="text-xl font-bold mb-4">Seller Details</h2>
+        <h2 className="text-xl font-bold mb-4">Deleted Seller Details</h2>
         <table className="w-full border-collapse border border-gray-200">
           <thead>
             <tr className="bg-gray-200">
@@ -198,7 +187,6 @@ const AllBusinesses = () => {
               <th className="border p-2">Shop Category</th>
               <th className="border p-2">Detail</th>
               <th className="border p-2">Email</th>
-              <th className="border p-2">Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -243,16 +231,6 @@ const AllBusinesses = () => {
                     className="bg-green-500 text-white px-4 py-2 rounded"
                   >
                     Email
-                  </motion.button>
-                </td>
-                <td className="border p-2 text-center">
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => handleDelete(seller)}
-                    className="bg-red-500 text-white px-4 py-2 rounded"
-                  >
-                    Delete
                   </motion.button>
                 </td>
               </motion.tr>
@@ -335,4 +313,4 @@ const AllBusinesses = () => {
   );
 };
 
-export default AllBusinesses;
+export default DeletedBusinesses;
