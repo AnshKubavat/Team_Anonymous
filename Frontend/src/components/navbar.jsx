@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Menu, Search, ChevronDown, MapPin, User } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setCity, setCategory } from "../features/userSlice.js";
+import { setCity, setCategory, setLanguage } from "../features/userSlice.js";
 import { getItem, setItem } from "../utils/localStorageManager.js";
 import { cities, languages, categories, logo } from "../assets/assets.js";
 import { motion } from "framer-motion";
@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 const Navbar = ({ isAuthenticated }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenForLanguage, setIsOpenForLanguage] = useState(false);
   const [cityDropdown, setCityDropdown] = useState(false);
   const [categoryDropdown, setCategoryDropdown] = useState(false);
   const [citySearch, setCitySearch] = useState("");
@@ -24,6 +25,7 @@ const Navbar = ({ isAuthenticated }) => {
   const { category } = useSelector((state) => state.user);
   console.log(category);
   console.log(user);
+  
   const handleLanguageChange = (lang) => {
     setSelectLanguage(lang);
     setItem("language", lang);
@@ -109,11 +111,11 @@ const Navbar = ({ isAuthenticated }) => {
         <div className="relative  ">
           <button
             className="flex items-center text-gray-700 font-medium px-3 py-1 border border-gray-300 rounded-sm bg-white gap-2"
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => setIsOpenForLanguage(!isOpenForLanguage)}
           >
             {language} <ChevronDown size={18} className="ml-2" />
           </button>
-          {isOpen && (
+          {isOpenForLanguage && (
             <div className="absolute bg-white shadow-md rounded-sm mt-2 w-32 p-2 z-10">
               <ul>
                 {languages.map((lang, index) => (
@@ -123,7 +125,7 @@ const Navbar = ({ isAuthenticated }) => {
                     onClick={() => {
                       handleLanguageChange(lang);
                       dispatch(setLanguage(lang));
-                      setIsOpen(false);
+                      setIsOpenForLanguage(false);
                     }}
                   >
                     {lang}
