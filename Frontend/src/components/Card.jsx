@@ -46,8 +46,6 @@ const Card = ({ businessList = [] }) => {
         <span className="text- font-medium">
           {business.city} | {business?.distance || "2.4 km"}
         </span>
-        
-       
       </div>
     </motion.div>
   ));
