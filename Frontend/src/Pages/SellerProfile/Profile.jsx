@@ -13,7 +13,6 @@ const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [role , setRole] = useState("user");
   const navigate = useNavigate();
-  console.log(user);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -182,13 +181,13 @@ const ProfilePage = () => {
                 <label className="block text-sm font-medium text-gray-700">
                   Email
                 </label>
-                <input
+                {<input
                   type="email"
                   value={tempEmail}
                   onChange={(e) => setTempEmail(e.target.value)}
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  disabled={!isEditing}
-                />
+                  disabled
+                />}
               </div>
             </div>
           </div>
@@ -196,7 +195,7 @@ const ProfilePage = () => {
           <div className="text-center w-full">
             <button
               onClick={handleLogout}
-              className="bg-red-400 text-white px-4 py-2 rounded-md font-semibold shadow-md hover:bg-red-600 transition md:text-xl"
+              className="bg-red-400 text-white px-4 py-2 rounded-sm shadow-md hover:bg-red-600 transition md:text-base"
             >
               Logout
             </button>
@@ -220,7 +219,7 @@ const ProfilePage = () => {
                   <span>
                     <button
                       onClick={handleDeleteReview}
-                      className="bg-red-400 m-1 text-white px-2 py-1 rounded-md font-semibold shadow-md hover:bg-red-600 transition md:text-xl"
+                      className="bg-red-400 m-1 text-white px-4 py-2 rounded-sm font-base shadow-md hover:bg-red-600 transition md:text-base"
                     >
                       Delete
                     </button>

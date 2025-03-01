@@ -2,12 +2,12 @@ import { useState } from "react";
 import { Menu, Search, ChevronDown, MapPin, User } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setCity, setCategory, setLanguage } from "../features/userSlice.js";
-import { getItem , setItem} from "../utils/localStorageManager.js";
-import { cities, categories, logo } from "../assets/assets.js";
-import {motion} from "framer-motion";
+import { setCity, setCategory } from "../features/userSlice.js";
+import { getItem, setItem } from "../utils/localStorageManager.js";
+import { cities, languages, categories, logo } from "../assets/assets.js";
+import { motion } from "framer-motion";
 
-const Navbar = ({isAuthenticated}) => {
+const Navbar = ({ isAuthenticated }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [cityDropdown, setCityDropdown] = useState(false);
@@ -20,8 +20,10 @@ const Navbar = ({isAuthenticated}) => {
   const [selectLanguage, setSelectLanguage] = useState(language || "English");
   const selectedCategory = getItem("category");
   const { user } = useSelector((state) => state.user);
+
+  const { category } = useSelector((state) => state.user);
+  console.log(category);
   console.log(user);
-  const languages = ["English", "Hindi", "Gujarati"];
   const handleLanguageChange = (lang) => {
     setSelectLanguage(lang);
     setItem("language", lang);
@@ -257,8 +259,6 @@ const Navbar = ({isAuthenticated}) => {
           </div>
         </div>
       )} */}
-
-
 
       {/* Mobile Menu */}
       {isOpen && (

@@ -28,6 +28,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const city = getItem("city");
   console.log(category);
+  console.log(language);
 
   const fetchBusinesses = async () => {
     try {
@@ -47,7 +48,7 @@ const Home = () => {
     if (city) {
       fetchBusinesses();
     }
-  }, [city]);
+  }, [city, category]);
 
   useEffect(() => {
     if (businessList.length > 0 && !isLocationFetched) {

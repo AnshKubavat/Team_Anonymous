@@ -20,6 +20,9 @@ export default function Login() {
       const result = await dispatch(signin({ email, password }));
       if (result.payload?.success) {
         setItem(KEY_ACCESS_TOKEN, result.payload?.message?.token);
+        setItem("city", "Vallabh Vidyanagar");
+        setItem("language", "English");
+        setItem("category", "All");
         toast.success("Login Successfully");
         navigate("/");
       } else {

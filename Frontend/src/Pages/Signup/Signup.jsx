@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { signupLogo } from "../../assets/assets";
 import { useDispatch } from "react-redux";
 import { signup } from "../../features/userSlice";
+import { setItem } from "../../utils/localStorageManager";
 
 export default function Signup() {
   const [username, setusername] = useState("");
@@ -27,6 +28,9 @@ export default function Signup() {
 
       if (result.payload?.success) {
         setItem(KEY_ACCESS_TOKEN, result.payload?.message?.token);
+        setItem("city", "Vallabh Vidyanagar");
+        setItem("language", "English");
+        setItem("category", "All");
         toast.success("Registerd Successfully");
         navigate("/");
       } else {
