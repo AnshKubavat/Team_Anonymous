@@ -5,8 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCity, setCategory } from "../features/userSlice.js";
 import { getItem } from "../utils/localStorageManager.js";
 import { cities, languages, categories, logo } from "../assets/assets.js";
+import {motion} from "framer-motion";
 
-const Navbar = () => {
+const Navbar = ({isAuthenticated}) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [cityDropdown, setCityDropdown] = useState(false);
@@ -201,7 +202,25 @@ const Navbar = () => {
         </div>
 
         {/* Profile or Login Button */}
-        <div className="lg:flex"></div>
+        <div className="lg:flex">
+          {isAuthenticated ? (
+            <User
+              onClick={() => navigate("/profile")}
+              className="text-gray-600 cursor-pointer mr-2"
+              size={32}
+            />
+          ) : (
+            <NavLink to="/login">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="text-gray-600    bg-gray-300 font-bold px-4 mr-1 py-2 rounded-md transition-all"
+              >
+                Login
+              </motion.button>
+            </NavLink>
+          )}
+        </div>
 
         {/* Mobile Menu Button */}
         <button
@@ -225,6 +244,8 @@ const Navbar = () => {
           </div>
         </div>
       )} */}
+
+
 
       {/* Mobile Menu */}
       {isOpen && (

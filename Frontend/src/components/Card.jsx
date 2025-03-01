@@ -46,13 +46,8 @@ const Card = ({ businessList = [] }) => {
         <span className="text-blue-500 font-medium">
           {business.city} | {business?.distance || "2.4 km"}
         </span>
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          className="px-4 ml-1 py-2 bg-blue-500 text-white text-sm rounded-lg shadow-md"
-        >
-          View Details
-        </motion.button>
+        
+       
       </div>
     </motion.div>
   ));
