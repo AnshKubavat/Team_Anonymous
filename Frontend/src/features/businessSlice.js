@@ -8,10 +8,10 @@ const initialState = {
 
 export const fetchAllSeller = createAsyncThunk(
   "business",
-  async (cityname, category) => {
+  async ({city, category}) => {
     try {
       const { data } = await axiosClient.get(
-        `/api/city/${cityname}/${category}`
+        `/api/city/${city}/${category}`
       );
       return data;
     } catch (e) {

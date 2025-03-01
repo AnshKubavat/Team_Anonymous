@@ -34,7 +34,7 @@ const categories = [
   "Rikshaman",
   "Salon",
   "Security Guard",
-  "Stationery Shop",
+  "Stationary Shop",
   "Tailor",
   "Tattoo Artist",
   "Tea Stall",

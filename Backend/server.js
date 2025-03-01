@@ -8,6 +8,9 @@ import connectDB from "./DB/connectDB.js";
 import connectCloudinary from "./config/cloudinary.js";
 import userRouter from "./routes/user.route.js";
 import useCityRouter from "./routes/useCity.route.js";
+import businessRouter from "./routes/business.route.js";
+
+import { authUser } from "./middlewares/auth.middleware.js";
 
 
 const PORT = process.env.PORT || 3000;
@@ -27,6 +30,7 @@ app.use(cookieParser());
 //All routes
 app.use("/user", userRouter);
 app.use("/api", useCityRouter);
+app.use("/business", authUser, businessRouter);
 
 
 

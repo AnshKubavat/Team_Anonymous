@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate , useLocation} from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Login from "./Pages/Login/Login";
 import Signup from "./Pages/Signup/Signup";
 import Navbar from "./components/Navbar";
@@ -10,12 +10,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchProfile } from "./features/userSlice";
 import ProfilePage from "./Pages/SellerProfile/Profile";
+import AddSeller from "./Pages/AddSeller/AddSeller";
 
 const Layout = () => {
   const location = useLocation();
-   const hideNavbarFooter =
-    location.pathname === "/login" ||
-    location.pathname === "/signup";
+  const hideNavbarFooter =
+    location.pathname === "/login" || location.pathname === "/signup";
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.user);
 
@@ -27,11 +27,11 @@ const Layout = () => {
       {!hideNavbarFooter && <Navbar isAuthenticated={isAuthenticated} />}
 
       <Routes>
-        
         <Route path="/category" element={<Category />} />
         <Route path="/" element={<Home />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/about" element={<About />} />
+        <Route path="/becomeaseller" element={<AddSeller />}/>
         {!isAuthenticated ? (
           <>
             <Route path="/login" element={<Login />} />
@@ -47,6 +47,6 @@ const Layout = () => {
       {!hideNavbarFooter && <Footer />}
     </>
   );
-}
+};
 
-export default Layout
+export default Layout;
