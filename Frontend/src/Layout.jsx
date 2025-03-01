@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import { fetchProfile } from "./features/userSlice";
 import ProfilePage from "./Pages/SellerProfile/Profile";
 import AddSeller from "./Pages/AddSeller/AddSeller";
+import Mybusiness from "./Pages/SellerDashboard/MyBusiness";
 // import PrivateRoute from "./components/PrivateRoute";
 
 const Layout = () => {
@@ -38,6 +39,7 @@ const Layout = () => {
         <Route path="/about" element={<About />} />
         <Route path="/becomeaseller" element={<AddSeller />}/>
         <Route path="/contact" element={<Contact />} />
+        <Route path="/myBusiness" element={<Mybusiness />} />
         {!isAuthenticated ? (
           <>
             <Route path="/login" element={<Login />} />
