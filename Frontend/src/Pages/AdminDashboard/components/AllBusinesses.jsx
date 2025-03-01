@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { MapPin, ChevronDown, Tag } from "lucide-react";
 import axiosClient from "../../../utils/axiosClient";
@@ -16,10 +16,24 @@ const AllBusinesses = () => {
   const [selectedSeller, setSelectedSeller] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 7;
-
+  const dropdownRef = useRef(null);
   const handleSellerClick = (seller) => {
     setSelectedSeller(seller);
   };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setCityDropdown(false);
+        setCategoryDropdown(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
   const fetchAllBusinesses = async () => {
     try {
       const { data } = await axiosClient.get("/admin/api/allbusinesses");
@@ -101,9 +115,9 @@ const AllBusinesses = () => {
   };
 
   return (
-    <div className="min-h-[800px] overflow-y-auto bg-gray-100 p-6  flex flex-col gap-6">
+    <div  className="min-h-[800px] overflow-y-auto bg-gray-100 p-6  flex flex-col gap-6">
       {/* Filter Section */}
-      <div className="flex flex-col md:flex-row mx-auto lg:mx-0 mt-10 md:mt-0 gap-4 mb-2">
+      <div ref={dropdownRef} className="flex flex-col md:flex-row mx-auto lg:mx-0 mt-10 md:mt-0 gap-4 mb-2">
         {/* City Dropdown with Search */}
         <div className="relative">
           <button
