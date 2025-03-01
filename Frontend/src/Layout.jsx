@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { fetchProfile } from "./features/userSlice";
 import ProfilePage from "./Pages/SellerProfile/Profile";
 import AddSeller from "./Pages/AddSeller/AddSeller";
+// import PrivateRoute from "./components/PrivateRoute";
 
 const Layout = () => {
   const location = useLocation();
@@ -27,6 +28,9 @@ const Layout = () => {
       {!hideNavbarFooter && <Navbar isAuthenticated={isAuthenticated} />}
 
       <Routes>
+      {/* <Route element={<PrivateRoute adminOnly={true} />}>
+          <Route path="/admin/*" element={<AdminDashboard />} />
+        </Route> */}
         <Route path="/category" element={<Category />} />
         <Route path="/" element={<Home />} />
         <Route path="/profile" element={<ProfilePage />} />
