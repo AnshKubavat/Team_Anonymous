@@ -144,7 +144,15 @@ const Home = () => {
         </h1>
 
         <section className="dark:bg-dark mt-4 mx-4 md:mx-10 pb-10 md:pb-20">
-          <div className="container mx-auto"></div>
+          <div className="container mx-auto">
+            {businessList.length > 0 ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <Card businessList={businessList} />
+              </div>
+            ) : (
+              "No business"
+            )}
+          </div>
         </section>
       </div>
     </div>
