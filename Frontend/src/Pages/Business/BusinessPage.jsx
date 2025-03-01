@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 
 const BusinessPage = () => {
   const [activeTab, setActiveTab] = useState("product");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State to manage sidebar visibility
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [business, setBusiness] = useState(null);
   const { id } = useParams();
   console.log(business);
@@ -77,7 +77,6 @@ const BusinessPage = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const handleBookService = () => {};
 
   return (
     <div className="w-full min-h-screen">
@@ -138,19 +137,6 @@ const BusinessPage = () => {
             >
               Review
             </li>
-            <li
-              className={`cursor-pointer px-4 py-2 rounded ${
-                activeTab === "service"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-400"
-              }`}
-              onClick={() => {
-                setActiveTab("service");
-                setIsSidebarOpen(false); // Close sidebar on mobile after selecting a tab
-              }}
-            >
-              Service
-            </li>
           </ul>
         </div>
 
@@ -173,12 +159,6 @@ const BusinessPage = () => {
               reviews={reviews}
               onDeleteReview={handleDeleteReview}
               onAddReview={handleAddReview}
-            />
-          )}
-          {activeTab === "service" && (
-            <ServiceSection
-              business={business}
-              bookService={handleBookService}
             />
           )}
         </div>
