@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product}) => {
     return (
         <motion.div
             className="bg-white p-4 rounded-lg shadow-md hover:shadow-xl transition duration-300 w-full max-w-full sm:w-72"

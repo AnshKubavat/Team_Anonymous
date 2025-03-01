@@ -321,7 +321,7 @@ const fetchBusinessDetails = async () => {
         </div>
       </div>
 
-      <div className="w-full max-h-full mx-auto mt-10  lg:mx-0 md:mt-5  lg:mt-0 p-6">
+      <div className="w-full max-h-screen mx-auto mt-10  lg:mx-0 md:mt-5  lg:mt-0 p-6">
         {/* Profile */}
        {selectedSection === "profile" && (
       <div className="max-h-full flex justify-center items-center p-4">
@@ -418,7 +418,7 @@ const fetchBusinessDetails = async () => {
 
         {/* Add or Update Product Form */}
         {selectedSection === "addProduct" && (
-          <div className="text-center">
+          <div className="text-center md:mt-10 ">
             <h2 className="text-2xl font-bold mb-4">
               {editingProduct ? "✏ Update Product" : "➕ Add New Product"}
             </h2>
