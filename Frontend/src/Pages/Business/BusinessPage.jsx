@@ -12,16 +12,17 @@ const BusinessPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State to manage sidebar visibility
   const [business, setBusiness] = useState(null);
   const { id } = useParams();
-
+  console.log(business);
   useEffect(() => {
     fetchSellerDetail();
-  }, [business]);
+  }, []);
 
   const fetchSellerDetail = async () => {
     try {
       const { data } = await axiosClient(`/business/${id}`);
+      console.log(data);
       if (data.success) {
-        setBusiness(data.message);
+        setBusiness(data.business);
       } else {
         toast.error(data.message);
       }

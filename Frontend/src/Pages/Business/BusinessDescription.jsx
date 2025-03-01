@@ -26,7 +26,7 @@ const BusinessDescription = ({ business}) => {
       whileHover={{ scale: 1.05 }}
     >
       <img
-        src="../../../assets/nearbygo_logo.webp"
+        src={business.image}
         alt={business.name}
         className="md:w-64 md:h-64 w-48 h-48 mx-auto rounded-2xl mt-3 object-cover"
       />
@@ -43,8 +43,8 @@ const BusinessDescription = ({ business}) => {
 
         <div className="space-y-2 mb-4">
           <p className="text-gray-700"><strong>City:</strong> {business.city}</p>
-          <p className="text-gray-700"><strong>Category:</strong> {business.category}</p>
-          <p className="text-gray-700"><strong>Address:</strong> {business.address}</p>
+          <p className="text-gray-700"><strong>Category:</strong> {business.categoryOfBusiness}</p>
+          {/* <p className="text-gray-700"><strong>Address:</strong> {business.city}</p> */}
           <p className="text-gray-700"><strong>Facility:</strong> {business.facility}</p>
         </div>
       </div>
