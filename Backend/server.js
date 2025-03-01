@@ -2,22 +2,33 @@ import "dotenv/config";
 import express from "express";
 const app = express();
 import axios from "axios";
+import cors from "cors";
 import cookieParser from "cookie-parser";
 import connectDB from "./DB/connectDB.js";
 import connectCloudinary from "./config/cloudinary.js";
-
+import userRouter from "./routes/user.route.js";
 
 const PORT = process.env.PORT || 3000;
 
+//middlewares
 app.use(express.json());
-app.use(cookieParser())
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-// app.use("/user", userRouter);
+
+//All routes
+app.use("/user", userRouter);
 
 
-
+//server start
 app.listen(PORT, () => {
-    connectDB();
-    connectCloudinary();
-    console.log(`Server running on port ${PORT}`);
-  });
+  connectDB();
+  connectCloudinary();
+  console.log(`Server running on port ${PORT}`);
+});
