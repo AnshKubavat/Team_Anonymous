@@ -1,20 +1,24 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 const ReviewSection = ({ reviews, onAddReview }) => {
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [newReview, setNewReview] = useState({ rating: 0, comment: "" });
+
+  useEffect(() => {
+    
+  },[reviews])
 
   const handleSubmitReview = (e) => {
     e.preventDefault();
 
     if (!newReview.comment.trim() || newReview.rating === 0) return;
 
-    onAddReview(newReview); // ✅ Send newReview directly
+    onAddReview(newReview); 
     setNewReview({ rating: 0, comment: "" });
     setShowReviewForm(false);
   };
-
+  console.log(reviews);
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
@@ -89,7 +93,8 @@ const ReviewSection = ({ reviews, onAddReview }) => {
                   ))}
                 </div>
                 <p className="text-gray-700">{review.comment}</p>
-                <span>{review.date || "Date of Review"}</span>
+                <span>{review.createdAt ? new Date(review.createdAt).toLocaleString() : "Date of Review"}</span>
+
               </div>
             </div>
           </div>

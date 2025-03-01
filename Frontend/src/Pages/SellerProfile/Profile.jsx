@@ -13,7 +13,10 @@ const ProfilePage = () => {
   const [email, setEmail] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState("reviews");
-
+  const services = user?.services || [];
+  console.log(services);
+  console.log(user);
+  console.log("user");
   const [role, setRole] = useState("user");
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -32,36 +35,17 @@ const ProfilePage = () => {
     dispatch(fetchProfile());
   }, [dispatch]);
 
-  const [reviews] = useState([
-    {
-      id: 1,
-      title: "Great Product!",
-      content: "I loved using this product. Highly recommended!",
-      date: "2023-10-01",
-    },
-    {
-      id: 2,
-      title: "Amazing Service",
-      content: "The customer service was excellent.",
-      date: "2023-09-25",
-    },
-    {
-      id: 3,
-      title: "Amazing Service",
-      content: "The customer service was excellent.",
-      date: "2023-09-25",
-    },
-    {
-      id: 4,
-      title: "Amazing Service",
-      content: "The customer service was excellent.",
-      date: "2023-09-25",
-    },
-  ]);
+  const [reviews, setReviews] = useState([]);
+  useEffect(() => {
+    if (user?.reviews) {
+      setReviews(user.reviews);
+    }
+  }, [user]);
 
   const becomeaSeller = () => {
     navigate("/becomeaseller");
   };
+  console.log(user);
 
   const handleUpdateProfile = async (e) => {
     try {
@@ -85,6 +69,8 @@ const ProfilePage = () => {
   };
 
   
+  // console.log(user.services.length);
+  const hasServices = user?.services && user.services.length > 0;
 
   const handleLogout = async () => {
     try {
@@ -242,10 +228,13 @@ const ProfilePage = () => {
                       key={review.id}
                       className="p-4 bg-white rounded-lg shadow-md mb-3"
                     >
-                      <h3 className="text-lg font-semibold">{review.title}</h3>
-                      <p>{review.content}</p>
+                      <h3 className="text-lg font-semibold">
+                        {review.username}
+                      </h3>
+
+                      <p>{review.comment}</p>
                       <p className="text-sm text-gray-500">
-                        Reviewed on: {review.date}
+                        Reviewed on: {new Date(review.createdAt).toLocaleDateString()}
                       </p>
                     </div>
                   ))
@@ -255,33 +244,39 @@ const ProfilePage = () => {
               </div>
             )}
             {activeTab === "bookings" && (
-              <div>
-                <h2 className="text-xl  font-semibold mb-3">Your Bookings</h2>
-                {isLoading ? (
-                  <p>Loading your bookings...</p>
-                ) : user?.services?.length > 0 ? (
-                  user.services.map((service) => (
-                    <div
-                      key={service._id}
-                      className="p-4 bg-white rounded-lg shadow-md mb-3"
-                    >
-                      <h3 className="text-lg font-semibold">
-                        {service?.bussiness?.businessName || "Unknown Business"}
-                      </h3>
-                      <p>{service?.status || "Unknown Status"}</p>
-                      <p className="text-sm text-gray-500">
-                        Requested on:{" "}
-                        {service?.createdAt
-                          ? new Date(service.createdAt).toLocaleDateString()
-                          : "N/A"}
-                      </p>
-                    </div>
-                  ))
-                ) : (
-                  <p>No bookings yet.</p>
-                )}
-              </div>
-            )}
+  <div>
+    <h2 className="text-xl font-semibold mb-3">Your Bookings</h2>
+    {isLoading ? (
+      <p>Loading your bookings...</p>
+    ) : user?.services?.length > 0 ? (
+      user.services.map((service, index) => (
+        service.business.map((business) => {
+          const formattedDate = service?.createdAt
+            ? new Date(service.createdAt).toLocaleDateString()
+            : "N/A";
+
+          return (
+            <div
+              key={business._id}
+              className="p-4 bg-white rounded-lg shadow-md mb-3"
+            >
+              <h3 className="text-lg font-semibold">
+                {business?.businessName || "Unknown Business"}
+              </h3>
+              <p>{service?.status || "Unknown Status"}</p>
+              <p className="text-sm text-gray-500">
+                Requested on: {formattedDate}
+              </p>
+            </div>
+          );
+        })
+      ))
+    ) : (
+      <p>No bookings yet.</p>
+    )}
+  </div>
+)}
+
           </div>
         </div>
       </div>

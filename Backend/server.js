@@ -19,6 +19,7 @@ import useReviewRouter from "./routes/review.route.js";
 
 
 import { authUser } from "./middlewares/auth.middleware.js";
+import Review from "./models/Review.js";
 
 const PORT = process.env.PORT || 3000;
 
@@ -44,6 +45,11 @@ app.use("/location", useLocationRouter);
 // 🔹 Google Translate API Route
 app.use("/translate", translateRouter);
 app.use("/review", useReviewRouter);
+app.get("/review/:id", async (req, res) => {
+  const { id } = req.params;
+  const reviews = await Review.find({ businessId: id });
+  res.json({ success: true, reviews });
+});
 
 
 // 🔹 Flask Recommendation API Route

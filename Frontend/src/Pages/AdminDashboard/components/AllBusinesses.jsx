@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { MapPin, ChevronDown, Tag } from "lucide-react";
 import axiosClient from "../../../utils/axiosClient";
 import { toast } from "react-toastify";
 import ReactPaginate from "react-paginate";
-import { cities,categories } from "../../../assets/assets";
+
 const AllBusinesses = () => {
   const [cityDropdown, setCityDropdown] = useState(false);
   const [categoryDropdown, setCategoryDropdown] = useState(false);
@@ -16,24 +16,10 @@ const AllBusinesses = () => {
   const [selectedSeller, setSelectedSeller] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 7;
-  const dropdownRef = useRef(null);
+
   const handleSellerClick = (seller) => {
     setSelectedSeller(seller);
   };
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setCityDropdown(false);
-        setCategoryDropdown(false);
-      }
-    };
-
-    document.addEventListener("click", handleClickOutside);
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, []);
-
   const fetchAllBusinesses = async () => {
     try {
       const { data } = await axiosClient.get("/admin/api/allbusinesses");
@@ -52,28 +38,45 @@ const AllBusinesses = () => {
     fetchAllBusinesses();
   }, []);
 
+  const cities = [
+    "Rajkot",
+    "Vallabh Vidyanagar",
+    "Vadodara",
+    "Anand",
+    "Ahmedabad",
+  ];
+  const categories = [
+    "All",
+    "Restaurants",
+    "Stationary Shop",
+    "Cobbler",
+    "Milkman",
+    "Carpenter",
+    "Blacksmith",
+    "Flower Shop",
+    "Laundry",
+    "Electrician",
+    "Plumber",
+    "Salon & Barber",
+    "Grocery Store",
+    "Bakery",
+    "Tailor",
+    "Mechanic",
+  ];
   const filteredCities = cities.filter((city) =>
     city.toLowerCase().includes(citySearch.toLowerCase())
   );
   const filteredCategories = categories.filter((category) =>
     category.toLowerCase().includes(categorySearch.toLowerCase())
   );
-  const filteredSellers = businesses.filter((business) => {
-    const cityMatch = selectedCity === "" || business.city === selectedCity;
-    const categoryMatch = selectedCategory === "All" || 
-                          business.categoryOfBusiness.toLowerCase() === selectedCategory.toLowerCase();
-    return cityMatch && categoryMatch;
-  });
-  
 
-  const handleCityDropdownClick = () => {
-    setCityDropdown(!cityDropdown);
-    setCategoryDropdown(false);
-  };
-  const handleCategoryDropdownClick = () => {
-    setCategoryDropdown(!categoryDropdown);
-    setCityDropdown(false);
-  };
+  const filteredSellers = businesses.filter((business) => {
+    return (
+      (selectedCity === "" || business.city === selectedCity) &&
+      (selectedCategory === "All" ||
+        business.categoryOfBusiness === selectedCategory.toLocaleLowerCase())
+    );
+  });
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected);
   };
@@ -98,21 +101,21 @@ const AllBusinesses = () => {
   };
 
   return (
-    <div  className="min-h-[800px] overflow-y-auto bg-gray-100 p-6  flex flex-col gap-6">
+    <div className="min-h-[800px] overflow-y-auto bg-gray-100 p-6  flex flex-col gap-6">
       {/* Filter Section */}
-      <div ref={dropdownRef} className="flex flex-col md:flex-row mx-auto lg:mx-0 mt-10 md:mt-0 gap-4 mb-2">
+      <div className="flex flex-col md:flex-row mx-auto lg:mx-0 mt-10 md:mt-0 gap-4 mb-2">
         {/* City Dropdown with Search */}
         <div className="relative">
           <button
-            className="flex cursor-pointer items-center text-gray-700 font-medium px-4 py-2 border border-gray-300 rounded-lg bg-white gap-2 w-70 md:w-80 "
-            onClick={handleCityDropdownClick}
+            className="flex items-center text-gray-700 font-medium px-4 py-2 border border-gray-300 rounded-lg bg-white gap-2 w-80 "
+            onClick={() => setCityDropdown(!cityDropdown)}
           >
             <MapPin size={18} className="text-black " />{" "}
             {selectedCity || "Select City"}
             <ChevronDown size={18} className="absolute right-3" />
           </button>
           {cityDropdown && (
-            <div className="absolute bg-white shadow-md rounded-lg  lg:w-98 mt-2  p-2 z-10 h-64 overflow-y-auto">
+            <div className="absolute bg-white shadow-md rounded-lg  lg:w-98 mt-2 w-72 p-2 z-10 h-64 overflow-y-auto">
               <input
                 type="text"
                 placeholder="Search city..."
@@ -143,8 +146,8 @@ const AllBusinesses = () => {
         {/* Category Dropdown with Search */}
         <div className="relative">
           <button
-            className="flex items-center text-gray-700 font-medium px-4 py-2 border border-gray-300 rounded-lg bg-white gap-2  w-70 sm:w-80"
-            onClick={handleCategoryDropdownClick}
+            className="flex items-center text-gray-700 font-medium px-4 py-2 border border-gray-300 rounded-lg bg-white gap-2  w-72 lg:w-80"
+            onClick={() => setCategoryDropdown(!categoryDropdown)}
           >
             <Tag size={18} className="text-black" />{" "}
             {selectedCategory || "Select Category"}
@@ -212,7 +215,7 @@ const AllBusinesses = () => {
               >
                 <td className="border p-2 text-center">{index + 1}</td>
                 <td className="border p-2 text-center">
-                  {seller.sellerDetails.username}
+                  {seller.sellerDetails?.username}
                 </td>
                 <td className="border p-2 text-center">{seller.city}</td>
                 <td className="border p-2 text-center">

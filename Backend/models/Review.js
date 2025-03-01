@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 const reviewSchema = new Schema({
-  description: {
+  comment: {
     type: String,
   },
   rating: {
