@@ -26,6 +26,7 @@ const Navbar = ({ isAuthenticated }) => {
   console.log(category);
   console.log(user);
   
+  
   const handleLanguageChange = (lang) => {
     setSelectLanguage(lang);
     setItem("language", lang);
