@@ -38,14 +38,14 @@ export const signin = createAsyncThunk("/user/login", async (body) => {
 
 export const fetchProfile = createAsyncThunk("/user/profile", async () => {
   try {
-    const response = await axiosClient.get("/user/profile", {
+    const {data} = await axiosClient.get("/user/profile", {
       headers: {
         "Cache-Control":
           "no-store, no-cache, must-revalidate, proxy-revalidate",
         Authorization: `Bearer ${getItem(KEY_ACCESS_TOKEN)}`,
       },
     });
-    return response.data;
+    return data;
   } catch (e) {
     console.log(e);
     Promise.reject(e);
@@ -141,7 +141,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isAuthenticated = action.payload?.success;
         state.user = action.payload?.success
-          ? action.payload?.message?.user
+          ? action.payload?.message
           : null;
       })
       .addCase(updateProfile.pending, (state, action) => {

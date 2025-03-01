@@ -5,7 +5,7 @@ import { fetchProfile, logout, updateProfile } from "../../features/userSlice";
 import { toast } from "react-toastify";
 import { KEY_ACCESS_TOKEN, removeItem } from "../../utils/localStorageManager";
 const ProfilePage = () => {
-  const { user } = useSelector((state) => state.user);
+  const { user, isLoading } = useSelector((state) => state.user);
   const [profileImage, setProfileImage] = useState(false);
   const [tempName, setTempName] = useState("");
   const [tempEmail, setTempEmail] = useState("");
@@ -27,6 +27,11 @@ const ProfilePage = () => {
       setRole(user.role);
     }
   }, [user]);
+
+  useEffect(() => {
+  dispatch(fetchProfile());
+}, [dispatch]);
+
 
   const [reviews] = useState([
     {
@@ -79,6 +84,9 @@ const ProfilePage = () => {
       toast.error(error.message);
     }
   };
+
+  console.log(user.services.length);
+  
 
   const handleLogout = async () => {
     try {
@@ -227,13 +235,23 @@ const ProfilePage = () => {
           {activeTab === "bookings" && (
             <div>
               <h2 className="text-xl  font-semibold mb-3">Your Bookings</h2>
-              {user?.services.length > 0 ? user?.services.map((service) => (
-                <div key={service._id} className="p-4 bg-white rounded-lg shadow-md mb-3">
-                  <h3 className="text-lg font-semibold">{service.title}</h3>
-                  <p>{service.description}</p>
-                  <p className="text-sm text-gray-500">Requested on: {new Date(service.createdAt).toLocaleDateString()}</p>
-                </div>
-              )) : <p>No bookings yet.</p>}
+             {isLoading ? (
+  <p>Loading your bookings...</p>
+) : user?.services?.length > 0 ? (
+  user.services.map((service) => (
+    <div key={service._id} className="p-4 bg-white rounded-lg shadow-md mb-3">
+      <h3 className="text-lg font-semibold">
+        {service?.bussiness?.businessName || "Unknown Business"}
+      </h3>
+      <p>{service?.status || "Unknown Status"}</p>
+      <p className="text-sm text-gray-500">
+        Requested on: {service?.createdAt ? new Date(service.createdAt).toLocaleDateString() : "N/A"}
+      </p>
+    </div>
+  ))
+) : (
+  <p>No bookings yet.</p>
+)}
             </div>
           )}
         </div>
