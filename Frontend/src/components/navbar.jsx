@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState,useRef  } from "react";
 import { Menu, Search, ChevronDown, MapPin, User } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,7 +21,7 @@ const Navbar = ({ isAuthenticated }) => {
   const [selectLanguage, setSelectLanguage] = useState(language || "English");
   const selectedCategory = getItem("category");
   const { user } = useSelector((state) => state.user);
-
+  const dropdownRef = useRef(null);
   const { category } = useSelector((state) => state.user);
   console.log(category);
   console.log(user);
@@ -47,6 +47,20 @@ const Navbar = ({ isAuthenticated }) => {
     setIsOpenForLanguage(false);
     setCityDropdown(false);
   };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpenForLanguage(false);
+        setCityDropdown(false);
+        setCategoryDropdown(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   const filteredCities = cities.filter((city) =>
     city.toLowerCase().includes(citySearch.toLowerCase())
@@ -56,7 +70,7 @@ const Navbar = ({ isAuthenticated }) => {
     category.toLowerCase().includes(categorySearch.toLowerCase())
   );
   return (
-    <nav className="bg-[#FEF6EF] p-4 shadow-lg">
+    <nav ref={dropdownRef} className="bg-[#FEF6EF] p-4 shadow-lg">
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo */}
         <div className="text-gray-600 text-xl font-bold flex items-center gap-2">
