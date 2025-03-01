@@ -1,9 +1,101 @@
-import React from 'react'
+import { useState } from "react";
+import { MdEmail } from "react-icons/md";
+import { FaUser, FaLock } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
-const Signup = () => {
+
+export default function Signup() {
+  const [username, setusername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+ 
   return (
-    <div>Signup</div>
-  )
-}
+    <div className="flex min-h-screen items-center justify-center bg-[#fdf5ee] p-6">
+      <div className="flex w-full max-w-4xl bg-white shadow-lg rounded-2xl overflow-hidden p-10">
+        <div className="hidden md:flex flex-1 items-center justify-center relative">
+          <div className="absolute w-80 h-full bg-[#fbe2cf] rounded-t-full top-0 left-0 right-0 mx-auto z-0"></div>
+          {/* Illustration */}
+          <img
+            src="signup.png"
+            alt="Illustration"
+            className="relative w-72 h-auto z-10"
+          />
+        </div>
 
-export default Signup
+        {/* Right Side (Form) */}
+        <div className="flex-1 p-10">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            Create Account
+          </h2>
+          <form className="space-y-5" >
+            <div>
+              <label className="block text-gray-600 mb-2">Username</label>
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Enter your Name"
+                  className="w-full p-3 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+                  value={username}
+                  onChange={(e) => setusername(e.target.value)}
+                  required
+                />
+                <span className="absolute left-3 top-4 text-xl text-gray-400">
+                  <FaUser />
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-gray-600 mb-2">Email</label>
+              <div className="relative">
+                <input
+                  type="email"
+                  placeholder="email@gmail.com"
+                  className="w-full p-3 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <span className="absolute left-3 top-4 text-xl text-gray-400">
+                  <MdEmail />
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-gray-600 mb-2">Password</label>
+              <div className="relative">
+                <input
+                  type="password"
+                  placeholder="Enter your password"
+                  className="w-full p-3 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <span className="absolute left-3 top-4 text-xl text-gray-400">
+                  <FaLock />
+                </span>
+              </div>
+            </div>
+
+            <button className="w-full bg-orange-400 text-white py-3 rounded-lg font-semibold hover:bg-orange-500 transition">
+              Create Account
+            </button>
+          </form>
+          
+
+          <p className="text-center text-gray-500 mt-5">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="text-orange-500 hover:underline font-semibold"
+            >
+              Sign in
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}

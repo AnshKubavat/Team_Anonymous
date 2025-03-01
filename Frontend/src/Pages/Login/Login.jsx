@@ -1,34 +1,13 @@
 import { useState } from "react";
 import { FaLock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
-import { useDispatch} from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { signin } from "../../features/userSlice";
-import { KEY_ACCESS_TOKEN, setItem } from "../../utils/localStorageManager";
-import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
+
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      const result = await dispatch(signin({ email, password }));
-      if (result.payload?.success) {
-        setItem(KEY_ACCESS_TOKEN, result.payload?.message?.token);
-        toast.success("Login Successfully");
-        navigate("/");
-      } else {       
-        toast.error(result.payload?.message);
-      }
-    } catch (error) {
-      toast.error(error)
-      console.log("Invalid email or password. Please try again.");
-    }
-  };
+  
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#FAF6F3] p-4">
@@ -39,7 +18,7 @@ export default function Login() {
             Welcome Back!!
           </h2>
 
-          <form className="space-y-6" onSubmit={handleLogin}>
+          <form className="space-y-6" >
             <div>
               <label className="block text-gray-700 mb-2">Email</label>
               <div className="relative">
