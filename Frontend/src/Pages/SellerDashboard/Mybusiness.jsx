@@ -236,7 +236,7 @@ const SellerDashboard = () => {
       toast.error("Failed to load business details.");
     }
   };
-  const menuItems = Business.facility === "product"
+  const menuItems = business?.facility === "product"
     ? [
       { name: "🏪 My Shop", key: "profile" },
       { name: "➕ Add New Product", key: "addProduct" },

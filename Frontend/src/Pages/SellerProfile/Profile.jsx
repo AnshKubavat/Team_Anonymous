@@ -85,7 +85,6 @@ const ProfilePage = () => {
     }
   };
 
-  console.log(user.services.length);
   
 
   const handleLogout = async () => {
