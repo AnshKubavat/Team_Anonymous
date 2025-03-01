@@ -17,11 +17,18 @@ const Navbar = ({ isAuthenticated }) => {
   const dispatch = useDispatch();
   const selectedCity = getItem("city");
   const language = getItem("language");
+  const [selectLanguage, setSelectLanguage] = useState(language || "English");
   const selectedCategory = getItem("category");
   const { user } = useSelector((state) => state.user);
 
   const { category } = useSelector((state) => state.user);
   console.log(category);
+  console.log(user);
+  const languages = ["English", "Hindi", "Gujarati"];
+  const handleLanguageChange = (lang) => {
+    setSelectLanguage(lang);
+    setItem("language", lang);
+  };
 
   const filteredCities = cities.filter((city) =>
     city.toLowerCase().includes(citySearch.toLowerCase())
@@ -100,7 +107,7 @@ const Navbar = ({ isAuthenticated }) => {
         </ul>
 
         {/* Language Selector */}
-        <div className="relative">
+        <div className="relative  ">
           <button
             className="flex items-center text-gray-700 font-medium px-3 py-1 border border-gray-300 rounded-sm bg-white gap-2"
             onClick={() => setIsOpen(!isOpen)}
@@ -109,14 +116,21 @@ const Navbar = ({ isAuthenticated }) => {
           </button>
           {isOpen && (
             <div className="absolute bg-white shadow-md rounded-sm mt-2 w-32 p-2 z-10">
-              {languages.map((lang, index) => (
-                <div
-                  key={index}
-                  className="p-2 hover:bg-[#FCE2CE] cursor-pointer text-gray-700"
-                >
-                  {lang}
-                </div>
-              ))}
+              <ul>
+                {languages.map((lang, index) => (
+                  <li
+                    key={index}
+                    className="p-2 flex  items-center gap-2 hover:bg-[#FCE2CE] cursor-pointer text-gray-700"
+                    onClick={() => {
+                      handleLanguageChange(lang);
+                      dispatch(setLanguage(lang));
+                      setIsOpen(false);
+                    }}
+                  >
+                    {lang}
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
         </div>
