@@ -11,6 +11,7 @@ import { fetchProfile } from "./features/userSlice";
 import ProfilePage from "./Pages/SellerProfile/Profile";
 import AddSeller from "./Pages/AddSeller/AddSeller";
 import Navbar from "./components/NavBar";
+import BusinessPage from "./Pages/Business/BusinessPage";
 // import PrivateRoute from "./components/PrivateRoute";
 
 const Layout = () => {
@@ -36,6 +37,7 @@ const Layout = () => {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/about" element={<About />} />
         <Route path="/becomeaseller" element={<AddSeller />}/>
+        <Route path="/business/:id" element={<BusinessPage/>}/>
         {!isAuthenticated ? (
           <>
             <Route path="/login" element={<Login />} />
