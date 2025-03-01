@@ -23,8 +23,6 @@ const Navbar = ({ isAuthenticated }) => {
   const { user } = useSelector((state) => state.user);
   const dropdownRef = useRef(null);
   const { category } = useSelector((state) => state.user);
-  console.log(category);
-  console.log(user);
   const languages = ["English", "Hindi", "Gujarati"];
   
  

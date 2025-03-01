@@ -104,10 +104,63 @@ export const getOwnBusiness = async (req, res) => {
       },
       { $unwind: { path: "$seller", preserveNullAndEmptyArrays: true } },
 
-      // Exclude password from the seller
+      // ✅ Populate services
+      {
+        $lookup: {
+          from: "services",
+          localField: "_id",
+          foreignField: "business",
+          as: "services",
+        },
+      },
+
+      // ✅ Populate owner details inside each service
+      {
+        $lookup: {
+          from: "users",
+          localField: "services.owner", // Reference to the user
+          foreignField: "_id",
+          as: "serviceOwners",
+        },
+      },
+
+      // ✅ Merge owner details into each service
+      {
+        $addFields: {
+          services: {
+            $map: {
+              input: "$services",
+              as: "service",
+              in: {
+                $mergeObjects: [
+                  "$$service",
+                  {
+                    owner: {
+                      $arrayElemAt: [
+                        {
+                          $filter: {
+                            input: "$serviceOwners",
+                            as: "owner",
+                            cond: { $eq: ["$$owner._id", "$$service.owner"] },
+                          },
+                        },
+                        0,
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+
+      // Exclude password from the seller & service owner
       {
         $project: {
-          "seller.password": 0, // Exclude password field
+          "seller.password": 0,
+          "services.owner.password": 0, // Exclude owner password
+          serviceOwners: 0, // Remove the temporary field
         },
       },
     ]);
