@@ -25,7 +25,7 @@ route.post("/", async (req, res) => {
                 params: {
                     q: text,
                     target: langCode,
-                    key: process.env.GOOGLE_TRANSLATE_API_KEY, // Ensure this is set in .env
+                    key: process.env.GOOGLE_TRANSALATE_API_KEY, // Ensure this is set in .env
                 },
             }
         );
