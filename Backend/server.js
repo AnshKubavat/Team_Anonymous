@@ -3,6 +3,8 @@ import express from "express";
 const app = express();
 import axios from "axios";
 import cookieParser from "cookie-parser";
+import connectDB from "./DB/connectDB.js";
+import connectCloudinary from "./config/cloudinary.js";
 
 
 const PORT = process.env.PORT || 3000;
