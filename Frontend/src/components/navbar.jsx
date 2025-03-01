@@ -125,7 +125,7 @@ const Navbar = ({ isAuthenticated }) => {
               Contact Us
             </NavLink>
           </li>
-          {user !== null && user.role === "seller" && (
+          {user !== null && user?.role === "seller" && (
             <li>
               <NavLink
                 to="/mybusiness"

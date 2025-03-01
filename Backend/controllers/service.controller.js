@@ -49,7 +49,7 @@ export const updateServiceStatus = async (req, res) => {
       pending: ["approved", "rejected"],
       approved: ["progress", "rejected"],
       progress: ["completed"],
-      completed: [],
+      completed: ["progress"],
       rejected: [],
     };
 

@@ -59,12 +59,69 @@ export const login = async (req, res) => {
 
 export const profile = async (req, res) => {
   try {
-    return res.status(200).json({ message: { user: req.user }, success: true });
+    const userId = req.user._id;
+
+    // Aggregate Pipeline to populate reviews & services (with business & owner)
+    const userProfile = await User.aggregate([
+      { $match: { _id: userId } }, // Match the user by ID
+      {
+        $lookup: {
+          from: "reviews", // Collection name in MongoDB
+          localField: "reviews",
+          foreignField: "_id",
+          as: "reviews",
+        },
+      },
+      {
+        $lookup: {
+          from: "services", // Lookup services related to this user
+          localField: "services",
+          foreignField: "_id",
+          as: "services",
+        },
+      },
+      { $unwind: { path: "$services", preserveNullAndEmptyArrays: true } }, // Flatten services array
+      {
+        $lookup: {
+          from: "businesses", // Lookup the related business for each service
+          localField: "services.business",
+          foreignField: "_id",
+          as: "services.business",
+        },
+      },
+      {
+        $lookup: {
+          from: "users", // Lookup the owner (assuming the owner is also a user)
+          localField: "services.owner",
+          foreignField: "_id",
+          as: "services.owner",
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          username: { $first: "$username" },
+          image: { $first: "$image" },
+          email: { $first: "$email" },
+          role: { $first: "$role" },
+          reviews: { $first: "$reviews" },
+          services: { $push: "$services" },
+        },
+      },
+      { $limit: 1 },
+    ]);
+
+    if (!userProfile.length) {
+      return res.status(404).json({ message: "User not found", success: false });
+    }
+
+    return res.status(200).json({ success: true, message: userProfile[0] });
   } catch (e) {
     console.log(e);
-    return res.status(500).json({ message: e, success: false });
+    return res.status(500).json({ message: e.message, success: false });
   }
 };
+
 
 export const logout = async (req, res) => {
   try {

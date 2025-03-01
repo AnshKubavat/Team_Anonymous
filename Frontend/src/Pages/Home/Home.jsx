@@ -30,7 +30,6 @@ const Home = () => {
   console.log(category);
   console.log(language);
 
-
   const t = locales[language];
 
   const fetchBusinesses = async () => {
@@ -55,19 +54,20 @@ const Home = () => {
 
       const response = await axiosClient.post("/recommend", {
         user_id: userId,
+        city,
       });
 
-      console.log("API Response:", response.data); 
+      console.log("API Response:", response.data);
 
       if (response.data?.length > 0) {
         setRecommendations(response.data);
       } else {
         setRecommendations([]);
-        console.log("No recommendations found"); 
+        console.log("No recommendations found");
       }
     } catch (error) {
       console.log(error);
-      console.error("Error fetching recommendations:", error); 
+      console.error("Error fetching recommendations:", error);
     }
   };
 
@@ -78,65 +78,56 @@ const Home = () => {
     if (userId) {
       fetchRecommendations();
     }
-    // if(category){
-    //   fetchBusinessesByCategory();
-    // }
-  }, [city, userId]); // Fetch businesses & recommendations when city/user changes
+  }, [city, userId, category]); // Fetch businesses & recommendations when city/user changes
 
   useEffect(() => {
     if (businessList.length > 0 && !isLocationFetched) {
-      // getUserLocationAndCalculateDistances();
+       getUserLocationAndCalculateDistances();
       setIsLocationFetched(true);
     }
   }, [businessList]);
   
-// const getUserLocationAndCalculateDistances = () => {
-  //   if (navigator.geolocation) {
-  //     navigator.geolocation.getCurrentPosition(async (position) => {
-  //       const userLatitude = position.coords.latitude;
-  //       const userLongitude = position.coords.longitude;
+const getUserLocationAndCalculateDistances = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const userLatitude = position.coords.latitude;
+        const userLongitude = position.coords.longitude;
 
-  //       try {
-  //         const response = await axiosClient.post("/location", {
-  //           userLatitude,
-  //           userLongitude,
-  //           businessLocations: businessList
-  //             .filter(business => business.businessLocation?.latitude && business.businessLocation?.longitude)
-  //             .map(business => ({
-  //               id: business._id,
-  //               latitude: business.businessLocation.latitude,
-  //               longitude: business.businessLocation.longitude,
-  //             }))
-  //         });
+        try {
+          const response = await axiosClient.post("/location", {
+            userLatitude,
+            userLongitude,
+            businessLocations: businessList
+              .filter(business => business.businessLocation?.latitude && business.businessLocation?.longitude)
+              .map(business => ({
+                id: business._id,
+                latitude: business.businessLocation.latitude,
+                longitude: business.businessLocation.longitude,
+              }))
+          });
 
-  //         const updatedBusinessList = businessList.map(business => {
-  //           const distanceInfo = response.data.find(item => item.id === business._id);
-  //           return { ...business, distance: distanceInfo ? distanceInfo.distance : "N/A" };
-  //         });
+          const updatedBusinessList = businessList.map(business => {
+            const distanceInfo = response.data.find(item => item.id === business._id);
+            return { ...business, distance: distanceInfo ? distanceInfo.distance : "N/A" };
+          });
 
-  //         setBusinessList(updatedBusinessList);
-  //       } catch (error) {
-  //         console.error("Error calculating distances:", error);
-  //       }
-  //     });
-  //   } else {
-  //     alert("Geolocation is not supported by this browser.");
-  //   }
-  // };
-  useEffect(() => {
-    if (city) {
-      fetchBusinesses();
+          setBusinessList(updatedBusinessList);
+        } catch (error) {
+          console.error("Error calculating distances:", error);
+        }
+      });
+    } else {
+      alert("Geolocation is not supported by this browser.");
     }
-  }, [city, category]);
+  };
+
 
   useEffect(() => {
     if (businessList.length > 0 && !isLocationFetched) {
-      // getUserLocationAndCalculateDistances();
+       getUserLocationAndCalculateDistances();
       setIsLocationFetched(true);
     }
   }, [businessList]);
-
- 
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -160,7 +151,7 @@ const Home = () => {
 
       <div>
         <h1 className="text-xl md:text-4xl font-bold text-left mt-10 md:mt-16 ml-4 md:ml-10">
-        {t.recommendation}
+          {t.recommendation}
         </h1>
         <div>
           <section className="dark:bg-dark mt-4 mx-4 md:mx-10 pb-10 md:pb-20">
@@ -170,7 +161,9 @@ const Home = () => {
                   <Card businessList={recommendations} />
                 </div>
               ) : (
-                <p className="text-center text-gray-500">{t.no_recommendations}</p>
+                <p className="text-center text-gray-500">
+                  {t.no_recommendations}
+                </p>
               )}
             </div>
           </section>
