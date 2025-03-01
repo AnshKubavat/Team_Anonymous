@@ -43,7 +43,7 @@ const Card = ({ businessList = [] }) => {
       </motion.div>
 
       <div className="flex items-center justify-between mt-3">
-        <span className="text-blue-500 font-medium">
+        <span className="text- font-medium">
           {business.city} | {business?.distance || "2.4 km"}
         </span>
         
