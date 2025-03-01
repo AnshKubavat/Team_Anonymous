@@ -119,19 +119,19 @@ export default function AddSeller() {
         <div className="p-8 rounded-sm bg-[#FCE2CE] border-[#3B2E2E] border">
           <div>
             <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">
-              Create Business
+              {t.create_business}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block pl-1 text-sm font-medium text-gray-700 mb-2">
                     <FaBuilding className="inline-block mr-2" />
-                    Business Name
+                    {t.business_name}
                   </label>
                   <input
                     type="text"
                     name="businessName"
-                    placeholder="Enter Your Business"
+                    placeholder={t.enter_business}
                     value={businessName}
                     onChange={(e) => setBusinessName(e.target.value)}
                     required
@@ -141,12 +141,12 @@ export default function AddSeller() {
                 <div>
                   <label className="block pl-1 text-sm font-medium text-gray-700 mb-2">
                     <FaMapMarkerAlt className="inline-block mr-2" />
-                    City
+                    {t.city}
                   </label>
                   <Select
                     options={cityOptions}
                     onChange={(selectedOption) => setCity(selectedOption)}
-                    placeholder="Select City"
+                    placeholder={t.select_city}
                     value={city}
                     className="react-select-container"
                     classNamePrefix="react-select"
@@ -155,12 +155,12 @@ export default function AddSeller() {
                 <div>
                   <label className="block pl-1 text-sm font-medium text-gray-700 mb-2">
                     <FaListAlt className="inline-block mr-2" />
-                    Facility
+                    {t.facility}
                   </label>
                   <Select
                     options={facilities}
                     onChange={(selectedOption) => setFacility(selectedOption)}
-                    placeholder="Select Facility"
+                    placeholder={t.select_facility}
                     value={facility}
                     className="react-select-container"
                     classNamePrefix="react-select"
@@ -169,32 +169,32 @@ export default function AddSeller() {
                 <div>
                   <label className="block pl-1 text-sm font-medium text-gray-700 mb-2">
                     <FaListAlt className="inline-block mr-2" />
-                    Category
+                    {t.category}
                   </label>
                   <Select
                     options={categoryOptions}
                     onChange={(selectedOption) =>
                       setCategoryOfBusiness(selectedOption)
                     }
-                    placeholder="Select Category"
+                    placeholder={t.select_category}
                     value={categoryOfBusiness}
                     className="react-select-container"
                     classNamePrefix="react-select"
-                    isClearable // Allows clearing selection
-                    isSearchable // Enables search inside select
+                    isClearable
+                    isSearchable
                   />
                 </div>
               </div>
               <div>
                 <label className="block pl-1 text-sm font-medium text-gray-700 mb-2">
                   <FaInfoCircle className="inline-block mr-2" />
-                  Description of the Business
+                  {t.description}
                 </label>
                 <textarea
                   name="description"
                   onChange={(e) => setDescription(e.target.value)}
                   value={description}
-                  placeholder="Enter a description of the business"
+                  placeholder={t.enter_description}
                   required
                   className="w-full p-3 border  bg-white border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   rows="4"
@@ -203,7 +203,7 @@ export default function AddSeller() {
               <div>
                 <label className="block pl-1 text-sm font-medium text-gray-700 mb-2">
                   <FaImage className="inline-block mr-2" />
-                  Upload Image
+                  {t.upload_image}
                 </label>
                 <input
                   type="file"
@@ -216,7 +216,7 @@ export default function AddSeller() {
               <div>
                 <label className="block pl-1 text-sm font-medium text-gray-700 mb-2">
                   <FaMapMarkerAlt className="inline-block mr-2" />
-                  Location
+                  {t.location}
                 </label>
                 <button
                   type="button"
@@ -227,12 +227,12 @@ export default function AddSeller() {
                   {isFetchingLocation ? (
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                   ) : (
-                    "Fetch Location"
+                    t.fetch_location
                   )}
                 </button>
                 {location.latitude && location.longitude && (
                   <div className="mt-2 text-sm text-gray-600">
-                    Latitude: {location.latitude}, Longitude:{" "}
+                    {t.latitude}: {location.latitude}, {t.longitude}:{" "}
                     {location.longitude}
                   </div>
                 )}
@@ -241,7 +241,7 @@ export default function AddSeller() {
                 type="submit"
                 className="w-full p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
               >
-                Register
+                {t.register}
               </button>
             </form>
           </div>
@@ -249,4 +249,5 @@ export default function AddSeller() {
       </motion.div>
     </div>
   );
+  
 }
