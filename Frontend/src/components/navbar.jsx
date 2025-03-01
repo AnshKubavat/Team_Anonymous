@@ -25,7 +25,7 @@ const Navbar = ({ isAuthenticated }) => {
   const { category } = useSelector((state) => state.user);
   console.log(category);
   console.log(user);
-  
+  const languages = ["English", "Hindi", "Gujarati"];
   
   const handleLanguageChange = (lang) => {
     setSelectLanguage(lang);
@@ -143,7 +143,6 @@ const Navbar = ({ isAuthenticated }) => {
         <div className="relative  ">
           <button
             className="flex items-center text-gray-700 font-medium px-3 py-1 border border-gray-300 rounded-sm bg-white gap-2"
-            // onClick={() => setIsOpenForLanguage(!isOpenForLanguage)}
             onClick={handleLanguageDropdownClick}
           >
             {language} <ChevronDown size={18} className="ml-2" />
