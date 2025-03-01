@@ -3,6 +3,7 @@ import {useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Webcam from "react-webcam";
 import axiosClient from "../../utils/axiosClient";
+import Business from "../../../../Backend/models/Business";
 
 const SellerDashboard = () => {
   const [selectedSection, setSelectedSection] = useState("profile");
@@ -68,21 +69,21 @@ const SellerDashboard = () => {
       description: "Latest smartphone",
       image: "/images/phone.jpg",
       reviews: [{ user: "Sarah", rating: 4, comment: "Good quality!" }],
-    },{
+    }, {
       id: 2,
       name: "Phone",
       price: 800,
       description: "Latest smartphone",
       image: "/images/phone.jpg",
       reviews: [{ user: "Sarah", rating: 4, comment: "Good quality!" }],
-    },{
+    }, {
       id: 2,
       name: "Phone",
       price: 800,
       description: "Latest smartphone",
       image: "/images/phone.jpg",
       reviews: [{ user: "Sarah", rating: 4, comment: "Good quality!" }],
-    },{
+    }, {
       id: 2,
       name: "Phone",
       price: 800,
@@ -114,15 +115,15 @@ const SellerDashboard = () => {
     }
   };
 
- const handleInputChange = (e) => {
-  const { name, value } = e.target;
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
 
-  if (editingProduct) {
+    if (editingProduct) {
       setEditingProduct({ ...editingProduct, [name]: value });
-  } else {
-    setNewProduct({ ...newProduct, [name]: value });
-  }
-};
+    } else {
+      setNewProduct({ ...newProduct, [name]: value });
+    }
+  };
 
 
   const handleAddProduct = (e) => {
@@ -148,7 +149,7 @@ const SellerDashboard = () => {
           Authorization: `Bearer ${API_KEY}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ inputs: uniquePrompt }), 
+        body: JSON.stringify({ inputs: uniquePrompt }),
       });
       const blob = await response.blob();
       setNewProduct({ ...newProduct, image: URL.createObjectURL(blob) });
@@ -190,12 +191,7 @@ const SellerDashboard = () => {
   const handleUploadClick = () => {
     fileInputRef.current.click();
   };
-  const menuItems = [
-    { name: "🏪My Shop", key: "profile"},
-    { name: "➕ Add New Product", key: "addProduct" },
-    { name: "📦 View All Products", key: "viewProducts" },
-    { name: "⭐ Reviews & Ratings", key: "reviews" },
-  ];
+ 
 
   
   const [isOpen, setIsOpen] = useState(false);
@@ -220,28 +216,44 @@ const SellerDashboard = () => {
   });
 
   useEffect(() => {
-  if (user?._id) {
-    fetchBusinessDetails();
-  }
-}, [user?._id]); 
-
-const fetchBusinessDetails = async () => {
-  try {
-    const { data } = await axiosClient.get(`/business/seller`);
-    console.log("Fetched Business Data:", data); 
-    
-    if (data.success && data.business) {
-      setBusiness(data.business);
-    } else {
-      toast.error(data.message || "Business details not found.");
+    if (user?._id) {
+      fetchBusinessDetails();
     }
-  } catch (error) {
-    console.error("Error fetching business details:", error);
-    toast.error("Failed to load business details.");
-  }
-};
+  }, [user?._id]);
+
+  const fetchBusinessDetails = async () => {
+    try {
+      const { data } = await axiosClient.get(`/business/seller`);
+      console.log("Fetched Business Data:", data);
+    
+      if (data.success && data.business) {
+        setBusiness(data.business);
+      } else {
+        toast.error(data.message || "Business details not found.");
+      }
+    } catch (error) {
+      console.error("Error fetching business details:", error);
+      toast.error("Failed to load business details.");
+    }
+  };
+  const menuItems = Business.facility === "product"
+    ? [
+      { name: "🏪 My Shop", key: "profile" },
+      { name: "➕ Add New Product", key: "addProduct" },
+      { name: "📦 View All Products", key: "viewProducts" },
+      { name: "⭐ Reviews & Ratings", key: "reviews" }
+    ]
+    : [{ name: "🏪 My Shop", key: "profile" },
+       {name:"👤 Services", key:"services"},
+       { name: "⭐ Reviews & Ratings", key: "reviews" },
+    ];
 
 
+//   business?.services.forEach((service, index) => {
+//   console.log(`Service ${index + 1} Owner Name:`, service.owner?.username);
+// });
+
+ 
 
 
 
@@ -670,6 +682,52 @@ const fetchBusinessDetails = async () => {
               <p className="text-gray-500 text-center">No reviews available.</p>
             )}
           </div>
+        )}
+
+
+        {selectedSection === "services" && (
+          <div className="max-w-5xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6 text-center">🔧 Services Offered</h1>
+      {business?.services.length === 0 ? (
+        <p className="text-center text-gray-500">No services available.</p>
+      ) : (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {business?.services.map((service) => (
+            <div
+              key={service._id}
+              className="bg-white p-4 shadow-lg rounded-lg border border-gray-200"
+            >
+              <div className="flex items-center space-x-4">
+                <img
+                  src={service.owner?.image || "https://via.placeholder.com/50"}
+                  alt={service.owner?.username || "User"}
+                  className="w-16 h-16 rounded-full object-cover border"
+                />
+                <div>
+                  <h2 className="text-lg font-semibold">{service.owner?.username || "Unknown Owner"}</h2>
+                  <p className="text-gray-600 text-sm">{service.owner?.email || "No Email"}</p>
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <p className="text-gray-700"><strong>Status:</strong> {service.status}</p>
+                <p className="text-gray-600 text-sm"><strong>Created At:</strong> {new Date(service.createdAt).toDateString()}</p>
+                <p className="text-gray-600 text-sm"><strong>Expires At:</strong> {new Date(service.expiresAt).toDateString()}</p>
+              </div>
+
+              <div className="mt-4 flex justify-between">
+                <button className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600">
+                  View Details
+                </button>
+                <button className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-600">
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
         )}
       </div>
       </div>
