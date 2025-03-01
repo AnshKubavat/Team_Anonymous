@@ -6,6 +6,7 @@ import { signupLogo } from "../../assets/assets";
 import { useDispatch } from "react-redux";
 import { signup } from "../../features/userSlice";
 import { setItem,KEY_ACCESS_TOKEN } from "../../utils/localStorageManager";
+import { toast } from "react-toastify";
 
 export default function Signup() {
   const [username, setusername] = useState("");
@@ -38,7 +39,7 @@ export default function Signup() {
         setError(result.payload?.message || "Signup failed. Please try again.");
         toast.error(error);
       }
-    } catch (error) {
+    } catch (e) {
       console.log("Error in signup submit", e);
       setError("Failed to sign up. Please try again.");
     }
