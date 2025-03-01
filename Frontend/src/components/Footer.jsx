@@ -43,7 +43,7 @@ const Footer = () => {
           <h2 className="text-xl font-bold mb-3">Quick Links</h2>
           <ul className="space-y-2">
             <li>
-              <NavLink to="/home" className="hover:underline">
+              <NavLink to="/" className="hover:underline">
                 Home
               </NavLink>
             </li>
