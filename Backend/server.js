@@ -12,6 +12,8 @@ import businessRouter from "./routes/business.route.js";
 import useAdminRouter from "./routes/admin.route.js";
 import serviceRouter from "./routes/service.route.js";
 import useLocationRouter from "./routes/location.route.js";
+import useReviewRouter from "./routes/review.route.js";
+
 
 
 import { authUser } from "./middlewares/auth.middleware.js";
@@ -37,6 +39,8 @@ app.use("/admin/api", useAdminRouter);
 
 app.use("/service", authUser, serviceRouter);
 app.use("/location", useLocationRouter);
+app.use("/review", useReviewRouter);
+
 
 
 //server start

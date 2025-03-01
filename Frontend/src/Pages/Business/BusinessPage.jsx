@@ -51,10 +51,7 @@ const BusinessPage = () => {
       price: "$700",
     },
   ]);
-  const [reviews, setReviews] = useState([
-    { id: 1, rating: 4, comment: "Great service!" },
-    { id: 2, rating: 5, comment: "Excellent product!" },
-  ]);
+  const [reviews, setReviews] = useState([]);
 
   const handleDeleteBusiness = () => {
     alert("Business deleted");
@@ -68,7 +65,13 @@ const BusinessPage = () => {
     setReviews(reviews.filter((review) => review.id !== id));
   };
 
-  const handleAddReview = (newReview) => {
+  const handleAddReview = async (newReview) => {
+    const { data } = await axiosClient.post(
+      `/review/${business._id}/add`,
+      newReview
+    );
+    console.log(data);
+
     setReviews([...reviews, newReview]);
   };
 
