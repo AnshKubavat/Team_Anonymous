@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import BusinessDescription from "./BusinessDescription";
 import ProductList from "./ProductList";
 import ReviewSection from "./ReviewSection";
-import ServiceSection from "./ServiceSection";
 import axiosClient from "../../utils/axiosClient";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
