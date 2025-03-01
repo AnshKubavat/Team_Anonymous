@@ -11,6 +11,8 @@ import useCityRouter from "./routes/useCity.route.js";
 import businessRouter from "./routes/business.route.js";
 import useAdminRouter from "./routes/admin.route.js";
 import serviceRouter from "./routes/service.route.js";
+import useLocationRouter from "./routes/location.route.js";
+
 
 import { authUser } from "./middlewares/auth.middleware.js";
 
@@ -34,6 +36,8 @@ app.use("/business", authUser, businessRouter);
 app.use("/admin/api", useAdminRouter);
 
 app.use("/service", authUser, serviceRouter);
+app.use("/location", useLocationRouter);
+
 
 //server start
 app.listen(PORT, () => {

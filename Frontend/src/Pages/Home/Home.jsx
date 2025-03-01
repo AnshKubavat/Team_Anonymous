@@ -78,60 +78,53 @@ const Home = () => {
     if (userId) {
       fetchRecommendations();
     }
-    // if(category){
-    //   fetchBusinessesByCategory();
-    // }
-  }, [city, userId]); // Fetch businesses & recommendations when city/user changes
+  }, [city, userId, category]); // Fetch businesses & recommendations when city/user changes
 
   useEffect(() => {
     if (businessList.length > 0 && !isLocationFetched) {
-      // getUserLocationAndCalculateDistances();
+       getUserLocationAndCalculateDistances();
       setIsLocationFetched(true);
     }
   }, [businessList]);
   
-// const getUserLocationAndCalculateDistances = () => {
-  //   if (navigator.geolocation) {
-  //     navigator.geolocation.getCurrentPosition(async (position) => {
-  //       const userLatitude = position.coords.latitude;
-  //       const userLongitude = position.coords.longitude;
+const getUserLocationAndCalculateDistances = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const userLatitude = position.coords.latitude;
+        const userLongitude = position.coords.longitude;
 
-  //       try {
-  //         const response = await axiosClient.post("/location", {
-  //           userLatitude,
-  //           userLongitude,
-  //           businessLocations: businessList
-  //             .filter(business => business.businessLocation?.latitude && business.businessLocation?.longitude)
-  //             .map(business => ({
-  //               id: business._id,
-  //               latitude: business.businessLocation.latitude,
-  //               longitude: business.businessLocation.longitude,
-  //             }))
-  //         });
+        try {
+          const response = await axiosClient.post("/location", {
+            userLatitude,
+            userLongitude,
+            businessLocations: businessList
+              .filter(business => business.businessLocation?.latitude && business.businessLocation?.longitude)
+              .map(business => ({
+                id: business._id,
+                latitude: business.businessLocation.latitude,
+                longitude: business.businessLocation.longitude,
+              }))
+          });
 
-  //         const updatedBusinessList = businessList.map(business => {
-  //           const distanceInfo = response.data.find(item => item.id === business._id);
-  //           return { ...business, distance: distanceInfo ? distanceInfo.distance : "N/A" };
-  //         });
+          const updatedBusinessList = businessList.map(business => {
+            const distanceInfo = response.data.find(item => item.id === business._id);
+            return { ...business, distance: distanceInfo ? distanceInfo.distance : "N/A" };
+          });
 
-  //         setBusinessList(updatedBusinessList);
-  //       } catch (error) {
-  //         console.error("Error calculating distances:", error);
-  //       }
-  //     });
-  //   } else {
-  //     alert("Geolocation is not supported by this browser.");
-  //   }
-  // };
-  useEffect(() => {
-    if (city) {
-      fetchBusinesses();
+          setBusinessList(updatedBusinessList);
+        } catch (error) {
+          console.error("Error calculating distances:", error);
+        }
+      });
+    } else {
+      alert("Geolocation is not supported by this browser.");
     }
-  }, [city, category]);
+  };
+
 
   useEffect(() => {
     if (businessList.length > 0 && !isLocationFetched) {
-      // getUserLocationAndCalculateDistances();
+       getUserLocationAndCalculateDistances();
       setIsLocationFetched(true);
     }
   }, [businessList]);
