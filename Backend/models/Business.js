@@ -48,6 +48,12 @@ const businessSchema = new Schema({
       ref: "Product",
     },
   ],
+  services: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Service",
+    },
+  ],
   address: {
     type: String,
   },
