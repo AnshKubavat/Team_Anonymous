@@ -1,14 +1,14 @@
 import { Routes, Route, Navigate , useLocation} from "react-router-dom";
 import Login from "./Pages/Login/Login";
 import Signup from "./Pages/Signup/Signup";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/NavBar";
 import Category from "./Pages/Category/Category";
 import Home from "./Pages/Home/Home";
 import Footer from "./components/Footer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchProfile } from "./features/userSlice";
-
+import ProfilePage from "./Pages/SellerProfile/Profile";
 
 const Layout = () => {
   const location = useLocation();
@@ -23,12 +23,13 @@ const Layout = () => {
   }, []);
   return (
     <>
-      {!hideNavbarFooter && <Navbar />}
+      {!hideNavbarFooter && <Navbar isAuthenticated={isAuthenticated} />}
 
       <Routes>
         
         <Route path="/category" element={<Category />} />
         <Route path="/" element={<Home />} />
+        <Route path="/profile" element={<ProfilePage />} />
         {!isAuthenticated ? (
           <>
             <Route path="/login" element={<Login />} />
