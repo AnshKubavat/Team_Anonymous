@@ -13,6 +13,7 @@ import ProfilePage from "./Pages/SellerProfile/Profile";
 import AddSeller from "./Pages/AddSeller/AddSeller";
 import Navbar from "./components/NavBar";
 import BusinessPage from "./Pages/Business/BusinessPage";
+import Mybusiness from "./Pages/SellerDashboard/MyBusiness";
 // import PrivateRoute from "./components/PrivateRoute";
 
 const Layout = () => {
@@ -40,6 +41,7 @@ const Layout = () => {
         <Route path="/becomeaseller" element={<AddSeller />}/>
         <Route path="/contact" element={<Contact />} />
         <Route path="/business/:id" element={<BusinessPage/>}/>
+        <Route path="/myBusiness" element={<Mybusiness />} />
         {!isAuthenticated ? (
           <>
             <Route path="/login" element={<Login />} />

@@ -128,7 +128,7 @@ const Navbar = ({ isAuthenticated }) => {
           {user !== null && user.role === "seller" && (
             <li>
               <NavLink
-                to="/myBusiness"
+                to="/mybusiness"
                 className={({ isActive }) =>
                   isActive ? "text-black font-semibold" : "hover:text-gray-800"
                 }
