@@ -14,7 +14,9 @@ const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState("reviews");
   const services = user?.services || [];
-
+  console.log(services);
+  console.log(user);
+  console.log("user");
   const [role, setRole] = useState("user");
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -40,9 +42,6 @@ const ProfilePage = () => {
     }
   }, [user]);
 
-  console.log("reviews");
-  console.log(reviews);
-  console.log("reviews");
   const becomeaSeller = () => {
     navigate("/becomeaseller");
   };
@@ -71,6 +70,7 @@ const ProfilePage = () => {
 
   // console.log(user.services.length);
   const hasServices = user?.services && user.services.length > 0;
+
   const handleLogout = async () => {
     try {
       const result = await dispatch(logout());
@@ -243,37 +243,39 @@ const ProfilePage = () => {
               </div>
             )}
             {activeTab === "bookings" && (
-              <div>
-                <h2 className="text-xl font-semibold mb-3">Your Bookings</h2>
-                {isLoading ? (
-                  <p>Loading your bookings...</p>
-                ) : user?.services?.length > 0 ? (
-                  user.services.map((service) => {
-                    const formattedDate = service?.createdAt
-                      ? new Date(service.createdAt).toLocaleDateString()
-                      : "N/A";
+  <div>
+    <h2 className="text-xl font-semibold mb-3">Your Bookings</h2>
+    {isLoading ? (
+      <p>Loading your bookings...</p>
+    ) : user?.services?.length > 0 ? (
+      user.services.map((service, index) => (
+        service.business.map((business) => {
+          const formattedDate = service?.createdAt
+            ? new Date(service.createdAt).toLocaleDateString()
+            : "N/A";
 
-                    return (
-                      <div
-                        key={service._id}
-                        className="p-4 bg-white rounded-lg shadow-md mb-3"
-                      >
-                        <h3 className="text-lg font-semibold">
-                          {service?.business?.businessName ||
-                            "Unknown Business"}
-                        </h3>
-                        <p>{service?.status || "Unknown Status"}</p>
-                        <p className="text-sm text-gray-500">
-                          Requested on: {formattedDate}
-                        </p>
-                      </div>
-                    );
-                  })
-                ) : (
-                  <p>No bookings yet.</p>
-                )}
-              </div>
-            )}
+          return (
+            <div
+              key={business._id}
+              className="p-4 bg-white rounded-lg shadow-md mb-3"
+            >
+              <h3 className="text-lg font-semibold">
+                {business?.businessName || "Unknown Business"}
+              </h3>
+              <p>{service?.status || "Unknown Status"}</p>
+              <p className="text-sm text-gray-500">
+                Requested on: {formattedDate}
+              </p>
+            </div>
+          );
+        })
+      ))
+    ) : (
+      <p>No bookings yet.</p>
+    )}
+  </div>
+)}
+
           </div>
         </div>
       </div>
