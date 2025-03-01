@@ -74,10 +74,10 @@ const Navbar = ({ isAuthenticated }) => {
     <nav ref={dropdownRef} className="bg-[#FEF6EF] p-4 shadow-lg">
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo */}
-        <div className="text-gray-600 text-xl font-bold flex items-center gap-2">
+        <div className="text-gray-600 text-xl font-bold flex items-center gap-2 cursor-pointer">
           <img
             src={logo}
-            alt="NearbyGo Logo"
+            alt="NearbyGo Logo" 
             onClick={() => navigate("/")}
             className="h-10 w-auto rounded-2xl ml-2"
           />

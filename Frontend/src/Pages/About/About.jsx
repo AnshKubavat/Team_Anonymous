@@ -39,7 +39,7 @@ const About = () => {
     setOpenIndex(openIndex === index ? null : index);
   };
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6 ">
       {/* Our Story */}
       <div className="mb-8 p-6 bg-white shadow-lg rounded-2xl border">
         <h2 className="text-3xl font-bold mb-4">📌 Our Story – Why We Started</h2>
@@ -48,7 +48,7 @@ const About = () => {
           <strong> We saw a gap</strong>—local businesses lacked visibility, making it hard for customers to discover nearby services.
         </p>
         <p className="text-lg text-gray-700 mt-4">
-          That&apos;s why we built <strong>[Your Platform Name]</strong>—a one-stop solution to bridge this gap by connecting users with small businesses and local services effortlessly.
+          That&apos;s why we built <strong>NearByGo</strong>—a one-stop solution to bridge this gap by connecting users with small businesses and local services effortlessly.
         </p>
         <img src="/images/story.png" alt="Our Story" className="mt-6 w-full rounded-lg" />
       </div>
