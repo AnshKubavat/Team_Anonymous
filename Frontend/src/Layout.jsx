@@ -15,6 +15,7 @@ import Navbar from "./components/Navbar";
 import BusinessPage from "./Pages/Business/BusinessPage";
 import Mybusiness from "./Pages/SellerDashboard/MyBusiness";
 // import PrivateRoute from "./components/PrivateRoute";
+import AdminDashboard from "./Pages/AdminDashboard";
 
 const Layout = () => {
   const location = useLocation();
@@ -38,10 +39,11 @@ const Layout = () => {
         <Route path="/" element={<Home />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/about" element={<About />} />
-        <Route path="/becomeaseller" element={<AddSeller />}/>
+        {/* <Route path="/becomeaseller" element={<AddSeller />}/> */}
         <Route path="/contact" element={<Contact />} />
         <Route path="/business/:id" element={<BusinessPage/>}/>
         <Route path="/myBusiness" element={<Mybusiness />} />
+         <Route path="/admin/*" element={<AdminDashboard />} />
         {!isAuthenticated ? (
           <>
             <Route path="/login" element={<Login />} />
@@ -53,6 +55,13 @@ const Layout = () => {
             <Route path="/signup" element={<Navigate to="/" />} />
           </>
         )}
+        {isAuthenticated ? (
+          <Route path="/becomeaseller" element={<AddSeller />} />
+        ) : (
+          <Route path="/becomeaseller" element={<Login />} />
+        )}
+
+        <Route path="/contact" element={<Contact />} />
       </Routes>
       {!hideNavbarFooter && <Footer />}
     </>
