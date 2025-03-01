@@ -25,11 +25,18 @@ const Navbar = ({ isAuthenticated }) => {
   const { category } = useSelector((state) => state.user);
   const languages = ["English", "Hindi", "Gujarati"];
   
-  const handleLanguageChange = (lang) => {
+ 
+  const handleLanguageChange = async (lang) => {
     setSelectLanguage(lang);
     setItem("language", lang);
+    dispatch(setLanguage(lang));
+  
+    // Translate dynamic data from backend
+    if (user?.name) {
+      const translatedName = await translateText(user.name, lang);
+      setUser({ ...user, name: translatedName });
+    }
   };
-
   const handleLanguageDropdownClick = () => {
     setIsOpenForLanguage(!isOpenForLanguage);
     setCityDropdown(false);

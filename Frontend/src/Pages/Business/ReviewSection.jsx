@@ -1,15 +1,17 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState } from "react";
+import { motion } from "framer-motion";
 
 const ReviewSection = ({ reviews, onAddReview }) => {
   const [showReviewForm, setShowReviewForm] = useState(false);
-  const [newReview, setNewReview] = useState({ name: '', rating: 0, comment: '' });
+  const [newReview, setNewReview] = useState({ rating: 0, comment: "" });
 
   const handleSubmitReview = (e) => {
     e.preventDefault();
-    if (!newReview.name.trim() || !newReview.comment.trim() || newReview.rating === 0) return;
-    onAddReview({ id: Date.now(), ...newReview });
-    setNewReview({ name: '', rating: 0, comment: '' });
+
+    if (!newReview.comment.trim() || newReview.rating === 0) return;
+
+    onAddReview(newReview); // ✅ Send newReview directly
+    setNewReview({ rating: 0, comment: "" });
     setShowReviewForm(false);
   };
 
@@ -23,7 +25,7 @@ const ReviewSection = ({ reviews, onAddReview }) => {
           className="bg-green-500 text-white px-4 py-2 rounded"
           onClick={() => setShowReviewForm(!showReviewForm)}
         >
-          {showReviewForm ? 'Cancel' : 'Add Review'}
+          {showReviewForm ? "Cancel" : "Add Review"}
         </motion.button>
       </div>
 
@@ -35,7 +37,11 @@ const ReviewSection = ({ reviews, onAddReview }) => {
               {[1, 2, 3, 4, 5].map((num) => (
                 <span
                   key={num}
-                  className={`text-5xl cursor-pointer ${num <= newReview.rating ? 'text-yellow-500' : 'text-gray-300'}`}
+                  className={`text-5xl cursor-pointer ${
+                    num <= newReview.rating
+                      ? "text-yellow-500"
+                      : "text-gray-300"
+                  }`}
                   onClick={() => setNewReview({ ...newReview, rating: num })}
                 >
                   ★
@@ -47,7 +53,9 @@ const ReviewSection = ({ reviews, onAddReview }) => {
             <label className="block text-gray-700">Comment</label>
             <textarea
               value={newReview.comment}
-              onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+              onChange={(e) =>
+                setNewReview({ ...newReview, comment: e.target.value })
+              }
               className="w-full p-2 border rounded"
               rows="3"
             />
@@ -64,22 +72,24 @@ const ReviewSection = ({ reviews, onAddReview }) => {
       )}
 
       <div className="space-y-4">
-        {reviews.map((review) => (
-          <div key={review.id} className="bg-white p-4 rounded-lg shadow-md">
+        {reviews.map((review, index) => (
+          <div key={index} className="bg-white p-4 rounded-lg shadow-md">
             <div className="flex justify-between items-center">
               <div>
-                <div className=''>
-                <h3 className="font-bold">{"Name Of Reviwer"}</h3>
-                </div>
                 <div className="flex items-center mb-2">
                   {[...Array(5)].map((_, i) => (
-                      <span key={i} className={`text-2xl ${i < review.rating ? 'text-yellow-500' : 'text-gray-300'}`}>
+                    <span
+                      key={i}
+                      className={`text-2xl ${
+                        i < review.rating ? "text-yellow-500" : "text-gray-300"
+                      }`}
+                    >
                       ★
                     </span>
                   ))}
                 </div>
                 <p className="text-gray-700">{review.comment}</p>
-                <span>{"Date of Review"}</span>
+                <span>{review.date || "Date of Review"}</span>
               </div>
             </div>
           </div>

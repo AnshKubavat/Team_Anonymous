@@ -12,7 +12,7 @@ const ProfilePage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-    const [activeTab, setActiveTab] = useState("reviews");
+  const [activeTab, setActiveTab] = useState("reviews");
 
   const [role, setRole] = useState("user");
   const navigate = useNavigate();
@@ -29,9 +29,8 @@ const ProfilePage = () => {
   }, [user]);
 
   useEffect(() => {
-  dispatch(fetchProfile());
-}, [dispatch]);
-
+    dispatch(fetchProfile());
+  }, [dispatch]);
 
   const [reviews] = useState([
     {
@@ -95,7 +94,7 @@ const ProfilePage = () => {
         removeItem("city");
         removeItem("language");
         removeItem("category");
-        removeItem(KEY_ACCESS_TOKEN)
+        removeItem(KEY_ACCESS_TOKEN);
         navigate("/login");
       } else {
         toast.error("Please try again");
@@ -104,7 +103,6 @@ const ProfilePage = () => {
       toast.error(error);
     }
   };
-
 
   return (
     <div className="min-h-screen px-2 py-10 flex justify-center items-center">
@@ -215,44 +213,76 @@ const ProfilePage = () => {
           </div>
 
           {/* Reviews Section */}
-          <div className="flex justify-around mb-4">
-            <button onClick={() => setActiveTab("reviews")} className={`px-4 cursor-pointer py-2 text-black text-lg ${activeTab === "reviews" ? "  font-semibold" : "  font-regular"}`}>My Reviews</button>
-            <button onClick={() => setActiveTab("bookings")} className={`px-4 py-2 text-lg cursor-pointer text-black ${activeTab === "bookings" ? "font-semibold " : " font-regular"}`}>My Bookings</button>
+          <div className="flex justify-around mb-4 border-b-2">
+            <button
+              onClick={() => setActiveTab("reviews")}
+              className={`px-4 cursor-pointer py-2 text-black text-lg ${
+                activeTab === "reviews" ? "  font-semibold" : "  font-regular"
+              }`}
+            >
+              My Reviews
+            </button>
+            <button
+              onClick={() => setActiveTab("bookings")}
+              className={`px-4 py-2 text-lg cursor-pointer text-black ${
+                activeTab === "bookings" ? "font-semibold " : " font-regular"
+              }`}
+            >
+              My Bookings
+            </button>
           </div>
-          {activeTab === "reviews" && (
-            <div>
-              <h2 className="text-xl font-semibold mb-3">Your Reviews</h2>
-              {reviews.length > 0 ? reviews.map((review) => (
-                <div key={review.id} className="p-4 bg-white rounded-lg shadow-md mb-3">
-                  <h3 className="text-lg font-semibold">{review.title}</h3>
-                  <p>{review.content}</p>
-                  <p className="text-sm text-gray-500">Reviewed on: {review.date}</p>
-                </div>
-              )) : <p>No reviews yet.</p>}
-            </div>
-          )}
-          {activeTab === "bookings" && (
-            <div>
-              <h2 className="text-xl  font-semibold mb-3">Your Bookings</h2>
-             {isLoading ? (
-  <p>Loading your bookings...</p>
-) : user?.services?.length > 0 ? (
-  user.services.map((service) => (
-    <div key={service._id} className="p-4 bg-white rounded-lg shadow-md mb-3">
-      <h3 className="text-lg font-semibold">
-        {service?.bussiness?.businessName || "Unknown Business"}
-      </h3>
-      <p>{service?.status || "Unknown Status"}</p>
-      <p className="text-sm text-gray-500">
-        Requested on: {service?.createdAt ? new Date(service.createdAt).toLocaleDateString() : "N/A"}
-      </p>
-    </div>
-  ))
-) : (
-  <p>No bookings yet.</p>
-)}
-            </div>
-          )}
+
+          <div className="p-6 h-60 overflow-y-auto">
+            {activeTab === "reviews" && (
+              <div>
+                <h2 className="text-xl font-semibold mb-3">Your Reviews</h2>
+                {reviews.length > 0 ? (
+                  reviews.map((review) => (
+                    <div
+                      key={review.id}
+                      className="p-4 bg-white rounded-lg shadow-md mb-3"
+                    >
+                      <h3 className="text-lg font-semibold">{review.title}</h3>
+                      <p>{review.content}</p>
+                      <p className="text-sm text-gray-500">
+                        Reviewed on: {review.date}
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <p>No reviews yet.</p>
+                )}
+              </div>
+            )}
+            {activeTab === "bookings" && (
+              <div>
+                <h2 className="text-xl  font-semibold mb-3">Your Bookings</h2>
+                {isLoading ? (
+                  <p>Loading your bookings...</p>
+                ) : user?.services?.length > 0 ? (
+                  user.services.map((service) => (
+                    <div
+                      key={service._id}
+                      className="p-4 bg-white rounded-lg shadow-md mb-3"
+                    >
+                      <h3 className="text-lg font-semibold">
+                        {service?.bussiness?.businessName || "Unknown Business"}
+                      </h3>
+                      <p>{service?.status || "Unknown Status"}</p>
+                      <p className="text-sm text-gray-500">
+                        Requested on:{" "}
+                        {service?.createdAt
+                          ? new Date(service.createdAt).toLocaleDateString()
+                          : "N/A"}
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <p>No bookings yet.</p>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
