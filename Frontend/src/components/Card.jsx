@@ -15,7 +15,7 @@ const Card = ({ businessList = [] }) => {
     <motion.div
       key={index}
       onClick={() => navigate(`/business/${business._id}`)}
-      className="relative p-5 bg-white rounded-2xl shadow-lg overflow-hidden"
+      className="relative p-5 bg-white dark:bg-gray-200 rounded-2xl shadow-lg overflow-hidden cursor-pointer"
       whileHover={{
         scale: 1.05,
         boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.2)",

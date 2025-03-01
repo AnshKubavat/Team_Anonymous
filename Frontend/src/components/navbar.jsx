@@ -42,10 +42,10 @@ const Navbar = ({ isAuthenticated }) => {
     <nav className="bg-[#FEF6EF] p-4 shadow-lg">
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo */}
-        <div className="text-gray-600 text-xl font-bold flex items-center gap-2">
+        <div className="text-gray-600 text-xl font-bold flex items-center gap-2 cursor-pointer">
           <img
             src={logo}
-            alt="NearbyGo Logo"
+            alt="NearbyGo Logo" 
             onClick={() => navigate("/")}
             className="h-10 w-auto rounded-2xl ml-2"
           />
@@ -110,7 +110,7 @@ const Navbar = ({ isAuthenticated }) => {
         {/* Language Selector */}
         <div className="relative  ">
           <button
-            className="flex items-center text-gray-700 font-medium px-3 py-1 border border-gray-300 rounded-sm bg-white gap-2"
+            className="flex items-center text-gray-700 font-medium px-3 py-1 border cursor-pointer border-gray-300 rounded-sm bg-white gap-2"
             onClick={() => setIsOpenForLanguage(!isOpenForLanguage)}
           >
             {language} <ChevronDown size={18} className="ml-2" />
@@ -140,7 +140,7 @@ const Navbar = ({ isAuthenticated }) => {
 
         <div className="relative hidden  md:flex">
           <button
-            className="flex md:w-54 items-center text-gray-700 font-medium px-3 py-1 border border-gray-300 rounded-sm bg-white gap-2"
+            className="flex md:w-54 items-center cursor-pointer text-gray-700 font-medium px-3 py-1 border border-gray-300 rounded-sm bg-white gap-2"
             onClick={() => setCityDropdown(!cityDropdown)}
           >
             <MapPin size={18} className="text-gray-600" />
@@ -181,7 +181,7 @@ const Navbar = ({ isAuthenticated }) => {
         <div className="relative hidden  md:flex">
           <button
             placeholder="Search"
-            className="flex items-center min-h-8 text-gray-700 font-medium px-3 py-1 border border-gray-300 rounded-sm bg-white gap-2 md:w-64"
+            className="flex items-center min-h-8 text-gray-700 cursor-pointer font-medium px-3 py-1 border border-gray-300 rounded-sm bg-white gap-2 md:w-64"
             onClick={() => setCategoryDropdown(!categoryDropdown)}
           >
             {/* <MapPin size={18} className="text-gray-600" /> */}
