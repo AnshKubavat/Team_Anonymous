@@ -1,17 +1,18 @@
 import { useState } from "react";
 import { FaLock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
-import { useDispatch} from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { loginImg } from "../../assets/assets";
 import { signin } from "../../features/userSlice";
-import { KEY_ACCESS_TOKEN, setItem } from "../../utils/localStorageManager";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { KEY_ACCESS_TOKEN, setItem } from "../../utils/localStorageManager";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -21,11 +22,11 @@ export default function Login() {
         setItem(KEY_ACCESS_TOKEN, result.payload?.message?.token);
         toast.success("Login Successfully");
         navigate("/");
-      } else {       
+      } else {
         toast.error(result.payload?.message);
       }
     } catch (error) {
-      toast.error(error)
+      toast.error(error);
       console.log("Invalid email or password. Please try again.");
     }
   };
@@ -73,7 +74,7 @@ export default function Login() {
                 </span>
               </div>
             </div>
-            
+
             <div className="text-right text-gray-600 text-sm">
               <a href="#" className="hover:underline">
                 Forgot Password?
@@ -84,8 +85,6 @@ export default function Login() {
               Login
             </button>
           </form>
-
-          
 
           <p className="text-center text-gray-600 mt-6">
             Don&apos;t have an account?{" "}
@@ -101,7 +100,7 @@ export default function Login() {
         <div className="hidden md:flex flex-1 items-center justify-center p-12 relative">
           <div className="absolute w-80 h-full bg-[#fbe2cf] rounded-t-full top-20 left-40 right-0 mx-auto z-0"></div>
           <img
-            src="login.png"
+            src={loginImg}
             alt="Laptop Boy"
             className="w-72 h-auto object-cover relative z-10"
           />
