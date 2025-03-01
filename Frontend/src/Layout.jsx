@@ -3,6 +3,7 @@ import Login from "./Pages/Login/Login";
 import Signup from "./Pages/Signup/Signup";
 import Navbar from "./components/Navbar";
 import Category from "./Pages/Category/Category";
+import About from "./Pages/About/About";
 import Home from "./Pages/Home/Home";
 import Footer from "./components/Footer";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,6 +31,7 @@ const Layout = () => {
         <Route path="/category" element={<Category />} />
         <Route path="/" element={<Home />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/about" element={<About />} />
         {!isAuthenticated ? (
           <>
             <Route path="/login" element={<Login />} />
