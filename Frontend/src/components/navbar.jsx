@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCity, setCategory } from "../features/userSlice.js";
 import { getItem } from "../utils/localStorageManager.js";
 import { cities, languages, categories, logo } from "../assets/assets.js";
-import {motion} from "framer-motion";
+import { motion } from "framer-motion";
 
-const Navbar = ({isAuthenticated}) => {
+const Navbar = ({ isAuthenticated }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [cityDropdown, setCityDropdown] = useState(false);
@@ -19,7 +19,9 @@ const Navbar = ({isAuthenticated}) => {
   const language = getItem("language");
   const selectedCategory = getItem("category");
   const { user } = useSelector((state) => state.user);
-  console.log(user);
+
+  const { category } = useSelector((state) => state.user);
+  console.log(category);
 
   const filteredCities = cities.filter((city) =>
     city.toLowerCase().includes(citySearch.toLowerCase())
@@ -244,8 +246,6 @@ const Navbar = ({isAuthenticated}) => {
           </div>
         </div>
       )} */}
-
-
 
       {/* Mobile Menu */}
       {isOpen && (

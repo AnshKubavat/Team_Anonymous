@@ -8,10 +8,10 @@ import {
 
 const initialState = {
   isLoading: false,
-  language: "English",
-  city: "Vallabh Vidyanagar",
+  language: getItem("language") || "English",
+  city: getItem("city") || "Vallabh Vidyanagar",
   isAuthenticated: false,
-  category: "All",
+  category: getItem("category") || "All",
   user: null,
 };
 
