@@ -1,0 +1,1 @@
+e:\Web\Project\FullStack\NearByGo\Fronted\assets\nearbygo_logo.webp
