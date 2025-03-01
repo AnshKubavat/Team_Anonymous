@@ -12,7 +12,8 @@ import businessRouter from "./routes/business.route.js";
 import useAdminRouter from "./routes/admin.route.js";
 import serviceRouter from "./routes/service.route.js";
 import useLocationRouter from "./routes/location.route.js";
-
+import translateRouter from "./routes/translate.route.js";
+import recommendRouter from "./routes/recommend.route.js";
 
 import { authUser } from "./middlewares/auth.middleware.js";
 
@@ -37,7 +38,11 @@ app.use("/admin/api", useAdminRouter);
 
 app.use("/service", authUser, serviceRouter);
 app.use("/location", useLocationRouter);
+// 🔹 Google Translate API Route
+app.use("/translate", translateRouter);
 
+// 🔹 Flask Recommendation API Route
+app.use("/recommend", recommendRouter);
 
 //server start
 app.listen(PORT, () => {

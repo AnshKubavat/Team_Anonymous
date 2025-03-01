@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getItem } from "../../utils/localStorageManager";
 // import Card from "../../components/Card";
@@ -10,6 +10,7 @@ import ad2 from "../../assets/ad2.jpg";
 import ad3 from "../../assets/ad3.png";
 import ad4 from "../../assets/ad4.jpg";
 import axiosClient from "../../utils/axiosClient";
+
 const slides = [
   { id: 1, color: "bg-red-500", image: ad1 },
   { id: 2, color: "bg-blue-500", image: ad2 },
@@ -18,7 +19,10 @@ const slides = [
 ];
 
 const Home = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const currentSlide = useRef(0);
+  const imageRef = useRef(null);
+  const sliderRef = useRef(null); // Local state for rendering
+
   const [businessList, setBusinessList] = useState([]);
   const [isLocationFetched, setIsLocationFetched] = useState(false);
   const [recommendations, setRecommendations] = useState([]);
@@ -78,8 +82,7 @@ const Home = () => {
     if (userId) {
       fetchRecommendations();
     }
-  }, [city, userId, category]); // Fetch businesses & recommendations when city/user changes
-
+  }, [city, category]); // Fetch businesses & recommendations when city/user chan
   useEffect(() => {
     if (businessList.length > 0 && !isLocationFetched) {
        getUserLocationAndCalculateDistances();
@@ -123,15 +126,18 @@ const getUserLocationAndCalculateDistances = () => {
 
 
   useEffect(() => {
-    if (businessList.length > 0 && !isLocationFetched) {
-       getUserLocationAndCalculateDistances();
-      setIsLocationFetched(true);
-    }
-  }, [businessList]);
-
-  useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
+      currentSlide.current = (currentSlide.current + 1) % slides.length;
+
+      // Update the image source directly
+      if (imageRef.current) {
+        imageRef.current.src = slides[currentSlide.current].image;
+      }
+
+      // Update the background color directly
+      if (sliderRef.current) {
+        sliderRef.current.className = `sliderAx mt-2 mb-10 md:mb-20 relative w-full h-96 ${slides[currentSlide.current].color}`;
+      }
     }, 4000);
 
     return () => clearInterval(interval);
@@ -139,15 +145,14 @@ const getUserLocationAndCalculateDistances = () => {
 
   return (
     <div className="bg-[#FEF6EF]">
-      <div
-        className={`sliderAx mt-2 mb-10 md:mb-20 relative w-full h-96 ${slides[currentSlide].color}`}
-      >
-        <img
-          src={`${slides[currentSlide].image}`}
-          className="w-full h-full object-cover "
-          alt=""
-        />
-      </div>
+ <div ref={sliderRef} className={`sliderAx mt-2 mb-10 md:mb-20 relative w-full h-96 ${slides[0].color}`}>
+      <img
+        ref={imageRef}
+        src={slides[0].image}
+        className="w-full h-full object-cover"
+        alt="Ad Slide"
+      />
+    </div>
 
       <div>
         <h1 className="text-xl md:text-4xl font-bold text-left mt-10 md:mt-16 ml-4 md:ml-10">

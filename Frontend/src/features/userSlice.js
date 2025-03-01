@@ -15,6 +15,15 @@ const initialState = {
   user: null,
 };
 
+import { translateText } from "../utils/translateService";
+
+export const translateDynamicData = createAsyncThunk(
+  "user/translateDynamicData",
+  async ({ text, targetLanguage }) => {
+    return await translateText(text, targetLanguage);
+  }
+);
+
 export const signup = createAsyncThunk("user/register", async (body) => {
   try {
     const { data } = await axiosClient.post("/user/register", body);
