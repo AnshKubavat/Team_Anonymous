@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import {useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Webcam from "react-webcam";
 import axiosClient from "../../utils/axiosClient";
@@ -74,21 +74,24 @@ const SellerDashboard = () => {
       description: "Latest smartphone",
       image: "/images/phone.jpg",
       reviews: [{ user: "Sarah", rating: 4, comment: "Good quality!" }],
-    }, {
+    },
+    {
       id: 2,
       name: "Phone",
       price: 800,
       description: "Latest smartphone",
       image: "/images/phone.jpg",
       reviews: [{ user: "Sarah", rating: 4, comment: "Good quality!" }],
-    }, {
+    },
+    {
       id: 2,
       name: "Phone",
       price: 800,
       description: "Latest smartphone",
       image: "/images/phone.jpg",
       reviews: [{ user: "Sarah", rating: 4, comment: "Good quality!" }],
-    }, {
+    },
+    {
       id: 2,
       name: "Phone",
       price: 800,
@@ -129,7 +132,6 @@ const SellerDashboard = () => {
       setNewProduct({ ...newProduct, [name]: value });
     }
   };
-
 
   const handleAddProduct = (e) => {
     e.preventDefault();
@@ -196,9 +198,7 @@ const SellerDashboard = () => {
   const handleUploadClick = () => {
     fileInputRef.current.click();
   };
- 
 
-  
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -208,7 +208,6 @@ const SellerDashboard = () => {
   const closeSidebar = () => {
     setIsOpen(false);
   };
-
 
   const { user } = useSelector((state) => state.user);
   const [business, setBusiness] = useState(null);
@@ -230,7 +229,7 @@ const SellerDashboard = () => {
     try {
       const { data } = await axiosClient.get(`/business/seller`);
       console.log("Fetched Business Data:", data);
-    
+
       if (data.success && data.business) {
         setBusiness(data.business);
       } else {
@@ -241,27 +240,23 @@ const SellerDashboard = () => {
       toast.error("Failed to load business details.");
     }
   };
-  const menuItems = business?.facility === "product"
-    ? [
-      { name: "🏪 My Shop", key: "profile" },
-      { name: "➕ Add New Product", key: "addProduct" },
-      { name: "📦 View All Products", key: "viewProducts" },
-      { name: "⭐ Reviews & Ratings", key: "reviews" }
-    ]
-    : [{ name: "🏪 My Shop", key: "profile" },
-       {name:"👤 Services", key:"services"},
-       { name: "⭐ Reviews & Ratings", key: "reviews" },
-    ];
+  const menuItems =
+    business?.facility === "product"
+      ? [
+          { name: "🏪 My Shop", key: "profile" },
+          { name: "➕ Add New Product", key: "addProduct" },
+          { name: "📦 View All Products", key: "viewProducts" },
+          { name: "⭐ Reviews & Ratings", key: "reviews" },
+        ]
+      : [
+          { name: "🏪 My Shop", key: "profile" },
+          { name: "👤 Services", key: "services" },
+          { name: "⭐ Reviews & Ratings", key: "reviews" },
+        ];
 
-
-//   business?.services.forEach((service, index) => {
-//   console.log(`Service ${index + 1} Owner Name:`, service.owner?.username);
-// });
-
- 
-
-
-
+  //   business?.services.forEach((service, index) => {
+  //   console.log(`Service ${index + 1} Owner Name:`, service.owner?.username);
+  // });
 
   const handleBusinessEdit = () => {
     if (business) {
@@ -281,7 +276,10 @@ const SellerDashboard = () => {
 
   const handleSaveBusinessChanges = async () => {
     try {
-      const { data } = await axiosClient.put(`/business/${business._id}`, editedBusiness);
+      const { data } = await axiosClient.put(
+        `/business/${business._id}`,
+        editedBusiness
+      );
       if (data.success) {
         toast.success("Business details updated successfully!");
         setBusiness(data.updatedBusiness);
@@ -294,7 +292,8 @@ const SellerDashboard = () => {
       toast.error("Failed to update business details.");
     }
   };
-  const style1 = "left-[165px]  text-white text-2xl md:top-[88px] md:left-[215px]";
+  const style1 =
+    "left-[165px]  text-white text-2xl md:top-[88px] md:left-[215px]";
   const style2 = " text-black text-2xl p-[6px]";
   const btnStyle = isOpen ? style1 : style2;
 
@@ -340,66 +339,54 @@ const SellerDashboard = () => {
 
       <div className="w-full max-h-screen mx-auto mt-10  lg:mx-0 md:mt-5  lg:mt-0 p-6">
         {/* Profile */}
-       {selectedSection === "profile" && (
-      <BusinessProfile
-  business={business}
-  user={user}
-  handleBusinessEdit={handleBusinessEdit}
-  handleSaveBusinessChanges={handleSaveBusinessChanges}
-/>
-
-)}
-
+        {selectedSection === "profile" && (
+          <BusinessProfile
+            business={business}
+            user={user}
+            handleBusinessEdit={handleBusinessEdit}
+            handleSaveBusinessChanges={handleSaveBusinessChanges}
+          />
+        )}
 
         {/* Add or Update Product Form */}
         {selectedSection === "addProduct" && (
           <ProductForm
-  editingProduct={editingProduct}
-  newProduct={newProduct}
-  handleInputChange={handleInputChange}
-  handleAddProduct={handleAddProduct}
-  handleUpdateProduct={handleUpdateProduct}
-  openImageModal={openImageModal}
-  showImageModal={showImageModal}
-  handleUploadClick={handleUploadClick}
-  handleFileChange={handleFileChange}
-  handleGenerateAIImage={handleGenerateAIImage}
-  openCamera={openCamera}
-  isCameraOpen={isCameraOpen}
-  webcamRef={webcamRef}
-  capturePhoto={capturePhoto}
-  capturedImage={capturedImage}
-  closeCamera={closeCamera}
-  closeImageModal={closeImageModal}
-  loading={loading}
-/>
-
+            editingProduct={editingProduct}
+            newProduct={newProduct}
+            handleInputChange={handleInputChange}
+            handleAddProduct={handleAddProduct}
+            handleUpdateProduct={handleUpdateProduct}
+            openImageModal={openImageModal}
+            showImageModal={showImageModal}
+            handleFileChange={handleFileChange}
+            handleGenerateAIImage={handleGenerateAIImage}
+            openCamera={openCamera}
+            isCameraOpen={isCameraOpen}
+            webcamRef={webcamRef}
+            capturePhoto={capturePhoto}
+            capturedImage={capturedImage}
+            closeCamera={closeCamera}
+            closeImageModal={closeImageModal}
+            loading={loading}
+          />
         )}
 
         {/* View Products Section */}
         {selectedSection === "viewProducts" && (
           <ProductList
-  products={products}
-  setEditingProduct={setEditingProduct}
-  setSelectedSection={setSelectedSection}
-  setProducts={setProducts}
-/>
-
+            products={products}
+            setEditingProduct={setEditingProduct}
+            setSelectedSection={setSelectedSection}
+            setProducts={setProducts}
+          />
         )}
-        
+
         {/* Reviews Section */}
-        {selectedSection === "reviews" && (
-          <ReviewList products={products} />
+        {selectedSection === "reviews" && <ReviewList products={products} />}
 
-        )}
-
-
-        {selectedSection === "services" && (
-         <ServiceList business={business} />
-        )}
+        {selectedSection === "services" && <ServiceList business={business} />}
       </div>
-      </div>
-
+    </div>
   );
 };
 

@@ -1,15 +1,15 @@
 import React, { useState, useRef } from "react";
 import Webcam from "react-webcam";
+import axiosClient from "../utils/axiosClient";
+import { toast } from "react-toastify";
 
 const ProductForm = ({
   editingProduct,
   newProduct,
   handleInputChange,
-  handleAddProduct,
   handleUpdateProduct,
   openImageModal,
   showImageModal,
-  handleUploadClick,
   handleFileChange,
   handleGenerateAIImage,
   openCamera,
@@ -21,11 +21,37 @@ const ProductForm = ({
   closeImageModal,
   loading,
 }) => {
+  const fileInputRef = useRef(null);
+
+  const handleAddProduct = async (event) => {
+    event.preventDefault();
+    try {
+      const formData = new FormData();
+      formData.append("name", newProduct.name);
+      formData.append("price", newProduct.price);
+      formData.append("description", newProduct.description);
+      if (newProduct.image) {
+        formData.append("image", newProduct.image);
+      }
+
+      const { data } = await axiosClient.post("/business/product", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (data.success) toast.success("Product added successfully");
+      else toast.error("Some error");
+    } catch (error) {
+      console.error("Error adding product:", error.response?.data || error);
+      alert("Failed to add product!");
+    }
+  };
+
   return (
     <div className="text-center md:mt-10 ">
       <h2 className="text-2xl font-bold mb-4">
         {editingProduct ? "✏ Update Product" : "➕ Add New Product"}
       </h2>
+
       <form
         className="grid grid-cols-1 max-w-2xl mx-auto gap-4 bg-gray-100 p-6 rounded-lg shadow-md"
         onSubmit={editingProduct ? handleUpdateProduct : handleAddProduct}
@@ -39,6 +65,7 @@ const ProductForm = ({
           className="p-2 border rounded"
           required
         />
+
         <input
           type="number"
           name="price"
@@ -56,6 +83,7 @@ const ProductForm = ({
         >
           Upload Image
         </button>
+
         <input
           type="text"
           name="description"
@@ -66,6 +94,7 @@ const ProductForm = ({
           placeholder="Description (Optional)"
           className="p-2 border rounded"
         />
+
         <button
           type="submit"
           className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
@@ -80,11 +109,14 @@ const ProductForm = ({
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-xl font-semibold mb-4">Select Image Source</h2>
 
-            {/* Show the product image */}
             {newProduct.image && (
               <div className="mt-4">
                 <img
-                  src={newProduct.image}
+                  src={
+                    typeof newProduct.image === "string"
+                      ? newProduct.image
+                      : URL.createObjectURL(newProduct.image)
+                  }
                   alt="Product Preview"
                   className="w-40 h-40 object-cover rounded-md mx-auto mb-10"
                 />
@@ -94,14 +126,16 @@ const ProductForm = ({
             {!isCameraOpen ? (
               <>
                 <button
-                  onClick={handleUploadClick}
+                  onClick={() => fileInputRef.current.click()}
                   className="block w-full p-2 bg-gray-300 rounded mb-2"
                 >
                   📂 Upload Image
                 </button>
+
                 <input
                   type="file"
                   accept="image/*"
+                  ref={fileInputRef}
                   onChange={handleFileChange}
                   className="hidden"
                 />
@@ -132,6 +166,7 @@ const ProductForm = ({
                       screenshotFormat="image/jpeg"
                       className="w-full h-auto rounded-lg"
                     />
+
                     <button
                       onClick={capturePhoto}
                       className="bg-blue-500 text-white p-2 mt-4 rounded"
@@ -146,6 +181,7 @@ const ProductForm = ({
                       alt="Captured"
                       className="w-full h-auto rounded-lg"
                     />
+
                     <div className="flex space-x-4 mt-4">
                       <button
                         onClick={closeCamera}
@@ -167,6 +203,7 @@ const ProductForm = ({
               >
                 ✖ Close
               </button>
+
               <button
                 onClick={closeImageModal}
                 className=" text-green-400 cursor-pointer"
