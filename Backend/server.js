@@ -7,6 +7,8 @@ import cookieParser from "cookie-parser";
 import connectDB from "./DB/connectDB.js";
 import connectCloudinary from "./config/cloudinary.js";
 import userRouter from "./routes/user.route.js";
+import useCityRouter from "./routes/useCity.route.js";
+
 
 const PORT = process.env.PORT || 3000;
 
@@ -24,6 +26,8 @@ app.use(cookieParser());
 
 //All routes
 app.use("/user", userRouter);
+app.use("/api", useCityRouter);
+
 
 
 //server start
