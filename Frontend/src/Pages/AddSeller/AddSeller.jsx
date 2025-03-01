@@ -2,6 +2,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import Select from "react-select";
+import locales from "../../locales/addseller.local.json";
 import {
   FaMapMarkerAlt,
   FaBuilding,
@@ -12,6 +13,7 @@ import {
 import axiosClient from "../../utils/axiosClient";
 import { useNavigate } from "react-router-dom";
 import { categories, cities } from "../../assets/assets";
+import { useSelector } from "react-redux";
 
 export default function AddSeller() {
   const [businessName, setBusinessName] = useState("");
@@ -103,6 +105,8 @@ export default function AddSeller() {
       console.log(error);
     }
   };
+  const { language } = useSelector((state) => state.user);
+  const t = locales[language];
 
   return (
     <div className="flex justify-center py-10 items-center min-h-screen bg-[#FEF6EF]">
