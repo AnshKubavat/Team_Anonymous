@@ -179,3 +179,68 @@ export const getBusiness = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error", success: false });
   }
 };
+
+export const updateBusiness = async (req, res) => {
+  try {
+    const { businessId } = req.params;
+    const { businessName, city, categoryOfBusiness, description } = req.body;
+
+    let updatedFields = {
+      businessName,
+      city,
+      description,
+      categoryOfBusiness,
+    };
+
+    const updatedBusiness = await Business.findOneAndUpdate(
+      { _id: businessId, isDeleted: false },
+      { $set: updatedFields },
+      { new: true }
+    );
+
+    if (!updatedBusiness) {
+      return res
+        .status(404)
+        .json({ message: "Business not found or deleted", success: false });
+    }
+
+    res.status(200).json({ business: updatedBusiness, success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error", success: false });
+  }
+};
+
+export const deleteBusiness = async (req, res) => {
+  try {
+    const { businessId } = req.params;
+
+    const business = await Business.findById(businessId).populate("seller");
+
+    if (!business) {
+      return res
+        .status(404)
+        .json({ message: "Business not found", success: false });
+    }
+
+    if (business.seller) {
+      business.seller.role = "user";
+      await business.seller.save();
+    }
+
+    await business.save();
+
+    await Product.updateMany(
+      { owner: businessId },
+      { $set: { isDeleted: true } }
+    );
+
+    res.status(200).json({
+      message: "Business and related products soft deleted successfully",
+      success: true,
+    });
+  } catch (error) {
+    console.error("Error deleting business:", error);
+    res.status(500).json({ message: "Internal Server Error", success: false });
+  }
+};
