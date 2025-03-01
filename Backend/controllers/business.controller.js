@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { v2 as cloudinary } from "cloudinary";
 import Business from "../models/Business.js";
 
@@ -65,5 +66,116 @@ export const createBusiness = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message, success: false });
+  }
+};
+
+export const getOwnBusiness = async (req, res) => {
+  try {
+    const user = req.user;
+
+    if (!user?._id) {
+      return res
+        .status(400)
+        .json({ message: "User not found", success: false });
+    }
+
+    const business = await Business.aggregate([
+      {
+        $match: {
+          seller: user._id,
+          isDelete: { $ne: true }, // Ensure isDelete is not true
+        },
+      },
+      {
+        $lookup: {
+          from: "reviews",
+          localField: "reviews",
+          foreignField: "_id",
+          as: "reviews",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "seller",
+          foreignField: "_id",
+          as: "seller",
+        },
+      },
+      { $unwind: { path: "$seller", preserveNullAndEmptyArrays: true } },
+
+      // Exclude password from the seller
+      {
+        $project: {
+          "seller.password": 0, // Exclude password field
+        },
+      },
+    ]);
+
+    if (!business.length) {
+      return res
+        .status(404)
+        .json({ message: "Business not found", success: false });
+    }
+
+    return res.status(200).json({ business: business[0], success: true });
+  } catch (error) {
+    console.error("Error fetching business:", error);
+    res.status(500).json({ message: "Internal Server Error", success: false });
+  }
+};
+
+export const getBusiness = async (req, res) => {
+  try {
+    const { businessId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(businessId)) {
+      return res
+        .status(400)
+        .json({ message: "Invalid Business ID", success: false });
+    }
+
+    const business = await Business.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(businessId),
+          isDelete: { $ne: true }, // Ensure isDelete is not true
+        },
+      },
+      {
+        $lookup: {
+          from: "reviews",
+          localField: "reviews",
+          foreignField: "_id",
+          as: "reviews",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "seller",
+          foreignField: "_id",
+          as: "seller",
+        },
+      },
+      { $unwind: { path: "$seller", preserveNullAndEmptyArrays: true } },
+
+      {
+        $project: {
+          "seller.password": 0,
+        },
+      },
+    ]);
+
+    if (!business.length) {
+      return res
+        .status(404)
+        .json({ message: "Business not found", success: false });
+    }
+
+    return res.status(200).json({ business: business[0], success: true });
+  } catch (error) {
+    console.error("Error fetching business:", error);
+    res.status(500).json({ message: "Internal Server Error", success: false });
   }
 };
