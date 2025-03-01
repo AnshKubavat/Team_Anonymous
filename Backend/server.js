@@ -40,3 +40,22 @@ app.listen(PORT, () => {
   connectCloudinary();
   console.log(`Server running on port ${PORT}`);
 });
+
+app.post("/recommend", async (req, res) => {
+  try {
+    const { user_id } = req.body;
+
+    if (!user_id) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+    console.log(`User ${user_id}`)
+
+    // 🔹 Call Flask API (Flask runs on port 3001)
+    const response = await axios.post(`${process.env.FLASK_URL}/recommend`, { user_id }, { headers: { "Content-Type": "application/json" } });
+    console.log(response.data);
+    return res.json(response.data); // Send Flask response to frontend
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Failed to fetch recommendations" });
+  }
+});

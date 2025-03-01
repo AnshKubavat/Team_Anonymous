@@ -4,12 +4,11 @@ import { getItem } from "../../utils/localStorageManager";
 // import Card from "../../components/Card";
 import { fetchAllSeller } from "../../features/businessSlice";
 import Card from "../../components/Card";
-import image from "../../assets/image.jpg";
-
 import ad1 from "../../assets/ad1.jpg";
 import ad2 from "../../assets/ad2.jpg";
 import ad3 from "../../assets/ad3.png";
 import ad4 from "../../assets/ad4.jpg";
+import axiosClient from "../../utils/axiosClient";
 const slides = [
   { id: 1, color: "bg-red-500", image: ad1 },
   { id: 2, color: "bg-blue-500", image: ad2 },
@@ -21,6 +20,7 @@ const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [businessList, setBusinessList] = useState([]);
   const [isLocationFetched, setIsLocationFetched] = useState(false);
+  const [recommendations, setRecommendations] = useState([]);
 
   const { user } = useSelector((state) => state.user);
   const { language } = useSelector((state) => state.user);
@@ -43,6 +43,54 @@ const Home = () => {
       console.error("Error in fetchBusinesses:", error);
     }
   };
+  const userId = user?._id;
+
+  // const t = locales[language];
+  // console.log(t);
+
+  
+
+  const fetchRecommendations = async () => {
+    try {
+      if (!userId) return;
+      console.log("Fetching recommendations for user:", userId);
+
+      const response = await axiosClient.post("/recommend", {
+        user_id: userId,
+      });
+
+      console.log("API Response:", response.data); 
+
+      if (response.data?.length > 0) {
+        setRecommendations(response.data);
+      } else {
+        setRecommendations([]);
+        console.log("No recommendations found"); 
+      }
+    } catch (error) {
+      console.log(error);
+      console.error("Error fetching recommendations:", error); 
+    }
+  };
+
+  useEffect(() => {
+    if (city) {
+      fetchBusinesses();
+    }
+    if (userId) {
+      fetchRecommendations();
+    }
+    // if(category){
+    //   fetchBusinessesByCategory();
+    // }
+  }, [city, userId]); // Fetch businesses & recommendations when city/user changes
+
+  useEffect(() => {
+    if (businessList.length > 0 && !isLocationFetched) {
+      // getUserLocationAndCalculateDistances();
+      setIsLocationFetched(true);
+    }
+  }, [businessList]);
 
   useEffect(() => {
     if (city) {
@@ -57,48 +105,7 @@ const Home = () => {
     }
   }, [businessList]);
 
-  const dummyBusinessList = [
-    {
-      _id: "1",
-      businessName: "Sunrise Cafe",
-      categoryOfBusiness: "Restaurant",
-      city: "Vallabh Vidyanagar",
-      distance: "1.2 km",
-      image: image,
-    },
-    {
-      _id: "2",
-      businessName: "Tech Hub",
-      categoryOfBusiness: "Electronics Store",
-      city: "Vallabh Vidyanagar",
-      distance: "3.5 km",
-      image: image,
-    },
-    {
-      _id: "3",
-      businessName: "Green Earth",
-      categoryOfBusiness: "Organic Market",
-      city: "Vallabh Vidyanagar",
-      distance: "2.1 km",
-      image: image,
-    },
-    {
-      _id: "4",
-      businessName: "Fit Life Gym",
-      categoryOfBusiness: "Fitness Center",
-      city: "Vallabh Vidyanagar",
-      distance: "4.8 km",
-      image: image,
-    },
-    {
-      _id: "5",
-      businessName: "Dream Salon",
-      categoryOfBusiness: "Beauty & Spa",
-      city: "Vallabh Vidyanagar",
-      distance: "3.0 km",
-      image: image,
-    },
-  ];
+ 
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -127,9 +134,9 @@ const Home = () => {
         <div>
           <section className="dark:bg-dark mt-4 mx-4 md:mx-10 pb-10 md:pb-20">
             <div className="container mx-auto">
-              {dummyBusinessList.length > 0 ? (
+              {recommendations.length > 0 ? (
                 <div className="grid grid-cols-1  md:grid-cols-3 lg:grid-cols-4 gap-6">
-                  <Card businessList={dummyBusinessList} />
+                  <Card businessList={recommendations} />
                 </div>
               ) : (
                 <p className="text-center text-gray-500">no record found</p>

@@ -102,24 +102,29 @@ export const updateProfile = async (req, res) => {
       .json({ message: "Internal Server Error", success: false });
   }
 };
-
 export const addHistory = async (req, res) => {
   try {
     const { user } = req;
     const { category } = req.body;
 
     if (!user) {
-      return res
-        .status(404)
-        .json({ message: "User not found", success: false });
+      return res.status(404).json({ message: "User not found", success: false });
     }
-    if (category) user.history.push(category);
+
+    if (category) {
+      // Ensure the history array does not exceed 20 entries
+      if (user.history.length >= 20) {
+        user.history.shift(); 
+      }
+
+      user.history.push(category); // Add the new category
+    }
 
     await user.save();
 
-    return res.status(200).json({ message: "history added", success: true });
+    return res.status(200).json({ message: "History updated", success: true });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).json({ message: error.message, success: false });
   }
 };
