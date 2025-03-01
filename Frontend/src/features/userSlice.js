@@ -11,7 +11,7 @@ const initialState = {
   language: "English",
   city: "Vallabh Vidyanagar",
   isAuthenticated: false,
-  category:"All",
+  category: "All",
   user: null,
 };
 
