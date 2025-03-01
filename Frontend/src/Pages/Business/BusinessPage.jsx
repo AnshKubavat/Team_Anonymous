@@ -14,7 +14,23 @@ const BusinessPage = () => {
   console.log(business);
   useEffect(() => {
     fetchSellerDetail();
+    fetchReviews(); // Fetch reviews when component mounts
   }, []);
+  
+  const fetchReviews = async () => {
+    try {
+      const { data } = await axiosClient.get(`/review/${id}`); // Adjust endpoint as per your backend
+      if (data.success) {
+        setReviews(data.reviews);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message || "Failed to load reviews");
+    }
+  };
+  
 
   const fetchSellerDetail = async () => {
     try {
@@ -53,27 +69,24 @@ const BusinessPage = () => {
   ]);
   const [reviews, setReviews] = useState([]);
 
-  const handleDeleteBusiness = () => {
-    alert("Business deleted");
-  };
-
-  const handleUpdateBusiness = () => {
-    alert("Business updated");
-  };
-
-  const handleDeleteReview = (id) => {
-    setReviews(reviews.filter((review) => review.id !== id));
-  };
+  // const handleDeleteReview = (id) => {
+  //   setReviews(reviews.filter((review) => review.id !== id));
+  // };
 
   const handleAddReview = async (newReview) => {
-    const { data } = await axiosClient.post(
-      `/review/${business._id}/add`,
-      newReview
-    );
-    console.log(data);
-
-    setReviews([...reviews, newReview]);
+    try {
+      const { data } = await axiosClient.post(`/review/${business._id}/add`, newReview);
+      if (data.success) {
+        setReviews([...reviews, data.review]); // Add the saved review from backend
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to add review");
+    }
   };
+  
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -162,13 +175,12 @@ const BusinessPage = () => {
           ) : activeTab === "description" ? (
             <BusinessDescription
               business={business}
-              onDelete={handleDeleteBusiness}
-              onUpdate={handleUpdateBusiness}
+         
             />
           ) : activeTab === "review" ? (
             <ReviewSection
-              reviews={reviews}
-              onDeleteReview={handleDeleteReview}
+              reviews={business.reviews}
+            
               onAddReview={handleAddReview}
             />
           ) : null}

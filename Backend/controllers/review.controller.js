@@ -5,6 +5,8 @@ import User from "../models/User.js";
 export const addReview = async (req, res) => {
   try {
     const { comment, rating } = req.body;
+    console.log(req.body);
+    
     const { businessId } = req.params;
     const user = req.user;
 

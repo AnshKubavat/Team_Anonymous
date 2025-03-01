@@ -5,6 +5,11 @@ export const createService = async (req, res) => {
   try {
     const { businessId } = req.body;
     const user = req.user;
+    if (user.role === "seller") {
+      return res
+        .status(400)
+        .json({ message: "Seller has not right", success: false });
+    }
 
     if (!businessId) {
       return res
@@ -44,14 +49,29 @@ export const updateServiceStatus = async (req, res) => {
   try {
     const { status } = req.body;
     const { serviceId } = req.params;
+    const { role } = req.user;
 
-    const allowedTransitions = {
+    // 🔹 Seller-Side Allowed Transitions
+    const sellerAllowedTransitions = {
       pending: ["approved", "rejected"],
       approved: ["progress", "rejected"],
       progress: ["completed"],
       completed: ["progress"],
       rejected: [],
     };
+
+    // 🔹 User-Side Allowed Transitions
+    const userAllowedTransitions = {
+      pending: [],
+      approved: ["completed"],
+      progress: ["completed"],
+      completed: ["progress"],
+      rejected: [],
+    };
+
+    // 🔹 Sellers use sellerAllowedTransitions, users use userAllowedTransitions
+    const allowedTransitions =
+      role === "seller" ? sellerAllowedTransitions : userAllowedTransitions;
 
     const service = await Service.findById(serviceId);
     if (!service || service.isDeleted)
@@ -60,13 +80,16 @@ export const updateServiceStatus = async (req, res) => {
         .json({ message: "Service not found", success: false });
 
     const previousStatus = service.status;
-    if (!allowedTransitions[previousStatus].includes(status)) {
+
+    // 🔹 Ensure the requested transition is valid
+    if (!allowedTransitions[previousStatus]?.includes(status)) {
       return res.status(400).json({
         message: `Invalid status transition from '${previousStatus}' to '${status}'`,
         success: false,
       });
     }
 
+    // 🔹 Update the service status
     service.status = status;
     await service.save();
     res.status(200).json({ message: { service }, success: true });

@@ -47,7 +47,7 @@ const BusinessDescription = ({ business }) => {
       whileHover={{ scale: 1.05 }}
     >
       <img
-        src={business.image}
+        src={business.image || "../../assets/userlogo.jpg"}
         alt={business.name}
         className="md:w-64 md:h-64 w-48 h-48 mx-auto rounded-2xl mt-3 object-cover"
       />

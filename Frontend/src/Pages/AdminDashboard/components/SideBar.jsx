@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const SideBar = () => {
-  const menu = ["Dashboard", "All Businesses","Deleted Businesses","All Contacts"];
+  const menu = [ "All Businesses","Deleted Businesses","All Contacts"];
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleSidebar = () => {
