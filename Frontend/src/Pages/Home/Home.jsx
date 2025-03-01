@@ -111,7 +111,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div>
+    <div className="bg-[#FEF6EF]">
       <div
         className={`sliderAx mt-2 mb-10 md:mb-20 relative w-full h-96 ${slides[currentSlide].color}`}
       >
