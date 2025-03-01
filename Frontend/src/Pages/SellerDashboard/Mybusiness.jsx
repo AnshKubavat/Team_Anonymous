@@ -337,7 +337,7 @@ const SellerDashboard = () => {
         </div>
       </div>
 
-      <div className="w-full max-h-screen mx-auto mt-10  lg:mx-0 md:mt-5  lg:mt-0 p-6">
+      <div className="w-full max-h-screen mx-auto mt-10 overflow-y-auto  lg:mx-0 md:mt-5  lg:mt-0 p-6">
         {/* Profile */}
         {selectedSection === "profile" && (
           <BusinessProfile
@@ -382,9 +382,9 @@ const SellerDashboard = () => {
         )}
 
         {/* Reviews Section */}
-        {selectedSection === "reviews" && <ReviewList products={products} />}
+        {selectedSection === "reviews" && <ReviewList business={business} />}
 
-        {selectedSection === "services" && <ServiceList business={business} />}
+        {selectedSection === "services" && <ServiceList business={business} userRole={"seller"} />}
       </div>
     </div>
   );
