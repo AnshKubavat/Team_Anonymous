@@ -6,6 +6,7 @@ import {
   getOwnBusiness,
   getBusiness,
   updateBusiness,
+  deleteBusiness,
 } from "../controllers/business.controller.js";
 import {
   addProduct,
@@ -19,7 +20,7 @@ import { isOwnProduct } from "../middlewares/isOwnProduct.middleware.js";
 router.post("/", upload.single("image"), createBusiness);
 router.get("/seller", isSeller, getOwnBusiness);
 router.put("/:businessId", isSeller, updateBusiness);
-
+router.delete("/:businessId", isSeller, deleteBusiness);
 
 router.get("/:businessId", getBusiness);
 

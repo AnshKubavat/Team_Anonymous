@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { v2 as cloudinary } from "cloudinary";
 import Business from "../models/Business.js";
+import Product from "../models/Product.js";
 
 export const createBusiness = async (req, res) => {
   try {
@@ -271,18 +272,23 @@ export const deleteBusiness = async (req, res) => {
     const business = await Business.findById(businessId).populate("seller");
 
     if (!business) {
-      return res
-        .status(404)
-        .json({ message: "Business not found", success: false });
+      return res.status(404).json({
+        message: "Business not found",
+        success: false,
+      });
     }
 
+    // Soft delete the business
+    business.isDeleted = true;
+    await business.save();
+
+    // If the seller exists, downgrade role to "user"
     if (business.seller) {
       business.seller.role = "user";
       await business.seller.save();
     }
 
-    await business.save();
-
+    // Soft delete all related products
     await Product.updateMany(
       { owner: businessId },
       { $set: { isDeleted: true } }
@@ -294,6 +300,10 @@ export const deleteBusiness = async (req, res) => {
     });
   } catch (error) {
     console.error("Error deleting business:", error);
-    res.status(500).json({ message: "Internal Server Error", success: false });
+    res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
   }
 };
+
