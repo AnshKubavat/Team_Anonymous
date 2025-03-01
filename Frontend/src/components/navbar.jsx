@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Menu, Search, ChevronDown, MapPin, User } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setCity,setCategory } from "../features/userSlice.js";
-import { getItem } from "../utils/localStorageManager";
+import { setCity, setCategory } from "../features/userSlice.js";
+import { getItem } from "../utils/localStorageManager.js";
+import { cities, languages, categories, logo } from "../assets/assets.js";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -19,37 +20,6 @@ const Navbar = () => {
   const { user } = useSelector((state) => state.user);
   console.log(user);
 
-  const languages = ["English", "Hindi", "Gujarati"];
-
- 
-
-  const cities = [
-    "Anand",
-    "Ahmedabad",
-    "Rajkot",
-    "Vallabh Vidyanagar",
-    "Vadodara",
-  ];
-
-  const categories = [
-    "All",
-    "Restaurants",
-    "Stationary Shop",
-    "Cobbler",
-    "Milkman",
-    "Carpenter",
-    "Blacksmith",
-    "Flower Shop",
-    "Laundry",
-    "Electrician",
-    "Plumber",
-    "Salon & Barber",
-    "Grocery Store",
-    "Bakery",
-    "Tailor",
-    "Mechanic",
-  ];
-
   const filteredCities = cities.filter((city) =>
     city.toLowerCase().includes(citySearch.toLowerCase())
   );
@@ -63,7 +33,7 @@ const Navbar = () => {
         {/* Logo */}
         <div className="text-gray-600 text-xl font-bold flex items-center gap-2">
           <img
-            src="../../assets/nearbygo_logo.webp"
+            src={logo}
             alt="NearbyGo Logo"
             onClick={() => navigate("/")}
             className="h-10 w-auto rounded-2xl ml-2"
@@ -140,7 +110,6 @@ const Navbar = () => {
                 <div
                   key={index}
                   className="p-2 hover:bg-[#FCE2CE] cursor-pointer text-gray-700"
-                  
                 >
                   {lang}
                 </div>
@@ -157,7 +126,7 @@ const Navbar = () => {
             onClick={() => setCityDropdown(!cityDropdown)}
           >
             <MapPin size={18} className="text-gray-600" />
-             {selectedCity}
+            {selectedCity}
             <ChevronDown size={18} className="absolute right-3" />
           </button>
           {cityDropdown && (
@@ -232,9 +201,7 @@ const Navbar = () => {
         </div>
 
         {/* Profile or Login Button */}
-        <div className="lg:flex">
-         
-        </div>
+        <div className="lg:flex"></div>
 
         {/* Mobile Menu Button */}
         <button

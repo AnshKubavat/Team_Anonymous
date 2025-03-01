@@ -2,8 +2,8 @@ import logo from "./nearbygo_logo.webp";
 import userlogo from "./userlogo.jpg";
 import loginImg from "./login.png";
 import signupLogo from "./signup.png";
-import Slider_1 from "./Slider_1.png";
-import store from "store.png";
+// import Slider_1 from "./Slider-1.png";
+import store from "./store.png";
 
 const cities = [
   "Anand",
@@ -40,6 +40,6 @@ export {
   languages,
   loginImg,
   signupLogo,
-  Slider_1,
+  // Slider_1,
   store,
 };
