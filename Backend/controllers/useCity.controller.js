@@ -64,13 +64,15 @@ export const fetchSeller = async (req, res) => {
 export const fetchCategoryOfBusiness = async (req, res) => {
   try {
     const { cityname, category } = req.params;
+    console.log(cityname, category);
+    
 
     const matchCondition = {
       city: cityname,
       isDeleted: false,
     };
 
-    if (category !== "all") {
+    if (category !== "All") {
       matchCondition.categoryOfBusiness = category;
     }
 

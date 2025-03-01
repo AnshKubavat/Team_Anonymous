@@ -4,12 +4,12 @@ import { getItem } from "../../utils/localStorageManager";
 // import Card from "../../components/Card";
 import { fetchAllSeller } from "../../features/businessSlice";
 import Card from "../../components/Card";
-import image from "../../assets/image.jpg"
+import image from "../../assets/image.jpg";
 
-import ad1 from "../../assets/ad1.jpg"
-import ad2 from "../../assets/ad2.jpg"
-import ad3 from "../../assets/ad3.png"
-import ad4 from "../../assets/ad4.jpg"
+import ad1 from "../../assets/ad1.jpg";
+import ad2 from "../../assets/ad2.jpg";
+import ad3 from "../../assets/ad3.png";
+import ad4 from "../../assets/ad4.jpg";
 const slides = [
   { id: 1, color: "bg-red-500", image: ad1 },
   { id: 2, color: "bg-blue-500", image: ad2 },
@@ -32,7 +32,7 @@ const Home = () => {
 
   const fetchBusinesses = async () => {
     try {
-      const result = await dispatch(fetchAllSeller(city, category));
+      const result = await dispatch(fetchAllSeller({ city, category }));
       if (result.payload?.success) {
         setBusinessList(result.payload?.message?.businesses);
       } else {
@@ -100,8 +100,6 @@ const Home = () => {
     },
   ];
 
-
-
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
@@ -127,7 +125,6 @@ const Home = () => {
           Recommended for you
         </h1>
         <div>
-
           <section className="dark:bg-dark mt-4 mx-4 md:mx-10 pb-10 md:pb-20">
             <div className="container mx-auto">
               {dummyBusinessList.length > 0 ? (
@@ -135,9 +132,7 @@ const Home = () => {
                   <Card businessList={dummyBusinessList} />
                 </div>
               ) : (
-                <p className="text-center text-gray-500">
-                  no record found
-                </p>
+                <p className="text-center text-gray-500">no record found</p>
               )}
             </div>
           </section>

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchProfile, logout, updateProfile } from "../../features/userSlice";
 import { toast } from "react-toastify";
+import { removeItem } from "../../utils/localStorageManager";
 const ProfilePage = () => {
   const { user } = useSelector((state) => state.user);
   const [profileImage, setProfileImage] = useState(false);
@@ -11,7 +12,7 @@ const ProfilePage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-  const [role , setRole] = useState("user");
+  const [role, setRole] = useState("user");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -53,7 +54,7 @@ const ProfilePage = () => {
   ]);
 
   const becomeaSeller = () => {
-    navigate("/sellersignup");
+    navigate("/becomeaseller");
   };
 
   const handleUpdateProfile = async (e) => {
@@ -82,7 +83,10 @@ const ProfilePage = () => {
       const result = await dispatch(logout());
       if (result.payload?.success) {
         toast.success(result.payload?.message);
-        navigate("/");
+        removeItem("city");
+        removeItem("language");
+        removeItem("category");
+        navigate("/login");
       } else {
         toast.error("Please try again");
       }
@@ -91,10 +95,8 @@ const ProfilePage = () => {
     }
   };
 
-  const handleDeleteReview = () => {
-    
-  }
- 
+  const handleDeleteReview = () => {};
+
   return (
     <div className="min-h-screen px-2 py-10 flex justify-center items-center">
       <div className="w-full max-w-3xl bg-white rounded-sm border border-gray-200 overflow-hidden">
@@ -181,13 +183,15 @@ const ProfilePage = () => {
                 <label className="block text-sm font-medium text-gray-700">
                   Email
                 </label>
-                {<input
-                  type="email"
-                  value={tempEmail}
-                  onChange={(e) => setTempEmail(e.target.value)}
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  disabled
-                />}
+                {
+                  <input
+                    type="email"
+                    value={tempEmail}
+                    onChange={(e) => setTempEmail(e.target.value)}
+                    className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    disabled
+                  />
+                }
               </div>
             </div>
           </div>
@@ -213,17 +217,17 @@ const ProfilePage = () => {
                   className="p-4 bg-white rounded-lg shadow-md mb-3"
                 >
                   <div className="md:flex md:justify-between">
-                  <h1 className="text-lg m-1 font-semibold text-gray-800">
-                    {review.title}
-                  </h1>
-                  <span>
-                    <button
-                      onClick={handleDeleteReview}
-                      className="bg-red-400 m-1 text-white px-4 py-2 rounded-sm font-base shadow-md hover:bg-red-600 transition md:text-base"
-                    >
-                      Delete
-                    </button>
-                  </span>
+                    <h1 className="text-lg m-1 font-semibold text-gray-800">
+                      {review.title}
+                    </h1>
+                    <span>
+                      <button
+                        onClick={handleDeleteReview}
+                        className="bg-red-400 m-1 text-white px-4 py-2 rounded-sm font-base shadow-md hover:bg-red-600 transition md:text-base"
+                      >
+                        Delete
+                      </button>
+                    </span>
                   </div>
                   <p className="text-gray-600">{review.content}</p>
                   <p className="text-sm text-gray-500 mt-2">
