@@ -1,13 +1,35 @@
 import { useState } from "react";
 import { FaLock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import { loginImg } from "../../assets/assets";
+import { signin } from "../../features/userSlice";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { KEY_ACCESS_TOKEN, setItem } from "../../utils/localStorageManager";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const result = await dispatch(signin({ email, password }));
+      if (result.payload?.success) {
+        setItem(KEY_ACCESS_TOKEN, result.payload?.message?.token);
+        toast.success("Login Successfully");
+        navigate("/");
+      } else {
+        toast.error(result.payload?.message);
+      }
+    } catch (error) {
+      toast.error(error);
+      console.log("Invalid email or password. Please try again.");
+    }
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#FAF6F3] p-4">
@@ -18,7 +40,7 @@ export default function Login() {
             Welcome Back!!
           </h2>
 
-          <form className="space-y-6" >
+          <form className="space-y-6" onSubmit={handleLogin}>
             <div>
               <label className="block text-gray-700 mb-2">Email</label>
               <div className="relative">
@@ -52,7 +74,7 @@ export default function Login() {
                 </span>
               </div>
             </div>
-            
+
             <div className="text-right text-gray-600 text-sm">
               <a href="#" className="hover:underline">
                 Forgot Password?
@@ -63,8 +85,6 @@ export default function Login() {
               Login
             </button>
           </form>
-
-          
 
           <p className="text-center text-gray-600 mt-6">
             Don&apos;t have an account?{" "}
@@ -80,7 +100,7 @@ export default function Login() {
         <div className="hidden md:flex flex-1 items-center justify-center p-12 relative">
           <div className="absolute w-80 h-full bg-[#fbe2cf] rounded-t-full top-20 left-40 right-0 mx-auto z-0"></div>
           <img
-            src="login.png"
+            src={loginImg}
             alt="Laptop Boy"
             className="w-72 h-auto object-cover relative z-10"
           />

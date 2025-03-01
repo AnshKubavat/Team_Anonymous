@@ -1,14 +1,44 @@
 import { useState } from "react";
 import { MdEmail } from "react-icons/md";
 import { FaUser, FaLock } from "react-icons/fa";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import { signupLogo } from "../../assets/assets";
+import { useDispatch } from "react-redux";
+import { signup } from "../../features/userSlice";
 
 export default function Signup() {
   const [username, setusername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
- 
+  const dispatch = useDispatch();
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const result = await dispatch(
+        signup({
+          username,
+          email,
+          password,
+        })
+      );
+
+      if (result.payload?.success) {
+        setItem(KEY_ACCESS_TOKEN, result.payload?.message?.token);
+        toast.success("Registerd Successfully");
+        navigate("/");
+      } else {
+        setError(result.payload?.message || "Signup failed. Please try again.");
+        toast.error(error);
+      }
+    } catch (error) {
+      console.log("Error in signup submit", e);
+      setError("Failed to sign up. Please try again.");
+    }
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#fdf5ee] p-6">
       <div className="flex w-full max-w-4xl bg-white shadow-lg rounded-2xl overflow-hidden p-10">
@@ -16,7 +46,7 @@ export default function Signup() {
           <div className="absolute w-80 h-full bg-[#fbe2cf] rounded-t-full top-0 left-0 right-0 mx-auto z-0"></div>
           {/* Illustration */}
           <img
-            src="signup.png"
+            src={signupLogo}
             alt="Illustration"
             className="relative w-72 h-auto z-10"
           />
@@ -27,7 +57,7 @@ export default function Signup() {
           <h2 className="text-2xl font-bold text-gray-800 mb-6">
             Create Account
           </h2>
-          <form className="space-y-5" >
+          <form className="space-y-5" onSubmit={handleSubmit}>
             <div>
               <label className="block text-gray-600 mb-2">Username</label>
               <div className="relative">
@@ -83,7 +113,6 @@ export default function Signup() {
               Create Account
             </button>
           </form>
-          
 
           <p className="text-center text-gray-500 mt-5">
             Already have an account?{" "}
