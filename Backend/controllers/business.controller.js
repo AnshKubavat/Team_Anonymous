@@ -75,9 +75,7 @@ export const getOwnBusiness = async (req, res) => {
     const user = req.user;
 
     if (!user?._id) {
-      return res
-        .status(400)
-        .json({ message: "User not found", success: false });
+      return res.status(400).json({ message: "User not found", success: false });
     }
 
     const business = await Business.aggregate([
@@ -156,20 +154,71 @@ export const getOwnBusiness = async (req, res) => {
         },
       },
 
-      // Exclude password from the seller & service owner
+      // ✅ Populate products associated with the business
+      {
+        $lookup: {
+          from: "products",
+          localField: "_id",
+          foreignField: "business",
+          as: "products",
+        },
+      },
+
+      // ✅ Populate owner details inside each product
+      {
+        $lookup: {
+          from: "users",
+          localField: "products.owner",
+          foreignField: "_id",
+          as: "productOwners",
+        },
+      },
+
+      // ✅ Merge owner details into each product
+      {
+        $addFields: {
+          products: {
+            $map: {
+              input: "$products",
+              as: "product",
+              in: {
+                $mergeObjects: [
+                  "$$product",
+                  {
+                    owner: {
+                      $arrayElemAt: [
+                        {
+                          $filter: {
+                            input: "$productOwners",
+                            as: "owner",
+                            cond: { $eq: ["$$owner._id", "$$product.owner"] },
+                          },
+                        },
+                        0,
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+
+      // Exclude password from the seller, service owner, and product owner
       {
         $project: {
           "seller.password": 0,
-          "services.owner.password": 0, // Exclude owner password
+          "services.owner.password": 0, // Exclude service owner password
+          "products.owner.password": 0, // Exclude product owner password
           serviceOwners: 0, // Remove the temporary field
+          productOwners: 0, // Remove the temporary field
         },
       },
     ]);
 
     if (!business.length) {
-      return res
-        .status(404)
-        .json({ message: "Business not found", success: false });
+      return res.status(404).json({ message: "Business not found", success: false });
     }
 
     return res.status(200).json({ business: business[0], success: true });
@@ -178,6 +227,7 @@ export const getOwnBusiness = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error", success: false });
   }
 };
+
 
 export const getBusiness = async (req, res) => {
   try {

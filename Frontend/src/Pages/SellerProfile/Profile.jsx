@@ -243,7 +243,7 @@ const ProfilePage = () => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         className="bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded"
-                        // onClick={() => handleDeleteReview(review.id)}
+                        onClick={() => handleDeleteReview(review._id)}
                       >
                         Delete
                       </motion.button>
