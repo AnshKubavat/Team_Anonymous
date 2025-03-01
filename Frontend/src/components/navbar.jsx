@@ -2,10 +2,11 @@ import { useEffect, useState,useRef  } from "react";
 import { Menu, Search, ChevronDown, MapPin, User } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setCity, setCategory, setLanguage } from "../features/userSlice.js";
+import { setCity, setCategory, setLanguage, setUser } from "../features/userSlice.js";
 import { getItem, setItem } from "../utils/localStorageManager.js";
 import { cities, languages, categories, logo } from "../assets/assets.js";
 import { motion } from "framer-motion";
+import { translateText } from "../utils/translateService.js";
 
 const Navbar = ({ isAuthenticated }) => {
   const navigate = useNavigate();
