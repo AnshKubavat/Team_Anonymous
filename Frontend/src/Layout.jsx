@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate , useLocation} from "react-router-dom";
 import Login from "./Pages/Login/Login";
 import Signup from "./Pages/Signup/Signup";
-import Navbar from "./components/NavBar";
+import Navbar from "./components/Navbar";
 import Category from "./Pages/Category/Category";
 import Home from "./Pages/Home/Home";
 import Footer from "./components/Footer";
