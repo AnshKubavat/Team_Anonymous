@@ -17,9 +17,9 @@ const BusinessPage = () => {
     facility: 'Service',
   });
   const [products, setProducts] = useState([
-    { id: 1, image: "../../../assets/nearbygo_logo.webp", title: "Laptop", price: "$1000" },
-    { id: 2, image: "../../../assets/nearbygo_logo.webp", title: "Smartphone", price: "$500" },
-    { id: 3, image: "../../../assets/nearbygo_logo.webp", title: "Tablet", price: "$700" }
+    { id: 1, image: "../../assets/userlogo.jpg", title: "Laptop", price: "$1000" },
+    { id: 2, image: "../../assets/nearbygo_logo.webp", title: "Smartphone", price: "$500" },
+    { id: 3, image: "../../assets/nearbygo_logo.webp", title: "Tablet", price: "$700" }
   ]);
   const [reviews, setReviews] = useState([
     { id: 1, rating: 4, comment: 'Great service!' },

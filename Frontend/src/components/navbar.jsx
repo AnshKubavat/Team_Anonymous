@@ -31,6 +31,23 @@ const Navbar = ({ isAuthenticated }) => {
     setItem("language", lang);
   };
 
+  const handleLanguageDropdownClick = () => {
+    setIsOpenForLanguage(!isOpenForLanguage);
+    setCityDropdown(false);
+    setCategoryDropdown(false); 
+  };
+  
+  const handleCityDropdownClick = () => {
+    setCityDropdown(!cityDropdown);
+    setIsOpenForLanguage(false);
+    setCategoryDropdown(false);
+  };
+  const handleCategoryDropdownClick = () => {
+    setCategoryDropdown(!categoryDropdown);
+    setIsOpenForLanguage(false);
+    setCityDropdown(false);
+  };
+
   const filteredCities = cities.filter((city) =>
     city.toLowerCase().includes(citySearch.toLowerCase())
   );
@@ -111,7 +128,8 @@ const Navbar = ({ isAuthenticated }) => {
         <div className="relative  ">
           <button
             className="flex items-center text-gray-700 font-medium px-3 py-1 border border-gray-300 rounded-sm bg-white gap-2"
-            onClick={() => setIsOpenForLanguage(!isOpenForLanguage)}
+            // onClick={() => setIsOpenForLanguage(!isOpenForLanguage)}
+            onClick={handleLanguageDropdownClick}
           >
             {language} <ChevronDown size={18} className="ml-2" />
           </button>
@@ -141,7 +159,8 @@ const Navbar = ({ isAuthenticated }) => {
         <div className="relative hidden  md:flex">
           <button
             className="flex md:w-54 items-center text-gray-700 font-medium px-3 py-1 border border-gray-300 rounded-sm bg-white gap-2"
-            onClick={() => setCityDropdown(!cityDropdown)}
+            // onClick={() => setCityDropdown(!cityDropdown)}
+            onClick={handleCityDropdownClick}
           >
             <MapPin size={18} className="text-gray-600" />
             {selectedCity}
@@ -182,7 +201,8 @@ const Navbar = ({ isAuthenticated }) => {
           <button
             placeholder="Search"
             className="flex items-center min-h-8 text-gray-700 font-medium px-3 py-1 border border-gray-300 rounded-sm bg-white gap-2 md:w-64"
-            onClick={() => setCategoryDropdown(!categoryDropdown)}
+            // onClick={() => setCategoryDropdown(!categoryDropdown)}
+            onClick={handleCategoryDropdownClick}
           >
             {/* <MapPin size={18} className="text-gray-600" /> */}
             {selectedCategory}
