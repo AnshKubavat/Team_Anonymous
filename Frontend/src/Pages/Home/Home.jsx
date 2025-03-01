@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getItem } from "../../utils/localStorageManager";
-import Card from "../../components/Card";
+// import Card from "../../components/Card";
+import { fetchAllSeller } from "../../features/businessSlice";
 
 const slides = [
   { id: 1, color: "bg-red-500", text: "YP's Hotel" },
@@ -14,9 +15,42 @@ const slides = [
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [businessList, setBusinessList] = useState([]);
+  const [isLocationFetched, setIsLocationFetched] = useState(false);
+
   const { user } = useSelector((state) => state.user);
+  const { language } = useSelector((state) => state.user);
+  const { category } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const city = getItem("city");
+  console.log(category);
+
+  const fetchBusinesses = async () => {
+    try {
+      const result = await dispatch(fetchAllSeller(city, category));
+      if (result.payload?.success) {
+        setBusinessList(result.payload?.message?.businesses);
+      } else {
+        setBusinessList([]);
+        console.error("Error in fetchBusinesses:", result.payload?.message);
+      }
+    } catch (error) {
+      console.error("Error in fetchBusinesses:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (city) {
+      fetchBusinesses();
+    }
+  }, [city]);
+
+  useEffect(() => {
+    if (businessList.length > 0 && !isLocationFetched) {
+      // getUserLocationAndCalculateDistances();
+      setIsLocationFetched(true);
+    }
+  }, [businessList]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -28,7 +62,9 @@ const Home = () => {
 
   return (
     <div>
-      <div className={`sliderAx mt-2 mb-10 md:mb-20 relative w-full h-60 ${slides[currentSlide].color}`}></div>
+      <div
+        className={`sliderAx mt-2 mb-10 md:mb-20 relative w-full h-60 ${slides[currentSlide].color}`}
+      ></div>
 
       <div>
         <h1 className="text-xl md:text-4xl font-bold text-left mt-10 md:mt-16 ml-4 md:ml-10">
