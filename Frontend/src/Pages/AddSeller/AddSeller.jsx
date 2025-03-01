@@ -32,7 +32,7 @@ export default function AddSeller() {
     { value: "service", label: "Service" },
     { value: "product", label: "Product" },
   ];
-
+  
   const fetchLocation = () => {
     setIsFetchingLocation(true);
     if (navigator.geolocation) {
@@ -56,6 +56,9 @@ export default function AddSeller() {
       setIsFetchingLocation(false);
     }
   };
+   
+  const cityOptions = cities.map(city => ({ value: city, label: city }));
+  const categoryOptions = categories.map(category => ({ value: category, label: category }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -137,7 +140,7 @@ export default function AddSeller() {
                     City
                   </label>
                   <Select
-                    options={cities}
+                    options={cityOptions}
                     onChange={(selectedOption) => setCity(selectedOption)}
                     placeholder="Select City"
                     value={city}
@@ -165,7 +168,7 @@ export default function AddSeller() {
                     Category
                   </label>
                   <Select
-                    options={categories}
+                    options={categoryOptions}
                     onChange={(selectedOption) =>
                       setCategoryOfBusiness(selectedOption)
                     }
