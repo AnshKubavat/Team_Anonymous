@@ -6,6 +6,7 @@ import Category from "./Pages/Category/Category";
 import About from "./Pages/About/About";
 import Home from "./Pages/Home/Home";
 import Footer from "./components/Footer";
+import Contact from "./Pages/Contact/Contact";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchProfile } from "./features/userSlice";
@@ -36,6 +37,7 @@ const Layout = () => {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/about" element={<About />} />
         <Route path="/becomeaseller" element={<AddSeller />}/>
+        <Route path="/contact" element={<Contact />} />
         {!isAuthenticated ? (
           <>
             <Route path="/login" element={<Login />} />
