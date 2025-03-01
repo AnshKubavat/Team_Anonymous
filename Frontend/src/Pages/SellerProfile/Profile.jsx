@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchProfile, logout, updateProfile } from "../../features/userSlice";
 import { toast } from "react-toastify";
-import { removeItem } from "../../utils/localStorageManager";
+import { KEY_ACCESS_TOKEN, removeItem } from "../../utils/localStorageManager";
 const ProfilePage = () => {
   const { user } = useSelector((state) => state.user);
   const [profileImage, setProfileImage] = useState(false);
@@ -86,6 +86,7 @@ const ProfilePage = () => {
         removeItem("city");
         removeItem("language");
         removeItem("category");
+        removeItem(KEY_ACCESS_TOKEN)
         navigate("/login");
       } else {
         toast.error("Please try again");
@@ -132,7 +133,7 @@ const ProfilePage = () => {
             <div className="absolute top-5 left-5 flex gap-4">
               {/* Become a Seller Button */}
               <button
-                className="bg-[#f0b485] text-gray-700 px-4 py-2 rounded-md font-semibold shadow-md hover:bg-[#a67f60] hover:text-amber-50 transition"
+                className="bg-[#f0b485] text-gray-700 px-4 py-2 cursor-pointer rounded-md font-semibold shadow-md hover:bg-[#a67f60] hover:text-amber-50 transition"
                 onClick={becomeaSeller}
               >
                 Become a Seller
@@ -145,7 +146,7 @@ const ProfilePage = () => {
             {!isEditing ? (
               <button
                 onClick={() => setIsEditing(true)}
-                className="bg-white text-blue-600 px-4 py-2 rounded-md font-semibold shadow-md hover:bg-gray-200 transition"
+                className="bg-white text-blue-600 px-4 py-2 rounded-md cursor-pointer font-semibold shadow-md hover:bg-gray-200 transition"
               >
                 Edit Profile
               </button>
@@ -199,7 +200,7 @@ const ProfilePage = () => {
           <div className="text-center w-full">
             <button
               onClick={handleLogout}
-              className="bg-red-400 text-white px-4 py-2 rounded-sm shadow-md hover:bg-red-600 transition md:text-base"
+              className="bg-red-400 text-white px-4 py-2 cursor-pointer rounded-sm shadow-md hover:bg-red-600 transition md:text-base"
             >
               Logout
             </button>
@@ -223,7 +224,7 @@ const ProfilePage = () => {
                     <span>
                       <button
                         onClick={handleDeleteReview}
-                        className="bg-red-400 m-1 text-white px-4 py-2 rounded-sm font-base shadow-md hover:bg-red-600 transition md:text-base"
+                        className="bg-red-400 m-1 cursor-pointer text-white px-4 py-2 rounded-sm font-base shadow-md hover:bg-red-600 transition md:text-base"
                       >
                         Delete
                       </button>
