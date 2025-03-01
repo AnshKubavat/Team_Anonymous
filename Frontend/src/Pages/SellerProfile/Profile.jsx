@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { fetchProfile, logout, updateProfile } from "../../features/userSlice";
 import { toast } from "react-toastify";
 import { KEY_ACCESS_TOKEN, removeItem } from "../../utils/localStorageManager";
+import { motion } from "framer-motion";
 const ProfilePage = () => {
   const { user, isLoading } = useSelector((state) => state.user);
   const [profileImage, setProfileImage] = useState(false);
@@ -198,7 +199,7 @@ const ProfilePage = () => {
           </div>
 
           {/* Reviews Section */}
-          <div className="flex justify-around mb-4 border-b-2">
+          <div className="flex mt-5 justify-around mb-4 border-b-2">
             <button
               onClick={() => setActiveTab("reviews")}
               className={`px-4 cursor-pointer py-2 text-black text-lg ${
@@ -225,16 +226,26 @@ const ProfilePage = () => {
                   reviews.map((review) => (
                     <div
                       key={review.id}
-                      className="p-4 bg-white rounded-lg shadow-md mb-3"
+                      className="p-4 bg-white rounded-lg shadow-md mb-3 flex justify-between items-center"
                     >
-                      <h3 className="text-lg font-semibold">
-                        {review.username}
-                      </h3>
-
-                      <p>{review.comment}</p>
-                      <p className="text-sm text-gray-500">
-                        Reviewed on: {new Date(review.createdAt).toLocaleDateString()}
-                      </p>
+                      <div>
+                        <h3 className="text-lg font-semibold">
+                          {review.username}
+                        </h3>
+                        <p>{review.comment}</p>
+                        <p className="text-sm text-gray-500">
+                          Reviewed on:{" "}
+                          {new Date(review.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded"
+                        // onClick={() => handleDeleteReview(review.id)}
+                      >
+                        Delete
+                      </motion.button>
                     </div>
                   ))
                 ) : (
@@ -243,39 +254,38 @@ const ProfilePage = () => {
               </div>
             )}
             {activeTab === "bookings" && (
-  <div>
-    <h2 className="text-xl font-semibold mb-3">Your Bookings</h2>
-    {isLoading ? (
-      <p>Loading your bookings...</p>
-    ) : user?.services?.length > 0 ? (
-      user.services.map((service, index) => (
-        service.business.map((business) => {
-          const formattedDate = service?.createdAt
-            ? new Date(service.createdAt).toLocaleDateString()
-            : "N/A";
+              <div>
+                <h2 className="text-xl font-semibold mb-3">Your Bookings</h2>
+                {isLoading ? (
+                  <p>Loading your bookings...</p>
+                ) : user?.services?.length > 0 ? (
+                  user.services.map((service, index) =>
+                    service.business.map((business) => {
+                      const formattedDate = service?.createdAt
+                        ? new Date(service.createdAt).toLocaleDateString()
+                        : "N/A";
 
-          return (
-            <div
-              key={business._id}
-              className="p-4 bg-white rounded-lg shadow-md mb-3"
-            >
-              <h3 className="text-lg font-semibold">
-                {business?.businessName || "Unknown Business"}
-              </h3>
-              <p>{service?.status || "Unknown Status"}</p>
-              <p className="text-sm text-gray-500">
-                Requested on: {formattedDate}
-              </p>
-            </div>
-          );
-        })
-      ))
-    ) : (
-      <p>No bookings yet.</p>
-    )}
-  </div>
-)}
-
+                      return (
+                        <div
+                          key={business._id}
+                          className="p-4 bg-white rounded-lg shadow-md mb-3"
+                        >
+                          <h3 className="text-lg font-semibold">
+                            {business?.businessName || "Unknown Business"}
+                          </h3>
+                          <p>{service?.status || "Unknown Status"}</p>
+                          <p className="text-sm text-gray-500">
+                            Requested on: {formattedDate}
+                          </p>
+                        </div>
+                      );
+                    })
+                  )
+                ) : (
+                  <p>No bookings yet.</p>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
