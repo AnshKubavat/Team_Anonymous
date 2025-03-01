@@ -46,21 +46,28 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
+
 app.post("/recommend", async (req, res) => {
   try {
-    const { user_id } = req.body;
+    const { user_id, city } = req.body;
 
     if (!user_id) {
       return res.status(400).json({ error: "User ID is required" });
     }
-    console.log(`User ${user_id}`)
 
-    // 🔹 Call Flask API (Flask runs on port 3001)
-    const response = await axios.post(`${process.env.FLASK_URL}/recommend`, { user_id }, { headers: { "Content-Type": "application/json" } });
-    console.log(response.data);
-    return res.json(response.data); // Send Flask response to frontend
+    // 🔹 Call Flask API
+    const business = await axios.post(
+      `${process.env.FLASK_URL}/recommend`,
+      { user_id },
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    // ✅ Correctly filter businesses by city
+    const filteredBusinesses = business.data.filter((b) => b.city === city);
+
+    return res.json(filteredBusinesses);
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching recommendations:", error.message);
     return res.status(500).json({ error: "Failed to fetch recommendations" });
   }
 });
