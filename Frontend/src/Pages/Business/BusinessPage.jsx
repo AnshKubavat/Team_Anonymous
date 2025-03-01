@@ -1,0 +1,139 @@
+import { useState } from 'react';
+import BusinessDescription from './BusinessDescription';
+import ProductList from './ProductList';
+import ReviewSection from './ReviewSection';
+import ServiceSection from './ServiceSection';
+
+const BusinessPage = () => {
+  const [activeTab, setActiveTab] = useState('product');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State to manage sidebar visibility
+  const [business, setBusiness] = useState({
+    name: 'Sample Business',
+    description: 'This is a sample business description.',
+    city: 'Sample City',
+    image: '../../../assets/userlogo.jpg',
+    category: 'Sample Category',
+    address: '123 Sample St, Sample City',
+    facility: 'Service',
+  });
+  const [products, setProducts] = useState([
+    { id: 1, image: "../../../assets/nearbygo_logo.webp", title: "Laptop", price: "$1000" },
+    { id: 2, image: "../../../assets/nearbygo_logo.webp", title: "Smartphone", price: "$500" },
+    { id: 3, image: "../../../assets/nearbygo_logo.webp", title: "Tablet", price: "$700" }
+  ]);
+  const [reviews, setReviews] = useState([
+    { id: 1, rating: 4, comment: 'Great service!' },
+    { id: 2, rating: 5, comment: 'Excellent product!' },
+  ]);
+
+  const handleDeleteBusiness = () => {
+    alert('Business deleted');
+  };
+
+  const handleUpdateBusiness = () => {
+    alert('Business updated');
+  };
+
+  const handleDeleteReview = (id) => {
+    setReviews(reviews.filter(review => review.id !== id));
+  };
+
+  const handleAddReview = (newReview) => {
+    setReviews([...reviews, newReview]);
+  };
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleBookService = () => {
+    
+  }
+
+  return (
+    <div className="w-full min-h-screen">
+      {/* Hamburger Menu Button for Mobile */}
+      <button
+        className= {`md:hidden fixed ${isSidebarOpen ? "left-30" : "top-20"} z-50 p-2  text-black rounded font-bold text-2xl`}
+        onClick={toggleSidebar}
+      >
+        ☰
+      </button>
+
+      <div className="flex w-full min-h-screen bg-gray-200 rounded-lg shadow-lg">
+        {/* Sidebar */}
+        <div
+          className={`md:w-1/4 bg-gray-300 p-6 rounded-l-lg transform transition-transform duration-300 ease-in-out ${
+            isSidebarOpen ? 'translate-x-0 pt-14' : '-translate-x-full'
+          } md:translate-x-0 fixed md:relative h-screen z-40`}
+        >
+          <ul className="space-y-4">
+            <li
+              className={`cursor-pointer px-4 py-2 rounded ${activeTab === 'product' ? 'bg-blue-500 text-white' : 'bg-gray-400'}`}
+              onClick={() => {
+                setActiveTab('product');
+                setIsSidebarOpen(false); // Close sidebar on mobile after selecting a tab
+              }}
+            >
+              Product
+            </li>
+            <li
+              className={`cursor-pointer px-4 py-2 rounded ${activeTab === 'description' ? 'bg-blue-500 text-white' : 'bg-gray-400'}`}
+              onClick={() => {
+                setActiveTab('description');
+                setIsSidebarOpen(false); // Close sidebar on mobile after selecting a tab
+              }}
+            >
+              Description
+            </li>
+            <li
+              className={`cursor-pointer px-4 py-2 rounded ${activeTab === 'review' ? 'bg-blue-500 text-white' : 'bg-gray-400'}`}
+              onClick={() => {
+                setActiveTab('review');
+                setIsSidebarOpen(false); // Close sidebar on mobile after selecting a tab
+              }}
+            >
+              Review
+            </li>
+            <li
+              className={`cursor-pointer px-4 py-2 rounded ${activeTab === 'service' ? 'bg-blue-500 text-white' : 'bg-gray-400'}`}
+              onClick={() => {
+                setActiveTab('service');
+                setIsSidebarOpen(false); // Close sidebar on mobile after selecting a tab
+              }}
+            >
+              Service
+            </li>
+          </ul>
+        </div>
+
+        {/* Content Section */}
+        <div className={`w-full md:w-3/4  max-h-screen overflow-y-auto p-8 ${isSidebarOpen && "pt-10"}`}> 
+          {activeTab === 'product' && <ProductList products={products} />}
+          {activeTab === 'description' && (
+            <BusinessDescription
+              business={business}
+              onDelete={handleDeleteBusiness}
+              onUpdate={handleUpdateBusiness}
+            />
+          )}
+          {activeTab === 'review' && (
+            <ReviewSection
+              reviews={reviews}
+              onDeleteReview={handleDeleteReview}
+              onAddReview={handleAddReview}
+            />
+          )}
+           {activeTab === 'service' && (
+            <ServiceSection
+            business={business}
+            bookService={handleBookService}
+            />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default BusinessPage;
