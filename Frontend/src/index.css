@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+::-webkit-scrollbar {
+  @apply hidden;
+}
+
 /* Custom styles for react-select */
 .react-select-container .react-select__control {
   border: 1px solid #dbd1d1; /* Gray border */
