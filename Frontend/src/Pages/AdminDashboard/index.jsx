@@ -1,7 +1,6 @@
 import AllContacts from "./components/AllContacts";
 import AllBusinesses from "./components/AllBusinesses";
 import DeletedBusinesses from "./components/DeletedBusinesses";
-import DashBoard from "./components/DashBoard";
 import SideBar from "./components/SideBar";
 import { Route, Routes } from "react-router-dom";
 
@@ -16,9 +15,7 @@ const Admin = () => {
 
           <div className="w-screen lg:max-w-7xl  overflow-y-auto">
             <Routes>
-              <Route path="/" element={<DashBoard/>}/>
-
-              <Route path="/dashboard" element={<DashBoard />}/>
+              <Route path="/" element={<AllBusinesses/>}/>
             
               <Route path="/allcontacts" element={<AllContacts />} />
 

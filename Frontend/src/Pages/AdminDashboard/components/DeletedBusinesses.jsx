@@ -200,7 +200,7 @@ const DeletedBusinesses = () => {
               >
                 <td className="border p-2 text-center">{index + 1}</td>
                 <td className="border p-2 text-center">
-                  {seller.sellerDetails.username}
+                  {seller.sellerDetails?.username}
                 </td>
                 <td className="border p-2 text-center">{seller.city}</td>
                 <td className="border p-2 text-center">
