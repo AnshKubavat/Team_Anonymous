@@ -94,7 +94,7 @@ export default function AddSeller() {
       });
       if (data.success) {
         toast.success("Seller created successfully!");
-        navigate("/sellerdashboard");
+        navigate("/mybusiness");
       } else {
         toast.error(data.message);
       }
