@@ -75,7 +75,9 @@ export const getOwnBusiness = async (req, res) => {
     const user = req.user;
 
     if (!user?._id) {
-      return res.status(400).json({ message: "User not found", success: false });
+      return res
+        .status(400)
+        .json({ message: "User not found", success: false });
     }
 
     const business = await Business.aggregate([
@@ -205,7 +207,6 @@ export const getOwnBusiness = async (req, res) => {
         },
       },
 
-      // Exclude password from the seller, service owner, and product owner
       {
         $project: {
           "seller.password": 0,
@@ -218,7 +219,9 @@ export const getOwnBusiness = async (req, res) => {
     ]);
 
     if (!business.length) {
-      return res.status(404).json({ message: "Business not found", success: false });
+      return res
+        .status(404)
+        .json({ message: "Business not found", success: false });
     }
 
     return res.status(200).json({ business: business[0], success: true });
@@ -227,7 +230,6 @@ export const getOwnBusiness = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error", success: false });
   }
 };
-
 
 export const getBusiness = async (req, res) => {
   try {
@@ -356,4 +358,3 @@ export const deleteBusiness = async (req, res) => {
     });
   }
 };
-

@@ -16,6 +16,7 @@ import BusinessPage from "./Pages/Business/BusinessPage";
 import Mybusiness from "./Pages/SellerDashboard/MyBusiness";
 // import PrivateRoute from "./components/PrivateRoute";
 import AdminDashboard from "./Pages/AdminDashboard";
+import CategoryPage from "./components/CategoryPage";
 
 const Layout = () => {
   const location = useLocation();
@@ -36,6 +37,8 @@ const Layout = () => {
           <Route path="/admin/*" element={<AdminDashboard />} />
         </Route> */}
         <Route path="/category" element={<Category />} />
+        <Route path="/category/:categoryName" element={<CategoryPage />} />
+
         <Route path="/" element={<Home />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/about" element={<About />} />
