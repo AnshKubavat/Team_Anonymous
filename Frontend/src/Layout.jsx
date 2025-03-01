@@ -1,7 +1,6 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Login from "./Pages/Login/Login";
 import Signup from "./Pages/Signup/Signup";
-import Navbar from "./components/Navbar";
 import Category from "./Pages/Category/Category";
 import About from "./Pages/About/About";
 import Home from "./Pages/Home/Home";
@@ -11,6 +10,7 @@ import { useEffect } from "react";
 import { fetchProfile } from "./features/userSlice";
 import ProfilePage from "./Pages/SellerProfile/Profile";
 import AddSeller from "./Pages/AddSeller/AddSeller";
+import Navbar from "./components/NavBar";
 // import PrivateRoute from "./components/PrivateRoute";
 
 const Layout = () => {
