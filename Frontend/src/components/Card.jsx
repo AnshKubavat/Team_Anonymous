@@ -15,7 +15,7 @@ const Card = ({ businessList = [] }) => {
     <motion.div
       key={index}
       onClick={() => navigate(`/business/${business._id}`)}
-      className="relative p-5 bg-white dark:bg-gray-200 rounded-2xl shadow-lg overflow-hidden"
+      className="relative p-5 bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer"
       whileHover={{
         scale: 1.05,
         boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.2)",
@@ -43,11 +43,9 @@ const Card = ({ businessList = [] }) => {
       </motion.div>
 
       <div className="flex items-center justify-between mt-3">
-        <span className="text-blue-500 font-medium">
+        <span className="text- font-medium">
           {business.city} | {business?.distance || "2.4 km"}
         </span>
-        
-       
       </div>
     </motion.div>
   ));

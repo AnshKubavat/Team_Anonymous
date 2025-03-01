@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getItem } from "../../utils/localStorageManager";
 // import Card from "../../components/Card";
+import locales from "../../locales/local.json";
 import { fetchAllSeller } from "../../features/businessSlice";
 import Card from "../../components/Card";
 import ad1 from "../../assets/ad1.jpg";
@@ -21,7 +22,6 @@ const Home = () => {
   const [businessList, setBusinessList] = useState([]);
   const [isLocationFetched, setIsLocationFetched] = useState(false);
   const [recommendations, setRecommendations] = useState([]);
-
   const { user } = useSelector((state) => state.user);
   const { language } = useSelector((state) => state.user);
   const { category } = useSelector((state) => state.user);
@@ -29,6 +29,9 @@ const Home = () => {
   const city = getItem("city");
   console.log(category);
   console.log(language);
+
+
+  const t = locales[language];
 
   const fetchBusinesses = async () => {
     try {
@@ -44,11 +47,6 @@ const Home = () => {
     }
   };
   const userId = user?._id;
-
-  // const t = locales[language];
-  // console.log(t);
-
-  
 
   const fetchRecommendations = async () => {
     try {
@@ -91,7 +89,40 @@ const Home = () => {
       setIsLocationFetched(true);
     }
   }, [businessList]);
+  
+// const getUserLocationAndCalculateDistances = () => {
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition(async (position) => {
+  //       const userLatitude = position.coords.latitude;
+  //       const userLongitude = position.coords.longitude;
 
+  //       try {
+  //         const response = await axiosClient.post("/location", {
+  //           userLatitude,
+  //           userLongitude,
+  //           businessLocations: businessList
+  //             .filter(business => business.businessLocation?.latitude && business.businessLocation?.longitude)
+  //             .map(business => ({
+  //               id: business._id,
+  //               latitude: business.businessLocation.latitude,
+  //               longitude: business.businessLocation.longitude,
+  //             }))
+  //         });
+
+  //         const updatedBusinessList = businessList.map(business => {
+  //           const distanceInfo = response.data.find(item => item.id === business._id);
+  //           return { ...business, distance: distanceInfo ? distanceInfo.distance : "N/A" };
+  //         });
+
+  //         setBusinessList(updatedBusinessList);
+  //       } catch (error) {
+  //         console.error("Error calculating distances:", error);
+  //       }
+  //     });
+  //   } else {
+  //     alert("Geolocation is not supported by this browser.");
+  //   }
+  // };
   useEffect(() => {
     if (city) {
       fetchBusinesses();
@@ -122,14 +153,14 @@ const Home = () => {
       >
         <img
           src={`${slides[currentSlide].image}`}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover "
           alt=""
         />
       </div>
 
       <div>
         <h1 className="text-xl md:text-4xl font-bold text-left mt-10 md:mt-16 ml-4 md:ml-10">
-          Recommended for you
+        {t.recommendation}
         </h1>
         <div>
           <section className="dark:bg-dark mt-4 mx-4 md:mx-10 pb-10 md:pb-20">
@@ -139,7 +170,7 @@ const Home = () => {
                   <Card businessList={recommendations} />
                 </div>
               ) : (
-                <p className="text-center text-gray-500">no record found</p>
+                <p className="text-center text-gray-500">{t.no_recommendations}</p>
               )}
             </div>
           </section>
@@ -147,11 +178,19 @@ const Home = () => {
 
         {/* All Businesses Section */}
         <h1 className="text-xl md:text-4xl font-bold text-left mt-10 md:mt-16 ml-4">
-          Explore Businesses
+          {t.explore}
         </h1>
 
         <section className="dark:bg-dark mt-4 mx-4 md:mx-10 pb-10 md:pb-20">
-          <div className="container mx-auto"></div>
+          <div className="container mx-auto">
+            {businessList.length > 0 ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <Card businessList={businessList} />
+              </div>
+            ) : (
+              `${t.no_recommendations}`
+            )}
+          </div>
         </section>
       </div>
     </div>

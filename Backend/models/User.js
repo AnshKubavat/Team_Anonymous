@@ -27,6 +27,12 @@ const userSchema = new Schema(
       default: "user",
       enums: ["user", "seller", "admin"],
     },
+    services: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Service",
+      },
+    ],
     reviews: [
       {
         type: Schema.Types.ObjectId,

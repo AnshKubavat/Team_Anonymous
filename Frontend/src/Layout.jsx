@@ -1,7 +1,6 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Login from "./Pages/Login/Login";
 import Signup from "./Pages/Signup/Signup";
-import Navbar from "./components/Navbar";
 import Category from "./Pages/Category/Category";
 import About from "./Pages/About/About";
 import Home from "./Pages/Home/Home";
@@ -12,8 +11,11 @@ import { useEffect } from "react";
 import { fetchProfile } from "./features/userSlice";
 import ProfilePage from "./Pages/SellerProfile/Profile";
 import AddSeller from "./Pages/AddSeller/AddSeller";
+import Navbar from "./components/Navbar";
+import BusinessPage from "./Pages/Business/BusinessPage";
 import Mybusiness from "./Pages/SellerDashboard/MyBusiness";
 // import PrivateRoute from "./components/PrivateRoute";
+import AdminDashboard from "./Pages/AdminDashboard";
 
 const Layout = () => {
   const location = useLocation();
@@ -37,9 +39,11 @@ const Layout = () => {
         <Route path="/" element={<Home />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/about" element={<About />} />
-        <Route path="/becomeaseller" element={<AddSeller />}/>
+        {/* <Route path="/becomeaseller" element={<AddSeller />}/> */}
         <Route path="/contact" element={<Contact />} />
+        <Route path="/business/:id" element={<BusinessPage/>}/>
         <Route path="/myBusiness" element={<Mybusiness />} />
+         <Route path="/admin/*" element={<AdminDashboard />} />
         {!isAuthenticated ? (
           <>
             <Route path="/login" element={<Login />} />
@@ -51,6 +55,13 @@ const Layout = () => {
             <Route path="/signup" element={<Navigate to="/" />} />
           </>
         )}
+        {isAuthenticated ? (
+          <Route path="/becomeaseller" element={<AddSeller />} />
+        ) : (
+          <Route path="/becomeaseller" element={<Login />} />
+        )}
+
+        <Route path="/contact" element={<Contact />} />
       </Routes>
       {!hideNavbarFooter && <Footer />}
     </>

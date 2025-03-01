@@ -324,7 +324,7 @@ const fetchBusinessDetails = async () => {
       <div className="w-full max-h-screen mx-auto mt-10  lg:mx-0 md:mt-5  lg:mt-0 p-6">
         {/* Profile */}
        {selectedSection === "profile" && (
-      <div className="min-h-screen flex justify-center items-center p-4">
+      <div className="max-h-full flex justify-center items-center p-4">
         <div className="w-full text-center max-w-4xl bg-white rounded-lg border border-gray-200 overflow-hidden shadow-md">
               <div className="bg-gradient-to-r from-orange-100 to-orange-300 p-6 text-center relative">
                 <div className="relative w-28 h-28 mx-auto rounded-full border-4 border-white overflow-hidden">
@@ -418,7 +418,7 @@ const fetchBusinessDetails = async () => {
 
         {/* Add or Update Product Form */}
         {selectedSection === "addProduct" && (
-          <div className="text-center">
+          <div className="text-center md:mt-10 ">
             <h2 className="text-2xl font-bold mb-4">
               {editingProduct ? "✏ Update Product" : "➕ Add New Product"}
             </h2>

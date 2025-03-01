@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState,useRef  } from "react";
 import { Menu, Search, ChevronDown, MapPin, User } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,15 +21,47 @@ const Navbar = ({ isAuthenticated }) => {
   const [selectLanguage, setSelectLanguage] = useState(language || "English");
   const selectedCategory = getItem("category");
   const { user } = useSelector((state) => state.user);
-
+  const dropdownRef = useRef(null);
   const { category } = useSelector((state) => state.user);
   console.log(category);
   console.log(user);
+  const languages = ["English", "Hindi", "Gujarati"];
   
   const handleLanguageChange = (lang) => {
     setSelectLanguage(lang);
     setItem("language", lang);
   };
+
+  const handleLanguageDropdownClick = () => {
+    setIsOpenForLanguage(!isOpenForLanguage);
+    setCityDropdown(false);
+    setCategoryDropdown(false); 
+  };
+  
+  const handleCityDropdownClick = () => {
+    setCityDropdown(!cityDropdown);
+    setIsOpenForLanguage(false);
+    setCategoryDropdown(false);
+  };
+  const handleCategoryDropdownClick = () => {
+    setCategoryDropdown(!categoryDropdown);
+    setIsOpenForLanguage(false);
+    setCityDropdown(false);
+  };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpenForLanguage(false);
+        setCityDropdown(false);
+        setCategoryDropdown(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   const filteredCities = cities.filter((city) =>
     city.toLowerCase().includes(citySearch.toLowerCase())
@@ -39,13 +71,13 @@ const Navbar = ({ isAuthenticated }) => {
     category.toLowerCase().includes(categorySearch.toLowerCase())
   );
   return (
-    <nav className="bg-[#FEF6EF] p-4 shadow-lg">
+    <nav ref={dropdownRef} className="bg-[#FEF6EF] p-4 shadow-lg">
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo */}
-        <div className="text-gray-600 text-xl font-bold flex items-center gap-2">
+        <div className="text-gray-600 text-xl font-bold flex items-center gap-2 cursor-pointer">
           <img
             src={logo}
-            alt="NearbyGo Logo"
+            alt="NearbyGo Logo" 
             onClick={() => navigate("/")}
             className="h-10 w-auto rounded-2xl ml-2"
           />
@@ -111,7 +143,7 @@ const Navbar = ({ isAuthenticated }) => {
         <div className="relative  ">
           <button
             className="flex items-center text-gray-700 font-medium px-3 py-1 border border-gray-300 rounded-sm bg-white gap-2"
-            onClick={() => setIsOpenForLanguage(!isOpenForLanguage)}
+            onClick={handleLanguageDropdownClick}
           >
             {language} <ChevronDown size={18} className="ml-2" />
           </button>
@@ -141,7 +173,8 @@ const Navbar = ({ isAuthenticated }) => {
         <div className="relative hidden  md:flex">
           <button
             className="flex md:w-54 items-center text-gray-700 font-medium px-3 py-1 border border-gray-300 rounded-sm bg-white gap-2"
-            onClick={() => setCityDropdown(!cityDropdown)}
+            // onClick={() => setCityDropdown(!cityDropdown)}
+            onClick={handleCityDropdownClick}
           >
             <MapPin size={18} className="text-gray-600" />
             {selectedCity}
@@ -182,7 +215,8 @@ const Navbar = ({ isAuthenticated }) => {
           <button
             placeholder="Search"
             className="flex items-center min-h-8 text-gray-700 font-medium px-3 py-1 border border-gray-300 rounded-sm bg-white gap-2 md:w-64"
-            onClick={() => setCategoryDropdown(!categoryDropdown)}
+            // onClick={() => setCategoryDropdown(!categoryDropdown)}
+            onClick={handleCategoryDropdownClick}
           >
             {/* <MapPin size={18} className="text-gray-600" /> */}
             {selectedCategory}

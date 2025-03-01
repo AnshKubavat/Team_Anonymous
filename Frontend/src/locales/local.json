@@ -1,0 +1,17 @@
+{
+  "English": {
+    "recommendation": "Recommended for you",
+    "explore": "Explore Businesses",
+    "no_recommendations": "No recommendations found."
+  },
+  "Hindi": {
+    "recommendation": "आपके लिए सिफारिश",
+    "explore": "व्यवसायों का अन्वेषण करें",
+    "no_recommendations": "कोई सिफारिश नहीं मिली।"
+  },
+  "Gujarati": {
+    "recommendation": "તમારા માટે ભલામણ",
+    "explore": "વ્યવસાયો શોધો",
+    "no_recommendations": "કોઈ ભલામણ મળી નથી."
+  }
+}
