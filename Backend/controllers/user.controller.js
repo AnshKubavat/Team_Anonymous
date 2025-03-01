@@ -59,12 +59,41 @@ export const login = async (req, res) => {
 
 export const profile = async (req, res) => {
   try {
-    return res.status(200).json({ message: { user: req.user }, success: true });
+    const userId = req.user._id;
+
+    // Aggregate Pipeline to populate reviews & services
+    const userProfile = await User.aggregate([
+      { $match: { _id: userId } },
+      {
+        $lookup: {
+          from: "reviews",
+          localField: "reviews",
+          foreignField: "_id",
+          as: "reviews",
+        },
+      },
+      {
+        $lookup: {
+          from: "services",
+          localField: "services",
+          foreignField: "_id",
+          as: "services",
+        },
+      },
+      { $limit: 1 },
+    ]);
+
+    if (!userProfile.length) {
+      return res.status(404).json({ message: "User not found", success: false });
+    }
+
+    return res.status(200).json({ success: true, user: userProfile[0] });
   } catch (e) {
     console.log(e);
-    return res.status(500).json({ message: e, success: false });
+    return res.status(500).json({ message: e.message, success: false });
   }
 };
+
 
 export const logout = async (req, res) => {
   try {
