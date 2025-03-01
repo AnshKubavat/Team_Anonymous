@@ -105,14 +105,14 @@ export default function AddSeller() {
   };
 
   return (
-    <div className="flex justify-center py-10 items-center min-h-screen bg-gradient-to-r from-[#FEF6EF] to-[#FCE2CE]">
+    <div className="flex justify-center py-10 items-center min-h-screen bg-[#FEF6EF]">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
         className="w-full max-w-4xl mx-4"
       >
-        <div className="p-8 rounded-sm bg-[#FEF6EF]">
+        <div className="p-8 rounded-sm bg-[#FCE2CE] border-[#3B2E2E] border">
           <div>
             <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">
               Create Business
@@ -131,7 +131,7 @@ export default function AddSeller() {
                     value={businessName}
                     onChange={(e) => setBusinessName(e.target.value)}
                     required
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-2 border bg-white border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
@@ -192,7 +192,7 @@ export default function AddSeller() {
                   value={description}
                   placeholder="Enter a description of the business"
                   required
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-3 border  bg-white border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   rows="4"
                 />
               </div>
@@ -206,7 +206,7 @@ export default function AddSeller() {
                   name="image"
                   onChange={(e) => setImage(e.target.files[0])}
                   accept="image/*"
-                  className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-2 border  bg-white border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <div>
