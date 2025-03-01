@@ -1,5 +1,9 @@
 import logo from "./nearbygo_logo.webp";
 import userlogo from "./userlogo.jpg";
+import loginImg from "./login.png";
+import signupLogo from "./signup.png";
+import Slider_1 from "./Slider_1.png";
+import store from "store.png";
 
 const cities = [
   "Anand",
@@ -28,4 +32,14 @@ const categories = [
 ];
 
 const languages = ["English", "Gujarati", "Hindi"];
-export { logo, userlogo, cities, categories, languages };
+export {
+  logo,
+  userlogo,
+  cities,
+  categories,
+  languages,
+  loginImg,
+  signupLogo,
+  Slider_1,
+  store,
+};
