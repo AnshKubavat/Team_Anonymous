@@ -1,7 +1,26 @@
 import { motion } from "framer-motion";
 import { Star } from "lucide-react"; // Assuming you have an icon library like Lucide for stars
+import { toast } from "react-toastify";
+import axiosClient from "../../utils/axiosClient";
 
 const BusinessDescription = ({ business }) => {
+  const handleBookService = async (req, res) => {
+    try {
+      const { data } = await axiosClient.post("/service/create", {
+        businessId: business._id,
+      });
+      console.log(data);
+      if (data.success) {
+        toast.success("Booking Done !");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+      console.log(error);
+    }
+  };
+
   // Function to render star rating
   const renderStars = (rating) => {
     const stars = [];
@@ -52,15 +71,18 @@ const BusinessDescription = ({ business }) => {
           <p className="text-gray-700">
             <strong>Facility:</strong> {business.facility}
           </p>
-          {business.facility=== "service" && <div className="text-center">
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className="text-white mt-2  bg-green-500 font-bold  px-4 mr-1 py-2 rounded-md transition-all"
-          >
-            Book a Service
-          </motion.button>
-          </div>}
+          {business.facility === "service" && (
+            <div className="text-center">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={handleBookService}
+                className="text-white mt-2  bg-green-500 font-bold  px-4 mr-1 py-2 rounded-md transition-all"
+              >
+                Book a Service
+              </motion.button>
+            </div>
+          )}
         </div>
       </div>
     </motion.div>
