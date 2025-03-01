@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import BusinessDescription from "./BusinessDescription";
 import ProductList from "./ProductList";
 import ReviewSection from "./ReviewSection";
-import ServiceSection from "./ServiceSection";
 import axiosClient from "../../utils/axiosClient";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -77,6 +76,11 @@ const BusinessPage = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  useEffect(() => {
+    if (business && business.facility !== "product") {
+      setActiveTab("description"); // Automatically switch to description
+    }
+  }, [business]);
 
   return (
     <div className="w-full min-h-screen">
@@ -98,19 +102,21 @@ const BusinessPage = () => {
           } md:translate-x-0 fixed md:relative h-screen z-40`}
         >
           <ul className="space-y-4">
-            <li
-              className={`cursor-pointer px-4 py-2 rounded ${
-                activeTab === "product"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-400"
-              }`}
-              onClick={() => {
-                setActiveTab("product");
-                setIsSidebarOpen(false); // Close sidebar on mobile after selecting a tab
-              }}
-            >
-              Product
-            </li>
+            {business !== null && business.facility === "product" && (
+              <li
+                className={`cursor-pointer px-4 py-2 rounded ${
+                  activeTab === "product"
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-400"
+                }`}
+                onClick={() => {
+                  setActiveTab("product");
+                  setIsSidebarOpen(false); // Close sidebar on mobile after selecting a tab
+                }}
+              >
+                Product
+              </li>
+            )}
             <li
               className={`cursor-pointer px-4 py-2 rounded ${
                 activeTab === "description"
@@ -142,25 +148,27 @@ const BusinessPage = () => {
 
         {/* Content Section */}
         <div
-          className={`w-full md:w-3/4  max-h-screen overflow-y-auto p-8 ${
+          className={`w-full md:w-3/4 max-h-screen overflow-y-auto p-8 ${
             isSidebarOpen && "pt-10"
           }`}
         >
-          {activeTab === "product" && <ProductList products={products} />}
-          {activeTab === "description" && (
+          {activeTab === "product" &&
+          business !== null &&
+          business.facility === "product" ? (
+            <ProductList products={products} />
+          ) : activeTab === "description" ? (
             <BusinessDescription
               business={business}
               onDelete={handleDeleteBusiness}
               onUpdate={handleUpdateBusiness}
             />
-          )}
-          {activeTab === "review" && (
+          ) : activeTab === "review" ? (
             <ReviewSection
               reviews={reviews}
               onDeleteReview={handleDeleteReview}
               onAddReview={handleAddReview}
             />
-          )}
+          ) : null}
         </div>
       </div>
     </div>

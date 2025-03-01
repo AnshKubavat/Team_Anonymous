@@ -1,7 +1,7 @@
-import { motion } from 'framer-motion';
-import { Star } from 'lucide-react'; // Assuming you have an icon library like Lucide for stars
+import { motion } from "framer-motion";
+import { Star } from "lucide-react"; // Assuming you have an icon library like Lucide for stars
 
-const BusinessDescription = ({ business}) => {
+const BusinessDescription = ({ business }) => {
   // Function to render star rating
   const renderStars = (rating) => {
     const stars = [];
@@ -10,7 +10,9 @@ const BusinessDescription = ({ business}) => {
         <Star
           key={i}
           size={20}
-          className={i <= rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}
+          className={
+            i <= rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"
+          }
         />
       );
     }
@@ -33,19 +35,32 @@ const BusinessDescription = ({ business}) => {
       <div className="p-6">
         <h2 className="text-2xl font-bold mb-2">{business.name}</h2>
         <p className="text-gray-700 mb-4">{business.description}</p>
-        
+
         <div className="flex items-center mb-4">
           <span className="text-gray-700 font-semibold mr-2">Rating:</span>
-          <div className="flex">
-            {renderStars(business.rating)}
-          </div>
+          <div className="flex">{renderStars(business.rating)}</div>
         </div>
 
         <div className="space-y-2 mb-4">
-          <p className="text-gray-700"><strong>City:</strong> {business.city}</p>
-          <p className="text-gray-700"><strong>Category:</strong> {business.categoryOfBusiness}</p>
+          <p className="text-gray-700">
+            <strong>City:</strong> {business.city}
+          </p>
+          <p className="text-gray-700">
+            <strong>Category:</strong> {business.categoryOfBusiness}
+          </p>
           {/* <p className="text-gray-700"><strong>Address:</strong> {business.city}</p> */}
-          <p className="text-gray-700"><strong>Facility:</strong> {business.facility}</p>
+          <p className="text-gray-700">
+            <strong>Facility:</strong> {business.facility}
+          </p>
+          {business.facility=== "service" && <div className="text-center">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="text-white mt-2  bg-green-500 font-bold  px-4 mr-1 py-2 rounded-md transition-all"
+          >
+            Book a Service
+          </motion.button>
+          </div>}
         </div>
       </div>
     </motion.div>
