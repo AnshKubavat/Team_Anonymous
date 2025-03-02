@@ -101,6 +101,7 @@ export default function AddSeller() {
       if (data.success) {
         toast.success("Seller created successfully!");
         navigate("/mybusiness");
+        scrollTo(0, 0);
       } else {
         toast.error(data.message);
       }
@@ -253,5 +254,4 @@ export default function AddSeller() {
       </motion.div>
     </div>
   );
-  
 }
