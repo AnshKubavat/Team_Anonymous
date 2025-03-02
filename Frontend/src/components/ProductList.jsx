@@ -1,12 +1,19 @@
-import React from "react";
+import React, { useState,useEffect } from "react";
+import axiosClient from "../utils/axiosClient";
 
-const ProductList = ({ products, setEditingProduct, setSelectedSection, setProducts }) => {
+const ProductList = ({business}) => {
+   const [products, setProducts] = useState([]);
+  const [selectedSection, setSelectedSection] = useState("list");
+  const [editingProduct, setEditingProduct] = useState(null);
+
+console.log(business);
+
   return (
     <div className="max-h-full px-5 overflow-y-auto">
       <h2 className="text-2xl text-center font-bold mb-4">📦 All Products</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.length > 0 ? (
-          products.map((product) => (
+        {business?.products?.length > 0 ? (
+          business?.products?.map((product) => (
             <div
               key={product.id}
               className="border rounded-2xl shadow-lg p-4 bg-white"
