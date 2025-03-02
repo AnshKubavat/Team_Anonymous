@@ -6,19 +6,14 @@ const Category = () => {
   const navigate = useNavigate();
 
   const handleCategoryClick = (category) => {
-    const formattedCategory = category
-      .toLowerCase()
-      .replace(/ & /g, "-")
-      .replace(/ /g, "-");
-
     const { data } = axiosClient.post("/user/history", { category });
     console.log(data);
 
-    navigate(`/category/${formattedCategory}`);
+    navigate(`/category/${category}`);
   };
 
   return (
-    <div className="p-6 bg-[#FEF6EF]" >
+    <div className="p-6 bg-[#FEF6EF]">
       <h2 className="text-2xl font-bold text-center mb-6">
         Business Categories
       </h2>

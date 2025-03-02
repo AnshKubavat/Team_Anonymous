@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-
+import { useEffect } from "react";
+import { translateText } from "../../utils/translateService"; 
+import { useSelector } from "react-redux";
 const ProductCard = ({ product}) => {
     return (
         <motion.div
@@ -70,7 +72,22 @@ const ProductList = () => {
             image: "https://via.placeholder.com/150"
         }
     ]);
-
+    const { language } = useSelector((state) => state.user);
+    useEffect(() => {
+        const translateProductDetails = async () => {
+          const translatedProducts = await Promise.all(
+            products.map(async (product) => ({
+              ...product,
+              name: await translateText(product.name, language),
+              description: await translateText(product.description, language),
+            }))
+          );
+      
+          setProducts(translatedProducts);
+        };
+      
+        translateProductDetails();
+      }, [language]);
     const handleDelete = (id) => {
         setProducts(products.filter(product => product.id !== id));
     };

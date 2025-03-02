@@ -74,13 +74,15 @@ export const fetchAllSeller = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error", success: false });
   }
 };
-
 export const fetchAllBusinesses = async (req, res) => {
   try {
     const businesses = await Business.aggregate([
       {
+        $match: { isDeleted: false },
+      },
+      {
         $lookup: {
-          from: "users", // Collection name in MongoDB
+          from: "users",
           localField: "seller",
           foreignField: "_id",
           as: "sellerDetails",
@@ -127,7 +129,74 @@ export const fetchAllBusinesses = async (req, res) => {
     if (!businesses.length) {
       return res
         .status(200)
-        .json({ success: false, message: "No businesses found" });
+        .json({ success: false, message: "No active businesses found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: { businesses },
+    });
+  } catch (error) {
+    console.error("Error fetching businesses:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+export const fetchAllDeletedBusinesses = async (req, res) => {
+  try {
+    const businesses = await Business.aggregate([
+      {
+        $match: { isDeleted: true },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "seller",
+          foreignField: "_id",
+          as: "sellerDetails",
+        },
+      },
+      {
+        $unwind: { path: "$sellerDetails", preserveNullAndEmptyArrays: true },
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "products",
+          foreignField: "_id",
+          as: "productDetails",
+        },
+      },
+      {
+        $lookup: {
+          from: "reviews",
+          localField: "reviews",
+          foreignField: "_id",
+          as: "reviewDetails",
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          businessName: 1,
+          description: 1,
+          city: 1,
+          categoryOfBusiness: 1,
+          address: 1,
+          isActive: 1,
+          "sellerDetails._id": 1,
+          "sellerDetails.name": 1,
+          "sellerDetails.username": 1,
+          "sellerDetails.email": 1,
+          productCount: { $size: "$productDetails" },
+          reviewCount: { $size: "$reviewDetails" },
+        },
+      },
+    ]);
+
+    if (!businesses.length) {
+      return res
+        .status(200)
+        .json({ success: false, message: "No active businesses found" });
     }
 
     res.status(200).json({

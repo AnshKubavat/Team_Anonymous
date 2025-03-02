@@ -13,7 +13,7 @@ import useAdminRouter from "./routes/admin.route.js";
 import serviceRouter from "./routes/service.route.js";
 import useLocationRouter from "./routes/location.route.js";
 import translateRouter from "./routes/translate.route.js";
-import recommendRouter from "./routes/recommend.route.js";
+
 import useReviewRouter from "./routes/review.route.js";
 
 
@@ -52,9 +52,30 @@ app.get("/review/:id", async (req, res) => {
 });
 
 
-// 🔹 Flask Recommendation API Route
-app.use("/recommend", recommendRouter);
 
+
+app.post("/recommend", async (req, res) => {
+  try {
+    const { user_id } = req.body;
+
+    if (!user_id) {
+      
+      return res.status(400).json({ error: "User ID is required" });
+    }
+    // Forward request to Flask server
+    const response = await axios.post(
+      `${process.env.FLASK_URL}/recommend`,
+      { user_id },
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+  
+    return res.json(response.data);
+  } catch (error) {
+  
+    return res.status(500).json({ error: "Failed to fetch recommendations" });
+  }
+});
 //server start
 app.listen(PORT, () => {
   connectDB();

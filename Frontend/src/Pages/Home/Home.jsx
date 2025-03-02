@@ -10,7 +10,7 @@ import ad2 from "../../assets/ad2.jpg";
 import ad3 from "../../assets/ad3.png";
 import ad4 from "../../assets/ad4.jpg";
 import axiosClient from "../../utils/axiosClient";
-
+import { translateText } from "../../utils/translateService";
 const slides = [
   { id: 1, color: "bg-red-500", image: ad1 },
   { id: 2, color: "bg-blue-500", image: ad2 },
@@ -36,45 +36,77 @@ const Home = () => {
 
   const t = locales[language];
 
+  // #########################3
+
+  const translateBusinessList = async (list, lang) => {
+    if (!list.length) return list;
+  
+    return await Promise.all(
+      list.map(async (business) => ({
+        ...business,
+        businessName: await translateText(business.businessName, lang),
+        categoryOfBusiness: await translateText(business.categoryOfBusiness, lang),
+        city: await translateText(business.city, lang), // ✅ Translate city names
+      }))
+    );
+  };
+  
+
   const fetchBusinesses = async () => {
     try {
       const result = await dispatch(fetchAllSeller({ city, category }));
       if (result.payload?.success) {
-        setBusinessList(result.payload?.message?.businesses);
+        const fetchedBusinesses = result.payload?.message?.businesses;
+
+        // 🔹 Apply translation
+        const translatedBusinesses = await translateBusinessList(fetchedBusinesses, language);
+        setBusinessList(translatedBusinesses);
       } else {
         setBusinessList([]);
-        console.error("Error in fetchBusinesses:", result.payload?.message);
       }
     } catch (error) {
       console.error("Error in fetchBusinesses:", error);
     }
   };
+
+  useEffect(() => {
+    const applyTranslation = async () => {
+      if (businessList.length > 0) {
+        const translatedBusinesses = await translateBusinessList(businessList, language);
+        setBusinessList(translatedBusinesses);
+        const translatedRecommendation = await translateText(recommendations,language)
+        setRecommendations(translatedRecommendation)
+      }
+    };
+  
+    applyTranslation();
+ },[language]);
+
   const userId = user?._id;
 
-  const fetchRecommendations = async () => {
-    try {
-      if (!userId) return;
-      console.log("Fetching recommendations for user:", userId);
+    const fetchRecommendations = async () => {
+      try {
+        if (!userId) return;
+        console.log("Fetching recommendations for user:", userId);
 
-      const response = await axiosClient.post("/recommend", {
-        user_id: userId,
-        city,
-      });
+        const response = await axiosClient.post("/recommend", {
+          user_id: userId,
+          city,
+        });
 
-      console.log("API Response:", response.data);
+        console.log("API Response:", response.data);
 
-      if (response.data?.length > 0) {
-        setRecommendations(response.data);
-      } else {
-        setRecommendations([]);
-        console.log("No recommendations found");
-      }
-    } catch (error) {
-      console.log(error);
-      console.error("Error fetching recommendations:", error);
-    }
+        if (response.data?.length > 0) {
+          setRecommendations(response.data);
+        } else {
+          setRecommendations([]);
+          console.log("No recommendations found");
+        }
+      } catch (error) {
+        console.log(error);
+        console.error("Error fetching recommendations:", error);
+  }
   };
-
   useEffect(() => {
     if (city) {
       fetchBusinesses();

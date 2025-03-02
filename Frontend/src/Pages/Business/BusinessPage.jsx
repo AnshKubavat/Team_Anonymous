@@ -5,6 +5,8 @@ import ReviewSection from "./ReviewSection";
 import axiosClient from "../../utils/axiosClient";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { translateText } from "../../utils/translateService";
+import { useSelector } from "react-redux";
 
 const BusinessPage = () => {
   const [activeTab, setActiveTab] = useState("product");
@@ -12,11 +14,34 @@ const BusinessPage = () => {
   const [business, setBusiness] = useState(null);
   const { id } = useParams();
   console.log(business);
+  const { language } = useSelector((state) => state.user);
+  useEffect(() => {
+    if (business) {
+      const translateBusinessDetails = async () => {
+        const translatedName = await translateText(business.businessName, language);
+        const translatedDescription = await translateText(business.description, language);
+        const translatedCity = await translateText(business.city, language);
+        const translatedCategory = await translateText(business.categoryOfBusiness, language);
+        const translatedFacility = await translateText(business.facility, language);
+
+        setBusiness({
+          ...business,
+          businessName: translatedName,
+          description: translatedDescription,
+          city: translatedCity,
+          categoryOfBusiness: translatedCategory,
+          // facility: translatedFacility,
+        });
+      };
+
+      translateBusinessDetails();
+    }
+  }, [language]);
   useEffect(() => {
     fetchSellerDetail();
     fetchReviews(); // Fetch reviews when component mounts
   }, []);
-  
+
   const fetchReviews = async () => {
     try {
       const { data } = await axiosClient.get(`/review/${id}`); // Adjust endpoint as per your backend
@@ -30,7 +55,6 @@ const BusinessPage = () => {
       toast.error(error.message || "Failed to load reviews");
     }
   };
-  
 
   const fetchSellerDetail = async () => {
     try {
@@ -69,13 +93,12 @@ const BusinessPage = () => {
   ]);
   const [reviews, setReviews] = useState([]);
 
-  // const handleDeleteReview = (id) => {
-  //   setReviews(reviews.filter((review) => review.id !== id));
-  // };
-
   const handleAddReview = async (newReview) => {
     try {
-      const { data } = await axiosClient.post(`/review/${business._id}/add`, newReview);
+      const { data } = await axiosClient.post(
+        `/review/${business._id}/add`,
+        newReview
+      );
       if (data.success) {
         setReviews([...reviews, data.review]); // Add the saved review from backend
       } else {
@@ -86,7 +109,6 @@ const BusinessPage = () => {
       toast.error("Failed to add review");
     }
   };
-  
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -173,14 +195,10 @@ const BusinessPage = () => {
           business.facility === "product" ? (
             <ProductList products={products} />
           ) : activeTab === "description" ? (
-            <BusinessDescription
-              business={business}
-         
-            />
+            <BusinessDescription business={business} />
           ) : activeTab === "review" ? (
             <ReviewSection
               reviews={business.reviews}
-            
               onAddReview={handleAddReview}
             />
           ) : null}
