@@ -19,7 +19,7 @@ const SideBar = () => {
 
   return (
     
-      <div>
+      <div >
         
       {/* Hamburger Button for Mobile */}
       <button
@@ -30,7 +30,7 @@ const SideBar = () => {
 
       {/* Sidebar */}
       <div
-        className={`min-h-[800px]  z-50 inset-y-0 left-0 md:p-3 md:text-xl md:w-64 w-48 bg-blue-800 text-white transform ${
+        className={`min-h-[800px]  z-50 inset-y-0 left-0 md:p-3 md:text-xl md:w-64 w-48 bg-[#3B2E2E] text-white transform ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0 transition-transform duration-200 ease-in-out`}
       >
@@ -44,7 +44,7 @@ const SideBar = () => {
                     <Link
                      to={`/admin/${item.trim().replace(/\s/g, "").toLowerCase()}`}
                       onClick={closeSidebar} 
-                      className="block p-2 hover:bg-blue-900 rounded"
+                      className="block p-2 hover:bg-grey-800 rounded"
                     >
                       {item}
                     </Link>

@@ -1,5 +1,5 @@
 {
-    "en": {
+    "English": {
       "create_business": "Create Business",
       "business_name": "Business Name",
       "enter_business": "Enter Your Business",
@@ -18,7 +18,7 @@
       "latitude": "Latitude",
       "longitude": "Longitude"
     },
-    "gu": {
+    "Gujarati": {
       "create_business": "વ્યવસાય બનાવો",
       "business_name": "વ્યવસાયનું નામ",
       "enter_business": "તમારો વ્યવસાય દાખલ કરો",
@@ -37,7 +37,7 @@
       "latitude": "અક્ષાંશ",
       "longitude": "રેખાંશ"
     },
-    "hi": {
+    "Hindi": {
       "create_business": "व्यवसाय बनाएँ",
       "business_name": "व्यवसाय का नाम",
       "enter_business": "अपना व्यवसाय दर्ज करें",

@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import axiosClient from "../../utils/axiosClient";
 import { toast } from "react-toastify";
-
+import locales from "../../locales/contact.locales.json";
+import { useSelector } from "react-redux";
 const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,6 +28,8 @@ const Contact = () => {
       console.error("Error submitting contact form:", error);
     }
   };
+  const { language } = useSelector((state) => state.user);
+  const t = locales[language];
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#F8EFE5] p-4 md:p-10">
@@ -34,24 +37,24 @@ const Contact = () => {
         {/* Left Side - Form */}
         <div className="flex-1 p-4 md:p-6 border border-blue-500 rounded-md">
           <h2 className="text-2xl font-bold mb-4 text-center md:text-left">
-            CONTACT US
+            {t.contact_us}
           </h2>
           <form className="space-y-4" onSubmit={handleSubmit}>
             <input
               type="text"
               name="name"
-              placeholder="Enter Your Name"
+              placeholder={t.enter_name}
               className="w-full p-3 border border-black rounded-md"
             />
             <input
               type="email"
               name="email"
-              placeholder="E-mail"
+              placeholder={t.email}
               className="w-full p-3 border border-black rounded-md"
             />
             <textarea
               name="message"
-              placeholder="Your Message"
+              placeholder={t.your_message}
               className="w-full p-3 border border-black rounded-md"
             ></textarea>
             <motion.button
@@ -60,11 +63,11 @@ const Contact = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Send
+              {t.send}
             </motion.button>
           </form>
         </div>
-
+  
         {/* Right Side - Map & Address */}
         <div className="flex-1 relative p-4 md:p-6 border border-blue-500 rounded-md mt-6 md:mt-0 md:ml-6">
           <div className="w-full h-48 md:h-64 bg-gray-200">
@@ -77,7 +80,7 @@ const Contact = () => {
             ></iframe>
           </div>
           <div className="absolute bottom-2 text-center left-4 bg-[#F8EFE5] p-2 md:p-4 shadow-md rounded-md">
-            <h3 className="font-semibold text-sm md:text-base">Address</h3>
+            <h3 className="font-semibold text-sm md:text-base">{t.address}</h3>
             <p className="text-xs md:text-sm">NearByGo</p>
             <p className="text-xs md:text-sm">V.V.Nagar</p>
             <p className="text-xs md:text-sm">+91 987654321</p>
@@ -86,6 +89,7 @@ const Contact = () => {
       </div>
     </div>
   );
+  
 };
 
 export default Contact;
