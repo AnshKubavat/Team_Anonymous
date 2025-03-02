@@ -13,7 +13,6 @@ import { KEY_ACCESS_TOKEN } from "../../utils/localStorageManager";
 
 const SellerDashboard = () => {
   const [selectedSection, setSelectedSection] = useState("profile");
-  const [showImageModal, setShowImageModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
@@ -33,8 +32,6 @@ const SellerDashboard = () => {
   const API_URL =
     "https://api-inference.huggingface.co/models/ZB-Tech/Text-to-Image";
 
-  const openImageModal = () => setShowImageModal(true);
-  const closeImageModal = () => setShowImageModal(false);
 
   const handleFileChange = (e) => {
   const file = e.target.files[0];
@@ -62,34 +59,6 @@ const SellerDashboard = () => {
   //   setNewProduct({ name: "", price: "", description: "", image: null });
   // };
 
-  const handleGenerateAIImage = async () => {
-    if (!newProduct.name) {
-      alert("Please enter a product name first.");
-      return;
-    }
-    setLoading(true);
-    try {
-      const uniquePrompt = `${newProduct.name} ${Math.random()
-        .toString(36)
-        .substring(7)}`;
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ inputs: uniquePrompt }),
-      });
-      const blob = await response.blob();
-      const file = new File([blob], `${newProduct.name}.png`, { type: "image/png" });
-      setNewProduct({ ...newProduct, image: file });
-    } catch (error) {
-      console.error("Image generation failed", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleUpdateProduct = (e) => {
     e.preventDefault();
     if (!editingProduct) return;
@@ -101,35 +70,6 @@ const SellerDashboard = () => {
     setEditingProduct(null);
     setSelectedSection("viewProducts");
   };
-
-  const openCamera = () => {
-    setIsCameraOpen(true);
-    setCapturedImage(null);
-  };
-
- const capturePhoto = async () => {
-  const imageSrc = webcamRef.current.getScreenshot();
-  setCapturedImage(imageSrc);
-
-  // Convert base64 image to File
-  const blob = await fetch(imageSrc).then(res => res.blob());
-  const file = new File([blob], "captured-image.png", { type: "image/png" });
-
-  setNewProduct({ ...newProduct, image: file });
-};
-
-
-  const closeCamera = () => {
-    setIsCameraOpen(false);
-  };
-
-  const fileInputRef = useRef(null);
-  const handleUploadClick = () => {
-    fileInputRef.current.click();
-  };
- 
-
-  
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -200,11 +140,6 @@ const SellerDashboard = () => {
   const handleBusinessChange = (e) => {
     setEditedBusiness({ ...editedBusiness, [e.target.name]: e.target.value });
   };
-
-
-
- 
-
   const handleSaveBusinessChanges = async () => {
     try {
       const { data } = await axiosClient.put(`/business/${business._id}`, editedBusiness);
@@ -224,24 +159,6 @@ const SellerDashboard = () => {
   const style2 = " text-black text-2xl p-[6px]";
   const btnStyle = isOpen ? style1 : style2;
 
-
-
-
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const { data } = await axiosClient.get("http://localhost:3000/api/products"); // Update API URL
-        if (data.success) {
-          setProducts(data.products); // Ensure correct data format
-        }
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-
-    fetchProducts();
-  }, []);
 
   return (
     <div className="flex">
