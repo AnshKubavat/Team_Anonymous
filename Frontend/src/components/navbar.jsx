@@ -13,17 +13,13 @@ const Navbar = ({ isAuthenticated }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenForLanguage, setIsOpenForLanguage] = useState(false);
   const [cityDropdown, setCityDropdown] = useState(false);
-  const [categoryDropdown, setCategoryDropdown] = useState(false);
   const [citySearch, setCitySearch] = useState("");
-  const [categorySearch, setCategorySearch] = useState("");
   const dispatch = useDispatch();
   const selectedCity = getItem("city");
   const language = getItem("language");
   const [selectLanguage, setSelectLanguage] = useState(language || "English");
-  const selectedCategory = getItem("category");
   const { user } = useSelector((state) => state.user);
   const dropdownRef = useRef(null);
-  const { category } = useSelector((state) => state.user);
   const languages = ["English", "Hindi", "Gujarati"];
   
  
@@ -41,25 +37,18 @@ const Navbar = ({ isAuthenticated }) => {
   const handleLanguageDropdownClick = () => {
     setIsOpenForLanguage(!isOpenForLanguage);
     setCityDropdown(false);
-    setCategoryDropdown(false); 
   };
   
   const handleCityDropdownClick = () => {
     setCityDropdown(!cityDropdown);
     setIsOpenForLanguage(false);
-    setCategoryDropdown(false);
   };
-  const handleCategoryDropdownClick = () => {
-    setCategoryDropdown(!categoryDropdown);
-    setIsOpenForLanguage(false);
-    setCityDropdown(false);
-  };
+ 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpenForLanguage(false);
         setCityDropdown(false);
-        setCategoryDropdown(false);
       }
     };
 
@@ -73,9 +62,7 @@ const Navbar = ({ isAuthenticated }) => {
     city.toLowerCase().includes(citySearch.toLowerCase())
   );
 
-  const filteredCategories = categories.filter((category) =>
-    category.toLowerCase().includes(categorySearch.toLowerCase())
-  );
+ 
   return (
     <nav ref={dropdownRef} className="bg-[#FEF6EF] p-4 shadow-lg">
       <div className="container mx-auto flex items-center justify-between">
@@ -179,7 +166,6 @@ const Navbar = ({ isAuthenticated }) => {
         <div className="relative hidden  md:flex">
           <button
             className="flex md:w-54 items-center text-gray-700 font-medium px-3 py-1 border border-gray-300 rounded-sm bg-white gap-2"
-            // onClick={() => setCityDropdown(!cityDropdown)}
             onClick={handleCityDropdownClick}
           >
             <MapPin size={18} className="text-gray-600" />
@@ -215,48 +201,9 @@ const Navbar = ({ isAuthenticated }) => {
           )}
         </div>
 
-        {/* Category Dropdown */}
+       
 
-        <div className="relative hidden  md:flex">
-          <button
-            placeholder="Search"
-            className="flex items-center min-h-8 text-gray-700 font-medium px-3 py-1 border border-gray-300 rounded-sm bg-white gap-2 md:w-64"
-            // onClick={() => setCategoryDropdown(!categoryDropdown)}
-            onClick={handleCategoryDropdownClick}
-          >
-            {/* <MapPin size={18} className="text-gray-600" /> */}
-            {selectedCategory}
-            <ChevronDown size={18} className="absolute right-3" />
-          </button>
-          {categoryDropdown && (
-            <div className="absolute max-h-64 overflow-y-auto  bg-white shadow-md rounded-sm mt-10 p-2 z-10">
-              <input
-                type="text"
-                placeholder="Search Category..."
-                className="w-full md:w-60 p-1 mb-2 border rounded text-gray-700"
-                value={categorySearch}
-                onChange={(e) => setCategorySearch(e.target.value)}
-                autoFocus
-              />
-              <ul>
-                {filteredCategories.map((category, index) => (
-                  <li
-                    key={index}
-                    className="p-2 flex items-center gap-2 hover:bg-[#FCE2CE] cursor-pointer text-gray-700"
-                    onClick={() => {
-                      dispatch(setCategory(category));
-                      setCategoryDropdown(false);
-                      setCategorySearch("");
-                    }}
-                  >
-                    {/* <MapPin size={16} className="text-black" /> */}
-                    {category}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
+       
 
         {/* Profile or Login Button */}
         <div className="lg:flex">
@@ -288,19 +235,7 @@ const Navbar = ({ isAuthenticated }) => {
         </button>
       </div>
 
-      {/* Mobile Search Bar */}
-      {/* {showSearch && (
-        <div className="lg:hidden mt-2 p-3">
-          <div className="flex items-center bg-white px-4 py-2 rounded-sm border-1 border-gray-400">
-            <Search className="text-gray-500" size={20} />
-            <input
-              type="text"
-              placeholder="Search By Category"
-              className="ml-3 outline-none w-full text-lg"
-            />
-          </div>
-        </div>
-      )} */}
+      
 
       {/* Mobile Menu */}
       {isOpen && (
@@ -363,46 +298,10 @@ const Navbar = ({ isAuthenticated }) => {
             </li>
           </ul>
 
-          {/* Mobile Category Dropdown */}
-          <button
-            className="md:hidden flex items-center text-gray-700 font-medium p-2 border border-gray-300 rounded-lg bg-white gap-2 w-full"
-            onClick={() => setCategoryDropdown(!categoryDropdown)}
-          >
-            {/* <MapPin size={18} /> */}
-            {selectedCategory} <ChevronDown size={18} className="ml-auto" />
-          </button>
+        
+         
 
-          {categoryDropdown && (
-            <div className="bg-white rounded-sm mt-1 w-full p-2 z-10">
-              {/* Search Bar inside the dropdown */}
-              <input
-                type="text"
-                placeholder="Search Category..."
-                className="w-full p-2 border border-gray-300 rounded-md text-gray-700"
-                value={categorySearch}
-                onChange={(e) => setCategorySearch(e.target.value)}
-                autoFocus
-              />
-
-              <ul className="mt-2 max-h-40 overflow-y-auto">
-                {filteredCategories.map((category, index) => (
-                  <li
-                    key={index}
-                    className="p-2 flex items-center gap-2 hover:bg-gray-200 cursor-pointer text-gray-700"
-                    onClick={() => {
-                      dispatch(setCategory(category));
-                      setCategoryDropdown(false);
-                      setCategorySearch("");
-                      // setIsOpen(false);
-                    }}
-                  >
-                    {/* <MapPin size={16} className="text-black" />  */}
-                    {category}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+         
 
           {/* Mobile City Dropdown */}
           <button
@@ -443,26 +342,6 @@ const Navbar = ({ isAuthenticated }) => {
               </ul>
             </div>
           )}
-
-          {/* Login Button (Mobile) */}
-          {/* <div className="text-center flex justify-center">
-            {isAuthenticated ? (
-              <User
-                className="text-gray-600 md:hidden  cursor-pointer"
-                size={32}
-              />
-            ) : (
-              <NavLink to="/login">
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  className="text-gray-600 md:hidden bg-gray-300 font-bold px-4 py-2 rounded-md transition-all"
-                >
-                  Login
-                </motion.button>
-              </NavLink>
-            )}
-          </div> */}
         </div>
       )}
     </nav>
