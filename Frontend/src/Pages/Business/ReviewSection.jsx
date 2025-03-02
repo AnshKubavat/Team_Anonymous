@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-
+import { translateText } from "../../utils/translateService"; 
+import { useSelector } from "react-redux";
 const ReviewSection = ({ reviews, onAddReview }) => {
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [newReview, setNewReview] = useState({ rating: 0, comment: "" });
@@ -8,7 +9,21 @@ const ReviewSection = ({ reviews, onAddReview }) => {
   useEffect(() => {
     
   },[reviews])
-
+  const { language } = useSelector((state) => state.user);
+  useEffect(() => {
+    const translateReviews = async () => {
+      const translatedReviews = await Promise.all(
+        reviews.map(async (review) => ({
+          ...review,
+          comment: await translateText(review.comment, language),
+        }))
+      );
+  
+      reviews = translateReviews;
+    };
+  
+    translateReviews();
+  }, [language]);
   const handleSubmitReview = (e) => {
     e.preventDefault();
 

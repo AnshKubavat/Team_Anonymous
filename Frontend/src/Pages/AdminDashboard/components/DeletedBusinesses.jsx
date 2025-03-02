@@ -5,6 +5,8 @@ import axiosClient from "../../../utils/axiosClient";
 import { toast } from "react-toastify";
 import ReactPaginate from "react-paginate";
 import { cities,categories } from "../../../assets/assets";
+import { translateText } from "../../../utils/translateService";
+import { useSelector } from "react-redux";
 const DeletedBusinesses = () => {
   const [cityDropdown, setCityDropdown] = useState(false);
   const [categoryDropdown, setCategoryDropdown] = useState(false);
@@ -34,23 +36,32 @@ const DeletedBusinesses = () => {
     };
   }, []);
 
+  const { language } = useSelector((state) => state.user);
+  
   const fetchAllBusinesses = async () => {
     try {
       const { data } = await axiosClient.get("/admin/api/alldeletedbusinesses");
       console.log(data);
-
+  
       if (data?.success) {
-        setBusinesses(data.message.businesses);
+        const businessesWithTranslatedCities = await Promise.all(
+          data.message.businesses.map(async (business) => ({
+            ...business,
+            city: await translateText(business.city, language),
+          }))
+        );
+        setBusinesses(businessesWithTranslatedCities);
       }
     } catch (error) {
       console.log(error);
       toast.error(error.message);
     }
   };
-
+  
   useEffect(() => {
     fetchAllBusinesses();
-  }, []);
+  }, [language]);
+
 
   const filteredCities = cities.filter((city) =>
     city.toLowerCase().includes(citySearch.toLowerCase())
