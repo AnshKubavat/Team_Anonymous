@@ -6,7 +6,7 @@ import axiosClient from "../../utils/axiosClient";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { translateText } from "../../utils/translateService";
-import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 const BusinessPage = () => {
   const [activeTab, setActiveTab] = useState("product");
@@ -18,11 +18,23 @@ const BusinessPage = () => {
   useEffect(() => {
     if (business) {
       const translateBusinessDetails = async () => {
-        const translatedName = await translateText(business.businessName, language);
-        const translatedDescription = await translateText(business.description, language);
+        const translatedName = await translateText(
+          business.businessName,
+          language
+        );
+        const translatedDescription = await translateText(
+          business.description,
+          language
+        );
         const translatedCity = await translateText(business.city, language);
-        const translatedCategory = await translateText(business.categoryOfBusiness, language);
-        const translatedFacility = await translateText(business.facility, language);
+        const translatedCategory = await translateText(
+          business.categoryOfBusiness,
+          language
+        );
+        const translatedFacility = await translateText(
+          business.facility,
+          language
+        );
 
         setBusiness({
           ...business,
@@ -36,7 +48,7 @@ const BusinessPage = () => {
 
       translateBusinessDetails();
     }
-  }, [language]);
+  }, [language]);
   useEffect(() => {
     fetchSellerDetail();
     fetchReviews(); // Fetch reviews when component mounts
@@ -44,7 +56,7 @@ const BusinessPage = () => {
 
   const fetchReviews = async () => {
     try {
-      const { data } = await axiosClient.get(`/review/${id}`); // Adjust endpoint as per your backend
+      const { data } = await axiosClient.get(`/review/get/${id}`); // Adjust endpoint as per your backend
       if (data.success) {
         setReviews(data.reviews);
       } else {
@@ -52,7 +64,7 @@ const BusinessPage = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.message || "Failed to load reviews");
+      toast.error(error.response.data.message || "Failed to load reviews");
     }
   };
 
@@ -106,7 +118,7 @@ const BusinessPage = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error("Failed to add review");
+      toast.error(error.response.data.message);
     }
   };
 
@@ -135,7 +147,7 @@ const BusinessPage = () => {
       <div className="flex w-full min-h-screen bg-gray-200 rounded-lg shadow-lg">
         {/* Sidebar */}
         <div
-          className={`md:w-1/4 bg-gray-300 p-6 rounded-l-lg transform transition-transform duration-300 ease-in-out ${
+          className={`md:w-1/6 bg-[#FEF6EF] p-6 rounded-l-lg transform transition-transform duration-300 ease-in-out ${
             isSidebarOpen ? "translate-x-0 pt-14" : "-translate-x-full"
           } md:translate-x-0 fixed md:relative h-screen z-40`}
         >
@@ -144,8 +156,8 @@ const BusinessPage = () => {
               <li
                 className={`cursor-pointer px-4 py-2 rounded ${
                   activeTab === "product"
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-400"
+                    ? "bg-[#FCE2CE] text-black"
+                    : "bg-[#FEF6EF]"
                 }`}
                 onClick={() => {
                   setActiveTab("product");
@@ -158,8 +170,8 @@ const BusinessPage = () => {
             <li
               className={`cursor-pointer px-4 py-2 rounded ${
                 activeTab === "description"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-400"
+                  ? "bg-[#FCE2CE] text-black"
+                  : "bg-[#FEF6EF]"
               }`}
               onClick={() => {
                 setActiveTab("description");
@@ -171,8 +183,8 @@ const BusinessPage = () => {
             <li
               className={`cursor-pointer px-4 py-2 rounded ${
                 activeTab === "review"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-400"
+                  ? "bg-[#FCE2CE] text-black"
+                  : "bg-"
               }`}
               onClick={() => {
                 setActiveTab("review");

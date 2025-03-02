@@ -243,16 +243,16 @@ const SellerDashboard = () => {
   const menuItems =
     business?.facility === "product"
       ? [
-        { name: "🏪 My Shop", key: "profile" },
-        { name: "➕ Add New Product", key: "addProduct" },
-        { name: "📦 View All Products", key: "viewProducts" },
-        { name: "⭐ Reviews & Ratings", key: "reviews" },
-      ]
+          { name: "My Shop", key: "profile" },
+          { name: "Add New Product", key: "addProduct" },
+          { name: "View All Products", key: "viewProducts" },
+          { name: "Reviews & Ratings", key: "reviews" },
+        ]
       : [
-        { name: "🏪 My Shop", key: "profile" },
-        { name: "👤 Services", key: "services" },
-        { name: "⭐ Reviews & Ratings", key: "reviews" },
-      ];
+          { name: "My Shop", key: "profile" },
+          { name: " Services", key: "services" },
+          { name: " Reviews & Ratings", key: "reviews" },
+        ];
 
   //   business?.services.forEach((service, index) => {
   //   console.log(Service ${index + 1} Owner Name:, service.owner?.username);
@@ -311,16 +311,17 @@ const SellerDashboard = () => {
 
           {/* Sidebar */}
           <div
-            className={`min-h-screen max-h-full z-50 inset-y-0 left-0 md:p-3 md:text-xl md:w-64 w-48 bg-gray-800 text-white transform ${isOpen ? "translate-x-0" : "-translate-x-full"
-              } lg:translate-x-0 transition-transform duration-200 ease-in-out`}
+            className={`min-h-screen max-h-full z-50 inset-y-0 left-0 md:p-3 md:text-xl md:w-64 w-48 bg-[#3B2E2E] text-white transform ${
+              isOpen ? "translate-x-0" : "-translate-x-full"
+            } lg:translate-x-0 transition-transform duration-200 ease-in-out`}
           >
-            <div className="p-4 pt-12 md:pt-0">
+            <div className="pt-12 md:pt-0">
               <h2 className="text-3xl font-bold">Dashboard</h2>
               <ul className="mt-7 ">
                 {menuItems.map((item) => (
                   <li
                     key={item.key}
-                    className="cursor-pointer hover:text-blue-400 mt-3 text-xl"
+                    className="cursor-pointer hover:text-[#FCE2CE] mt-3 border border-black px-3 my-1 py-1 text-left text-xl"
                     onClick={() => {
                       setSelectedSection(item.key);
                       setEditingProduct(null);
@@ -383,7 +384,9 @@ const SellerDashboard = () => {
         {/* Reviews Section */}
         {selectedSection === "reviews" && <ReviewList business={business} />}
 
-        {selectedSection === "services" && <ServiceList business={business} userRole={"seller"} />}
+        {selectedSection === "services" && (
+          <ServiceList business={business} userRole={"seller"} />
+        )}
       </div>
     </div>
   );

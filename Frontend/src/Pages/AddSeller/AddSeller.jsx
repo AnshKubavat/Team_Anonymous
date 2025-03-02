@@ -35,7 +35,7 @@ export default function AddSeller() {
     { value: "service", label: "Service" },
     { value: "product", label: "Product" },
   ];
-  
+
   const fetchLocation = () => {
     setIsFetchingLocation(true);
     if (navigator.geolocation) {
@@ -59,9 +59,12 @@ export default function AddSeller() {
       setIsFetchingLocation(false);
     }
   };
-   
-  const cityOptions = cities.map(city => ({ value: city, label: city }));
-  const categoryOptions = categories.map(category => ({ value: category, label: category }));
+
+  const cityOptions = cities.map((city) => ({ value: city, label: city }));
+  const categoryOptions = categories.map((category) => ({
+    value: category,
+    label: category,
+  }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -98,6 +101,7 @@ export default function AddSeller() {
       if (data.success) {
         toast.success("Seller created successfully!");
         navigate("/mybusiness");
+        scrollTo(0, 0);
       } else {
         toast.error(data.message);
       }
@@ -250,5 +254,4 @@ export default function AddSeller() {
       </motion.div>
     </div>
   );
-  
 }
