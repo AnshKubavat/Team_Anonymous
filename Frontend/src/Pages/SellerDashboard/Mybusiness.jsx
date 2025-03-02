@@ -153,7 +153,7 @@ const SellerDashboard = () => {
       const response = await fetch(API_URL, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${API_KEY}`,
+          Authorization: ` Bearer ${API_KEY}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ inputs: uniquePrompt }),
@@ -227,7 +227,7 @@ const SellerDashboard = () => {
 
   const fetchBusinessDetails = async () => {
     try {
-      const { data } = await axiosClient.get(`/business/seller`);
+      const { data } = await axiosClient.get("/business/seller");
       console.log("Fetched Business Data:", data);
 
       if (data.success && data.business) {
@@ -235,27 +235,27 @@ const SellerDashboard = () => {
       } else {
         toast.error(data.message || "Business details not found.");
       }
-    } catch (error) {
-      console.error("Error fetching business details:", error);
+    } catch (e) {
+      console.error("Error fetching business details:", e);
       toast.error("Failed to load business details.");
     }
   };
   const menuItems =
     business?.facility === "product"
       ? [
-          { name: "🏪 My Shop", key: "profile" },
-          { name: "➕ Add New Product", key: "addProduct" },
-          { name: "📦 View All Products", key: "viewProducts" },
-          { name: "⭐ Reviews & Ratings", key: "reviews" },
-        ]
+        { name: "🏪 My Shop", key: "profile" },
+        { name: "➕ Add New Product", key: "addProduct" },
+        { name: "📦 View All Products", key: "viewProducts" },
+        { name: "⭐ Reviews & Ratings", key: "reviews" },
+      ]
       : [
-          { name: "🏪 My Shop", key: "profile" },
-          { name: "👤 Services", key: "services" },
-          { name: "⭐ Reviews & Ratings", key: "reviews" },
-        ];
+        { name: "🏪 My Shop", key: "profile" },
+        { name: "👤 Services", key: "services" },
+        { name: "⭐ Reviews & Ratings", key: "reviews" },
+      ];
 
   //   business?.services.forEach((service, index) => {
-  //   console.log(`Service ${index + 1} Owner Name:`, service.owner?.username);
+  //   console.log(Service ${index + 1} Owner Name:, service.owner?.username);
   // });
 
   const handleBusinessEdit = () => {
@@ -311,9 +311,8 @@ const SellerDashboard = () => {
 
           {/* Sidebar */}
           <div
-            className={`min-h-screen max-h-full z-50 inset-y-0 left-0 md:p-3 md:text-xl md:w-64 w-48 bg-gray-800 text-white transform ${
-              isOpen ? "translate-x-0" : "-translate-x-full"
-            } lg:translate-x-0 transition-transform duration-200 ease-in-out`}
+            className={`min-h-screen max-h-full z-50 inset-y-0 left-0 md:p-3 md:text-xl md:w-64 w-48 bg-gray-800 text-white transform ${isOpen ? "translate-x-0" : "-translate-x-full"
+              } lg:translate-x-0 transition-transform duration-200 ease-in-out`}
           >
             <div className="p-4 pt-12 md:pt-0">
               <h2 className="text-3xl font-bold">Dashboard</h2>
@@ -388,6 +387,5 @@ const SellerDashboard = () => {
       </div>
     </div>
   );
-};
-
+}
 export default SellerDashboard;

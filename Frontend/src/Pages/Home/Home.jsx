@@ -84,29 +84,55 @@ const Home = () => {
 
   const userId = user?._id;
 
-    const fetchRecommendations = async () => {
-      try {
-        if (!userId) return;
-        console.log("Fetching recommendations for user:", userId);
+  // const fetchRecommendations = async () => {
+  //   try {
+  //     if (!userId) return;
+  //     console.log("Fetching recommendations for user:", userId);
 
-        const response = await axiosClient.post("/recommend", {
-          user_id: userId,
-          city,
-        });
+  //     const response = await axiosClient.post("/recommend", {
+  //       user_id: userId,
+  //       city,
+  //     });
 
-        console.log("API Response:", response.data);
+  //     console.log("API Response:", response.data);
 
-        if (response.data?.length > 0) {
-          setRecommendations(response.data);
-        } else {
-          setRecommendations([]);
-          console.log("No recommendations found");
-        }
-      } catch (error) {
-        console.log(error);
-        console.error("Error fetching recommendations:", error);
-  }
-  };
+  //     if (response.data?.length > 0) {
+  //       setRecommendations(response.data);
+  //       const translatedRecommendation = await translateBusinessList(recommendations, language);
+  //       setRecommendations(translatedRecommendation)
+        
+  //     } else {
+  //       setRecommendations([]);
+  //       console.log("No recommendations found");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     console.error("Error fetching recommendations:", error);
+  //   }
+  // };
+  const fetchRecommendations = async () => {
+    try {
+      if (!userId) return;
+      console.log("Fetching recommendations for user:", userId);
+
+      const response = await axiosClient.post("/recommend", {
+        user_id: userId,
+        city,
+      });
+
+      console.log("API Response:", response.data);
+
+      if (response.data?.length > 0) {
+        setRecommendations(response.data);
+      } else {
+        setRecommendations([]);
+        console.log("No recommendations found");
+      }
+    } catch (error) {
+      console.log(error);
+      console.error("Error fetching recommendations:", error);
+}
+};
   useEffect(() => {
     if (city) {
       fetchBusinesses();
@@ -114,7 +140,7 @@ const Home = () => {
     if (userId) {
       fetchRecommendations();
     }
-  }, [city, category]); // Fetch businesses & recommendations when city/user chan
+  }, [city, category,user]); // Fetch businesses & recommendations when city/user chan
   useEffect(() => {
     if (businessList.length > 0 && !isLocationFetched) {
        getUserLocationAndCalculateDistances();
