@@ -9,6 +9,7 @@ import ProductForm from "../../components/ProductForm";
 import ProductList from "../../components/ProductList";
 import ReviewList from "../../components/ReviewList";
 import ServiceList from "../../components/ServiceList";
+import { KEY_ACCESS_TOKEN } from "../../utils/localStorageManager";
 
 const SellerDashboard = () => {
   const [selectedSection, setSelectedSection] = useState("profile");
@@ -17,87 +18,9 @@ const SellerDashboard = () => {
   const [capturedImage, setCapturedImage] = useState(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const webcamRef = useRef(null);
+    const [products, setProducts] = useState([]);
 
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: "Laptop",
-      price: 1200,
-      description: "High-performance laptop",
-      image: "/images/laptop.jpg",
-      reviews: [{ user: "John", rating: 4.5, comment: "Great product!" }],
-    },
-    {
-      id: 2,
-      name: "Phone",
-      price: 800,
-      description: "Latest smartphone",
-      image: "/images/phone.jpg",
-      reviews: [{ user: "Sarah", rating: 4, comment: "Good quality!" }],
-    },
-    {
-      id: 2,
-      name: "Phone",
-      price: 800,
-      description: "Latest smartphone",
-      image: "/images/phone.jpg",
-      reviews: [{ user: "Sarah", rating: 4, comment: "Good quality!" }],
-    },
-    {
-      id: 2,
-      name: "Phone",
-      price: 800,
-      description: "Latest smartphone",
-      image: "/images/phone.jpg",
-      reviews: [{ user: "Sarah", rating: 4, comment: "Good quality!" }],
-    },
-    {
-      id: 2,
-      name: "Phone",
-      price: 800,
-      description: "Latest smartphone",
-      image: "/images/phone.jpg",
-      reviews: [{ user: "Sarah", rating: 4, comment: "Good quality!" }],
-    },
-    {
-      id: 2,
-      name: "Phone",
-      price: 800,
-      description: "Latest smartphone",
-      image: "/images/phone.jpg",
-      reviews: [{ user: "Sarah", rating: 4, comment: "Good quality!" }],
-    },
-    {
-      id: 2,
-      name: "Phone",
-      price: 800,
-      description: "Latest smartphone",
-      image: "/images/phone.jpg",
-      reviews: [{ user: "Sarah", rating: 4, comment: "Good quality!" }],
-    }, {
-      id: 2,
-      name: "Phone",
-      price: 800,
-      description: "Latest smartphone",
-      image: "/images/phone.jpg",
-      reviews: [{ user: "Sarah", rating: 4, comment: "Good quality!" }],
-    }, {
-      id: 2,
-      name: "Phone",
-      price: 800,
-      description: "Latest smartphone",
-      image: "/images/phone.jpg",
-      reviews: [{ user: "Sarah", rating: 4, comment: "Good quality!" }],
-    }, {
-      id: 2,
-      name: "Phone",
-      price: 800,
-      description: "Latest smartphone",
-      image: "/images/phone.jpg",
-      reviews: [{ user: "Sarah", rating: 4, comment: "Good quality!" }],
-    },
-  ]);
-
+ 
   const [newProduct, setNewProduct] = useState({
     name: "",
     price: "",
@@ -114,11 +37,12 @@ const SellerDashboard = () => {
   const closeImageModal = () => setShowImageModal(false);
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setNewProduct({ ...newProduct, image: URL.createObjectURL(file) });
-    }
-  };
+  const file = e.target.files[0];
+  if (file) {
+    setNewProduct({ ...newProduct, image: file });
+  }
+};
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -131,12 +55,12 @@ const SellerDashboard = () => {
   };
 
 
-  const handleAddProduct = (e) => {
-    e.preventDefault();
-    if (!newProduct.name || !newProduct.price) return;
-    setProducts([...products, { ...newProduct, id: Date.now(), reviews: [] }]);
-    setNewProduct({ name: "", price: "", description: "", image: null });
-  };
+  // const handleAddProduct = (e) => {
+  //   e.preventDefault();
+  //   if (!newProduct.name || !newProduct.price) return;
+  //   setProducts([...products, { ...newProduct, id: Date.now(), reviews: [] }]);
+  //   setNewProduct({ name: "", price: "", description: "", image: null });
+  // };
 
   const handleGenerateAIImage = async () => {
     if (!newProduct.name) {
@@ -157,7 +81,8 @@ const SellerDashboard = () => {
         body: JSON.stringify({ inputs: uniquePrompt }),
       });
       const blob = await response.blob();
-      setNewProduct({ ...newProduct, image: URL.createObjectURL(blob) });
+      const file = new File([blob], `${newProduct.name}.png`, { type: "image/png" });
+      setNewProduct({ ...newProduct, image: file });
     } catch (error) {
       console.error("Image generation failed", error);
     } finally {
@@ -182,11 +107,17 @@ const SellerDashboard = () => {
     setCapturedImage(null);
   };
 
-  const capturePhoto = () => {
-    const imageSrc = webcamRef.current.getScreenshot();
-    setCapturedImage(imageSrc);
-    setNewProduct({ ...newProduct, image: imageSrc });
-  };
+ const capturePhoto = async () => {
+  const imageSrc = webcamRef.current.getScreenshot();
+  setCapturedImage(imageSrc);
+
+  // Convert base64 image to File
+  const blob = await fetch(imageSrc).then(res => res.blob());
+  const file = new File([blob], "captured-image.png", { type: "image/png" });
+
+  setNewProduct({ ...newProduct, image: file });
+};
+
 
   const closeCamera = () => {
     setIsCameraOpen(false);
@@ -243,14 +174,14 @@ const SellerDashboard = () => {
   };
   const menuItems = business?.facility === "product"
     ? [
-      { name: "🏪 My Shop", key: "profile" },
-      { name: "➕ Add New Product", key: "addProduct" },
-      { name: "📦 View All Products", key: "viewProducts" },
-      { name: "⭐ Reviews & Ratings", key: "reviews" }
+      { name: "My Shop", key: "profile" },
+      { name: "Add New Product", key: "addProduct" },
+      { name: "View All Products", key: "viewProducts" },
+      { name: "Reviews & Ratings", key: "reviews" }
     ]
-    : [{ name: "🏪 My Shop", key: "profile" },
-       {name:"👤 Services", key:"services"},
-       { name: "⭐ Reviews & Ratings", key: "reviews" },
+    : [{ name: "My Shop", key: "profile" },
+       {name:" Services", key:"services"},
+       { name: "Reviews & Ratings", key: "reviews" },
     ];
 
 
@@ -270,6 +201,10 @@ const SellerDashboard = () => {
     setEditedBusiness({ ...editedBusiness, [e.target.name]: e.target.value });
   };
 
+
+
+ 
+
   const handleSaveBusinessChanges = async () => {
     try {
       const { data } = await axiosClient.put(`/business/${business._id}`, editedBusiness);
@@ -288,6 +223,25 @@ const SellerDashboard = () => {
   const style1 = "left-[165px]  text-white text-2xl md:top-[88px] md:left-[215px]";
   const style2 = " text-black text-2xl p-[6px]";
   const btnStyle = isOpen ? style1 : style2;
+
+
+
+
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { data } = await axiosClient.get("http://localhost:3000/api/products"); // Update API URL
+        if (data.success) {
+          setProducts(data.products); // Ensure correct data format
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   return (
     <div className="flex">
@@ -344,38 +298,13 @@ const SellerDashboard = () => {
 
         {/* Add or Update Product Form */}
         {selectedSection === "addProduct" && (
-          <ProductForm
-editingProduct={editingProduct}
-newProduct={newProduct}
-handleInputChange={handleInputChange}
-handleAddProduct={handleAddProduct}
-handleUpdateProduct={handleUpdateProduct}
-openImageModal={openImageModal}
-showImageModal={showImageModal}
-handleUploadClick={handleUploadClick}
-handleFileChange={handleFileChange}
-handleGenerateAIImage={handleGenerateAIImage}
-openCamera={openCamera}
-isCameraOpen={isCameraOpen}
-webcamRef={webcamRef}
-capturePhoto={capturePhoto}
-capturedImage={capturedImage}
-closeCamera={closeCamera}
-closeImageModal={closeImageModal}
-loading={loading}
-/>
+          <ProductForm />
 
         )}
 
         {/* View Products Section */}
         {selectedSection === "viewProducts" && (
-          <ProductList
-  products={products}
-  setEditingProduct={setEditingProduct}
-  setSelectedSection={setSelectedSection}
-  setProducts={setProducts}
-/>
-
+          <ProductList business={business}/>
         )}
         
         {/* Reviews Section */}
