@@ -7,6 +7,12 @@ from collections import Counter
 from collections import defaultdict
 from dotenv import load_dotenv
 import os
+from googletrans import Translator
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -48,6 +54,7 @@ def most_searched_category(categories):
 def recommend():
     data = request.json
     user_id = data.get("user_id")
+    print(user_id)
 
     if not user_id:
         return jsonify({"error": "User ID is required"}), 400
@@ -71,9 +78,6 @@ def recommend():
 
     most_category = most_searched_category(categories)
     
-
-   
-
     matching_business_ids = [
         str(business["_id"]) for business in all_businesses if business.get("categoryOfBusiness").lower() == most_category.lower()
     ]
@@ -136,6 +140,49 @@ def recommend():
             sorted_businesses, key=lambda b: sorted_business_ids.index(ObjectId(b["_id"])))
 
         return jsonify(sorted_businesses)
+
+
+faq_data = {
+    "What is the purpose of this platform?": "Our platform helps newcomers and tourists find local businesses like restaurants, tailors, cobblers, and rickshaw services in a unified digital space.",
+    "How does the platform work?": "Users can search for businesses, check service details, compare prices, and request rickshaw rides through an interactive web-based platform.",
+    "Do I need an account to use the platform?": "No, you can browse services without an account, but signing up allows you to leave reviews, save businesses, and request rickshaw rides.",
+    "What makes this platform different from Google Maps or other business directories?": "We focus on hyperlocal businesses that may not be listed elsewhere and integrate rickshaw ride requests, making it easier for new residents to find services.",
+    "Can business owners list their services on this platform?": "Yes, business owners can create accounts, list their services, and manage their business information through our platform.",
+    "How accurate are the business listings and prices?": "Business owners update their listings regularly, and users can report incorrect information.",
+    "Can I search for specific services like laundry or a blacksmith?": "Absolutely! The platform allows you to search for specific service categories and view available options near you.",
+    "How does the platform recommend businesses to users?": "We use AI-based recommendations based on your search history and top-rated businesses in your preferred category.",
+    "Is there a way to rate or review any services?": "Yes, users can rate and review businesses based on their experiences to help others make informed decisions.",
+    "Is my personal information safe?": "Yes! We use secure encryption and privacy measures to protect user data.",
+    "How can I contact support?": "You can contact support through our Contact Us page."
+}
+
+questions = list(faq_data.keys())
+answers = list(faq_data.values())
+
+vectorizer = TfidfVectorizer()
+question_vectors = vectorizer.fit_transform(questions)
+
+
+@app.route("/get_answer", methods=["POST"])
+def ask_question():
+    def get_answer():
+        data = request.json
+        user_query = data.get("question", "").strip()
+
+        if not user_query:
+            return jsonify({"error": "Please provide a question"}), 400
+
+        user_vector = vectorizer.transform([user_query])
+
+        similarities = cosine_similarity(user_vector, question_vectors).flatten()
+
+        best_match_idx = np.argmax(similarities)
+
+        if similarities[best_match_idx] < 0.2:  # If similarity is too low, return fallback
+            return jsonify({"answer": "I'm sorry, I couldn't find a relevant answer. Please check our FAQ section."})
+
+    # Return the best matching answer
+        return jsonify({"answer": answers[best_match_idx]})
 
 
 if __name__ == "__main__":
