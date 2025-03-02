@@ -75,9 +75,7 @@ export const getOwnBusiness = async (req, res) => {
     const user = req.user;
 
     if (!user?._id) {
-      return res
-        .status(400)
-        .json({ message: "User not found", success: false });
+      return res.status(400).json({ message: "User not found", success: false });
     }
 
     const business = await Business.aggregate([
@@ -119,7 +117,7 @@ export const getOwnBusiness = async (req, res) => {
       {
         $lookup: {
           from: "users",
-          localField: "services.owner", // Reference to the user
+          localField: "services.owner",
           foreignField: "_id",
           as: "serviceOwners",
         },
@@ -161,7 +159,7 @@ export const getOwnBusiness = async (req, res) => {
         $lookup: {
           from: "products",
           localField: "_id",
-          foreignField: "business",
+          foreignField: "owner", // ✅ Ensure this matches your Product schema
           as: "products",
         },
       },
@@ -219,9 +217,7 @@ export const getOwnBusiness = async (req, res) => {
     ]);
 
     if (!business.length) {
-      return res
-        .status(404)
-        .json({ message: "Business not found", success: false });
+      return res.status(404).json({ message: "Business not found", success: false });
     }
 
     return res.status(200).json({ business: business[0], success: true });
@@ -230,6 +226,7 @@ export const getOwnBusiness = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error", success: false });
   }
 };
+
 
 export const getBusiness = async (req, res) => {
   try {
