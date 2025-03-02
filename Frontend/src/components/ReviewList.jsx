@@ -10,7 +10,7 @@ const ReviewsList = ({ business }) => {
             <div key={index} className="border rounded-lg p-4 bg-white shadow-md">
               <h3 className="text-xl font-semibold">{business.businessName}</h3>
               <p>
-                <strong>{review.user}</strong>: {review.comment}
+                <strong>Name {review.user}</strong>: {review.comment}
               </p>
               <p className="text-yellow-500">⭐ {review.rating}/5</p>
             </div>

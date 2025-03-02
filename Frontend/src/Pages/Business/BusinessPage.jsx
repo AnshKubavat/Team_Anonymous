@@ -44,7 +44,7 @@ const BusinessPage = () => {
 
   const fetchReviews = async () => {
     try {
-      const { data } = await axiosClient.get(`/review/${id}`); // Adjust endpoint as per your backend
+      const { data } = await axiosClient.get(`/review/get/${id}`); // Adjust endpoint as per your backend
       if (data.success) {
         setReviews(data.reviews);
       } else {
@@ -52,7 +52,7 @@ const BusinessPage = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.message || "Failed to load reviews");
+      toast.error(error.response.data.message || "Failed to load reviews");
     }
   };
 
@@ -106,7 +106,7 @@ const BusinessPage = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error("Failed to add review");
+      toast.error(error.response.data.message);
     }
   };
 

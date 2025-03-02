@@ -118,13 +118,13 @@ const Home = () => {
     if (userId) {
       fetchRecommendations();
     }
-  }, [city, category]); // Fetch businesses & recommendations when city/user chan
+  }, [city, category, userId]); // Fetch businesses & recommendations when city/user chan
   useEffect(() => {
     if (businessList.length > 0 && !isLocationFetched) {
        getUserLocationAndCalculateDistances();
       setIsLocationFetched(true);
     }
-  }, [businessList]);
+  }, [businessList, isLocationFetched]);
   
 const getUserLocationAndCalculateDistances = () => {
     if (navigator.geolocation) {
