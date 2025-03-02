@@ -16,8 +16,6 @@ import translateRouter from "./routes/translate.route.js";
 import recommendRouter from "./routes/recommend.route.js";
 import useReviewRouter from "./routes/review.route.js";
 
-
-
 import { authUser } from "./middlewares/auth.middleware.js";
 import Review from "./models/Review.js";
 
@@ -51,7 +49,6 @@ app.get("/review/get/:id", async (req, res) => {
   res.json({ success: true, reviews });
 });
 
-
 // 🔹 Flask Recommendation API Route
 app.use("/recommend", recommendRouter);
 
@@ -60,30 +57,4 @@ app.listen(PORT, () => {
   connectDB();
   connectCloudinary();
   console.log(`Server running on port ${PORT}`);
-});
-
-
-app.post("/recommend", async (req, res) => {
-  try {
-    const { user_id, city } = req.body;
-
-    if (!user_id) {
-      return res.status(400).json({ error: "User ID is required" });
-    }
-
-    // 🔹 Call Flask API
-    const business = await axios.post(
-      `${process.env.FLASK_URL}/recommend`,
-      { user_id },
-      { headers: { "Content-Type": "application/json" } }
-    );
-
-    // ✅ Correctly filter businesses by city
-    const filteredBusinesses = business.data.filter((b) => b.city === city);
-
-    return res.json(filteredBusinesses);
-  } catch (error) {
-    console.error("Error fetching recommendations:", error.message);
-    return res.status(500).json({ error: "Failed to fetch recommendations" });
-  }
 });

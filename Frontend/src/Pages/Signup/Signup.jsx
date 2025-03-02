@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { signupLogo } from "../../assets/assets";
 import { useDispatch } from "react-redux";
 import { signup } from "../../features/userSlice";
-import { setItem,KEY_ACCESS_TOKEN } from "../../utils/localStorageManager";
+import { setItem, KEY_ACCESS_TOKEN } from "../../utils/localStorageManager";
 import { toast } from "react-toastify";
 
 export default function Signup() {
@@ -27,21 +27,26 @@ export default function Signup() {
         })
       );
       console.log(result);
-      
-      if (result.payload.success) {
+
+      if (result?.payload?.success) {
         navigate("/");
         setItem(KEY_ACCESS_TOKEN, result.payload?.message?.token);
         setItem("city", "Vallabh Vidyanagar");
         setItem("language", "English");
         setItem("category", "All");
-        toast.success("Registerd Successfully");
+        toast.success("Registered Successfully");
       } else {
-        setError(result.payload?.message || "Signup failed. Please try again.");
-        toast.error(error);
+        const errorMessage =
+          result.payload?.message || "Signup failed. Please try again.";
+        setError(errorMessage);
+        toast.error(errorMessage); // ✅ Pass error message directly
       }
     } catch (e) {
-      console.log("Error in signup submit", e);
-      setError("Failed to sign up. Please try again.");
+      console.error("Error in signup submit", e);
+      const errorMessage =
+        e?.response?.data?.message || "Failed to sign up. Please try again.";
+      setError(errorMessage);
+      toast.error(errorMessage); // ✅ Ensure proper error message
     }
   };
 
