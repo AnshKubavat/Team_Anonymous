@@ -41,7 +41,7 @@ const BusinessPage = () => {
     fetchSellerDetail();
     fetchReviews(); // Fetch reviews when component mounts
   }, []);
-  
+
   const fetchReviews = async () => {
     try {
       const { data } = await axiosClient.get(`/review/${id}`); // Adjust endpoint as per your backend
@@ -55,7 +55,6 @@ const BusinessPage = () => {
       toast.error(error.message || "Failed to load reviews");
     }
   };
-  
 
   const fetchSellerDetail = async () => {
     try {
@@ -94,13 +93,12 @@ const BusinessPage = () => {
   ]);
   const [reviews, setReviews] = useState([]);
 
-  // const handleDeleteReview = (id) => {
-  //   setReviews(reviews.filter((review) => review.id !== id));
-  // };
-
   const handleAddReview = async (newReview) => {
     try {
-      const { data } = await axiosClient.post(`/review/${business._id}/add`, newReview);
+      const { data } = await axiosClient.post(
+        `/review/${business._id}/add`,
+        newReview
+      );
       if (data.success) {
         setReviews([...reviews, data.review]); // Add the saved review from backend
       } else {
@@ -111,7 +109,6 @@ const BusinessPage = () => {
       toast.error("Failed to add review");
     }
   };
-  
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -198,14 +195,10 @@ const BusinessPage = () => {
           business.facility === "product" ? (
             <ProductList products={products} />
           ) : activeTab === "description" ? (
-            <BusinessDescription
-              business={business}
-         
-            />
+            <BusinessDescription business={business} />
           ) : activeTab === "review" ? (
             <ReviewSection
               reviews={business.reviews}
-            
               onAddReview={handleAddReview}
             />
           ) : null}

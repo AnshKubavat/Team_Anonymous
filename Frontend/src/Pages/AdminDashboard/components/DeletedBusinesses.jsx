@@ -40,7 +40,7 @@ const DeletedBusinesses = () => {
   
   const fetchAllBusinesses = async () => {
     try {
-      const { data } = await axiosClient.get("/admin/api/allbusinesses");
+      const { data } = await axiosClient.get("/admin/api/alldeletedbusinesses");
       console.log(data);
   
       if (data?.success) {

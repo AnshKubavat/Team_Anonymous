@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { v2 as cloudinary } from "cloudinary";
 import Business from "../models/Business.js";
+import Product from "../models/Product.js";
 
 export const createBusiness = async (req, res) => {
   try {
@@ -74,9 +75,7 @@ export const getOwnBusiness = async (req, res) => {
     const user = req.user;
 
     if (!user?._id) {
-      return res
-        .status(400)
-        .json({ message: "User not found", success: false });
+      return res.status(400).json({ message: "User not found", success: false });
     }
 
     const business = await Business.aggregate([
@@ -118,7 +117,7 @@ export const getOwnBusiness = async (req, res) => {
       {
         $lookup: {
           from: "users",
-          localField: "services.owner", // Reference to the user
+          localField: "services.owner",
           foreignField: "_id",
           as: "serviceOwners",
         },
@@ -155,20 +154,70 @@ export const getOwnBusiness = async (req, res) => {
         },
       },
 
-      // Exclude password from the seller & service owner
+      // ✅ Populate products associated with the business
+      {
+        $lookup: {
+          from: "products",
+          localField: "_id",
+          foreignField: "owner", // ✅ Ensure this matches your Product schema
+          as: "products",
+        },
+      },
+
+      // ✅ Populate owner details inside each product
+      {
+        $lookup: {
+          from: "users",
+          localField: "products.owner",
+          foreignField: "_id",
+          as: "productOwners",
+        },
+      },
+
+      // ✅ Merge owner details into each product
+      {
+        $addFields: {
+          products: {
+            $map: {
+              input: "$products",
+              as: "product",
+              in: {
+                $mergeObjects: [
+                  "$$product",
+                  {
+                    owner: {
+                      $arrayElemAt: [
+                        {
+                          $filter: {
+                            input: "$productOwners",
+                            as: "owner",
+                            cond: { $eq: ["$$owner._id", "$$product.owner"] },
+                          },
+                        },
+                        0,
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+
       {
         $project: {
           "seller.password": 0,
-          "services.owner.password": 0, // Exclude owner password
+          "services.owner.password": 0, // Exclude service owner password
+          "products.owner.password": 0, // Exclude product owner password
           serviceOwners: 0, // Remove the temporary field
+          productOwners: 0, // Remove the temporary field
         },
       },
     ]);
 
     if (!business.length) {
-      return res
-        .status(404)
-        .json({ message: "Business not found", success: false });
+      return res.status(404).json({ message: "Business not found", success: false });
     }
 
     return res.status(200).json({ business: business[0], success: true });
@@ -177,6 +226,7 @@ export const getOwnBusiness = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error", success: false });
   }
 };
+
 
 export const getBusiness = async (req, res) => {
   try {
@@ -271,18 +321,23 @@ export const deleteBusiness = async (req, res) => {
     const business = await Business.findById(businessId).populate("seller");
 
     if (!business) {
-      return res
-        .status(404)
-        .json({ message: "Business not found", success: false });
+      return res.status(404).json({
+        message: "Business not found",
+        success: false,
+      });
     }
 
+    // Soft delete the business
+    business.isDeleted = true;
+    await business.save();
+
+    // If the seller exists, downgrade role to "user"
     if (business.seller) {
       business.seller.role = "user";
       await business.seller.save();
     }
 
-    await business.save();
-
+    // Soft delete all related products
     await Product.updateMany(
       { owner: businessId },
       { $set: { isDeleted: true } }
@@ -294,6 +349,9 @@ export const deleteBusiness = async (req, res) => {
     });
   } catch (error) {
     console.error("Error deleting business:", error);
-    res.status(500).json({ message: "Internal Server Error", success: false });
+    res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
   }
 };

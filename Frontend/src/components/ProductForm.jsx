@@ -194,8 +194,8 @@ const ProductForm = () => {
 
             {!isCameraOpen ? (
               <>
-                <button onClick={handleGenerateAIImage} className="block w-full p-2 bg-gray-200 rounded">🤖 Generate Using AI</button>
-                <button onClick={openCamera} className="block w-full p-2 bg-blue-500 text-white rounded mt-2">📸 Capture Image</button>
+                <button onClick={handleGenerateAIImage} className="block w-full p-2 bg-gray-200 rounded">Generate Using AI</button>
+                <button onClick={openCamera} className="block w-full p-2 bg-blue-500 text-white rounded mt-2">Capture Image</button>
                 {loading && <p className="text-center">Generating...</p>}
               </>
             ) : (
