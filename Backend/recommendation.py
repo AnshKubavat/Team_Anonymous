@@ -3,8 +3,7 @@ from flask_cors import CORS
 from pymongo import MongoClient
 from bson import ObjectId
 from bson.errors import InvalidId
-from collections import Counter
-from collections import defaultdict
+from collections import Counter, defaultdict
 from dotenv import load_dotenv
 import os
 
@@ -23,6 +22,18 @@ client = MongoClient(MONGO_URI, ssl=True)
 db = client["NearByGo"]  # Your main database
 users_collection = db["users"]  # Collection storing user info
 business_collection = db["businesses"]  # Collection storing business data
+
+
+def convert_objectid_to_str(data):
+    """Recursively converts ObjectId fields to strings in nested structures."""
+    if isinstance(data, list):
+        return [convert_objectid_to_str(item) for item in data]
+    elif isinstance(data, dict):
+        return {k: convert_objectid_to_str(v) for k, v in data.items()}
+    elif isinstance(data, ObjectId):
+        return str(data)
+    else:
+        return data
 
 
 def most_searched_category(categories):
@@ -59,10 +70,8 @@ def recommend():
 
     if not user:
         return jsonify({"error": "User not found"}), 404
-    all_businesses = list(business_collection.find({}))  # Fetch all fields
 
-    all_businesses = list(business_collection.find(
-        {}, {"_id": 1, "categoryOfBusiness": 1}))
+    all_businesses = list(business_collection.find({}, {"_id": 1, "categoryOfBusiness": 1}))
 
     categories = user.get("history", [])
 
@@ -70,72 +79,45 @@ def recommend():
         return jsonify({"message": "No search history found"}), 200
 
     most_category = most_searched_category(categories)
-    
-
-   
 
     matching_business_ids = [
-        str(business["_id"]) for business in all_businesses if business.get("categoryOfBusiness").lower() == most_category.lower()
+        business["_id"] for business in all_businesses if business.get("categoryOfBusiness", "").lower() == most_category.lower()
     ]
-    rate_list = list(db["reviews"].find({}, {'business': 1, 'rating': 1}))
-    
 
-    matching_business_ids = [ObjectId(id) for id in matching_business_ids]
+    rate_list = list(db["reviews"].find({}, {'business': 1, 'rating': 1}))
 
     filtered_ratings = [
         rate for rate in rate_list if rate["business"] in matching_business_ids
     ]
 
-    if (len(filtered_ratings) == 0):
-        businesses = list(business_collection.find(
-            {"_id": {"$in": matching_business_ids}}))
+    if not filtered_ratings:
+        businesses = list(business_collection.find({"_id": {"$in": matching_business_ids}}))
+        return jsonify(convert_objectid_to_str(businesses))
 
-        for business in businesses:
-            business["_id"] = str(business["_id"])
-            if "reviews" in business and isinstance(business["reviews"], list):
-                business["reviews"] = [str(review_id)
-                                       for review_id in business["reviews"]]
+    business_ratings = defaultdict(lambda: {"total": 0, "count": 0})
 
-            for key, value in business.items():
-                if isinstance(value, ObjectId):
-                    business[key] = str(value)
+    for rate in filtered_ratings:
+        business_id = rate["business"]
+        business_ratings[business_id]["total"] += rate["rating"]
+        business_ratings[business_id]["count"] += 1
 
-        return jsonify(businesses)
-    else:
-        business_ratings = defaultdict(lambda: {"total": 0, "count": 0})
+    average_ratings = {
+        business_id: round(data["total"] / data["count"], 2) if data["count"] > 0 else 0
+        for business_id, data in business_ratings.items()
+    }
 
-        for rate in filtered_ratings:
-            business_id = str(rate["business"])
-            business_ratings[business_id]["total"] += rate["rating"]
-            business_ratings[business_id]["count"] += 1
+    sorted_average_ratings = sorted(
+        average_ratings.items(), key=lambda x: x[1], reverse=True
+    )
 
-        average_ratings = {business_id: round(
-            data["total"] / data["count"], 2) if data["count"] > 0 else 0 for business_id, data in business_ratings.items()}
+    sorted_business_ids = [business_id for business_id, _ in sorted_average_ratings]
 
-        sorted_average_ratings = sorted(
-            average_ratings.items(), key=lambda x: x[1], reverse=True
-        )
+    sorted_businesses = list(business_collection.find({"_id": {"$in": sorted_business_ids}}))
 
-        sorted_business_ids = [ObjectId(business_id)
-                               for business_id, _ in sorted_average_ratings]
+    # Convert ObjectId fields to string before returning JSON
+    sorted_businesses = convert_objectid_to_str(sorted_businesses)
 
-        sorted_businesses = list(business_collection.find(
-            {"_id": {"$in": sorted_business_ids}}))
-
-        for business in sorted_businesses:
-            business["_id"] = str(business["_id"])
-            if "reviews" in business and isinstance(business["reviews"], list):
-                business["reviews"] = [str(review_id)
-                                       for review_id in business["reviews"]]
-
-            for key, value in business.items():
-                if isinstance(value, ObjectId):
-                    business[key] = str(value)
-
-        sorted_businesses = sorted(
-            sorted_businesses, key=lambda b: sorted_business_ids.index(ObjectId(b["_id"])))
-
-        return jsonify(sorted_businesses)
+    return jsonify(sorted_businesses)
 
 
 if __name__ == "__main__":
