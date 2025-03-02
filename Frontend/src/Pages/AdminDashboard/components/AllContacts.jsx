@@ -2,23 +2,35 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import axiosClient from "../../../utils/axiosClient";
 import { toast } from "react-toastify";
+import { translateText } from "../../../utils/translateService";
+import { useSelector } from "react-redux";
 
 const AllContacts = () => {
   const [contacts, setContacts] = useState([]);
   const [selectedContact, setSelectedContact] = useState(null);
-
-  useEffect(() => {
-    fetchContacts();
-  }, []);
-
+  const { language } = useSelector((state) => state.user);
   const fetchContacts = async () => {
     try {
       const { data } = await axiosClient.get("admin/api/allcontacts");
-      if (data.success) setContacts(data.message);
+      if (data.success) {
+        const contactsWithTranslatedCities = await Promise.all(
+          data.message.map(async (contact) => ({
+            ...contact,
+            name:await translateText(contact.name,language),
+            city: await translateText(contact.city, language),
+          }))
+        );
+        setContacts(contactsWithTranslatedCities);
+      }
     } catch (error) {
       console.error("Error Fetching All Contacts:", error);
     }
   };
+  
+  useEffect(() => {
+    fetchContacts();
+  }, [language]);
+
 
   const handleDeleteContact = async (id) => {
     if (!window.confirm("Are you sure you want to delete this contact?"))

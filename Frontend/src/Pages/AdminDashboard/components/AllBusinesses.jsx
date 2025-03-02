@@ -5,6 +5,8 @@ import axiosClient from "../../../utils/axiosClient";
 import { toast } from "react-toastify";
 import ReactPaginate from "react-paginate";
 import { cities, categories } from "../../../assets/assets";
+import { translateText } from "../../../utils/translateService";
+import { useSelector } from "react-redux";
 const AllBusinesses = () => {
   const [cityDropdown, setCityDropdown] = useState(false);
   const [categoryDropdown, setCategoryDropdown] = useState(false);
@@ -21,23 +23,36 @@ const AllBusinesses = () => {
   const handleSellerClick = (seller) => {
     setSelectedSeller(seller);
   };
+  
+  const { language } = useSelector((state) => state.user);
+   
   const fetchAllBusinesses = async () => {
     try {
       const { data } = await axiosClient.get("/admin/api/allbusinesses");
-      console.log(data);
-
+  
       if (data?.success) {
-        setBusinesses(data.message.businesses);
+        const businessesWithTranslatedCities = await Promise.all(
+          data.message.businesses.map(async (business) => ({
+            ...business,
+            businessName : await translateText(business.businessName, language),
+            description : await translateText(business.description, language),
+            facility : await translateText(business.facility, language),
+            city: await translateText(business.city, language),
+          }))
+        );
+  
+        setBusinesses(businessesWithTranslatedCities);
       }
     } catch (error) {
       console.log(error);
       toast.error(error.message);
     }
   };
-
+  
   useEffect(() => {
     fetchAllBusinesses();
-  }, []);
+  }, [language]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {

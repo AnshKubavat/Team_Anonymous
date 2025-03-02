@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import Select from "react-select";
 import locales from "../../locales/addseller.local.json";
+
 import {
   FaMapMarkerAlt,
   FaBuilding,
