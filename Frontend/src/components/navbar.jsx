@@ -7,7 +7,7 @@ import { getItem, setItem } from "../utils/localStorageManager.js";
 import { cities, languages, categories, logo } from "../assets/assets.js";
 import { motion } from "framer-motion";
 import { translateText } from "../utils/translateService.js";
-
+import locales from "../locales/navbar.local.json"
 const Navbar = ({ isAuthenticated }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
@@ -26,6 +26,7 @@ const Navbar = ({ isAuthenticated }) => {
   const { category } = useSelector((state) => state.user);
   const languages = ["English", "Hindi", "Gujarati"];
   
+  const t = locales[language];
  
   const handleLanguageChange = async (lang) => {
     setSelectLanguage(lang);
@@ -98,7 +99,7 @@ const Navbar = ({ isAuthenticated }) => {
                 isActive ? "text-black font-semibold" : "hover:text-gray-800"
               }
             >
-              Home
+             {t.home}
             </NavLink>
           </li>
           <li>
@@ -108,7 +109,7 @@ const Navbar = ({ isAuthenticated }) => {
                 isActive ? "text-black font-semibold" : "hover:text-gray-800"
               }
             >
-              Category
+              {t.category}
             </NavLink>
           </li>
           <li>
@@ -118,7 +119,7 @@ const Navbar = ({ isAuthenticated }) => {
                 isActive ? "text-black font-semibold" : "hover:text-gray-800"
               }
             >
-              About
+              {t.about}
             </NavLink>
           </li>
           <li>
@@ -128,7 +129,7 @@ const Navbar = ({ isAuthenticated }) => {
                 isActive ? "text-black font-semibold" : "hover:text-gray-800"
               }
             >
-              Contact Us
+              {t.contact} 
             </NavLink>
           </li>
           {user !== null && user?.role === "seller" && (
@@ -139,7 +140,7 @@ const Navbar = ({ isAuthenticated }) => {
                   isActive ? "text-black font-semibold" : "hover:text-gray-800"
                 }
               >
-                My Business
+                {t.myBusiness}
               </NavLink>
             </li>
           )}
@@ -273,7 +274,7 @@ const Navbar = ({ isAuthenticated }) => {
                 whileTap={{ scale: 0.9 }}
                 className="text-gray-600    bg-gray-300 font-bold px-4 mr-1 py-2 rounded-md transition-all"
               >
-                Login
+                {t.login}
               </motion.button>
             </NavLink>
           )}
@@ -314,7 +315,7 @@ const Navbar = ({ isAuthenticated }) => {
                   isActive ? "text-black font-semibold" : "hover:text-gray-800"
                 }
               >
-                Home
+                {t.home}
               </NavLink>
             </li>
             <li>
@@ -325,7 +326,7 @@ const Navbar = ({ isAuthenticated }) => {
                   isActive ? "text-black font-semibold" : "hover:text-gray-800"
                 }
               >
-                Category
+                {t.category}
               </NavLink>
             </li>
             <li>
@@ -336,7 +337,7 @@ const Navbar = ({ isAuthenticated }) => {
                   isActive ? "text-black font-semibold" : "hover:text-gray-800"
                 }
               >
-                About
+                {t.about}
               </NavLink>
             </li>
             <li>
@@ -347,7 +348,7 @@ const Navbar = ({ isAuthenticated }) => {
                   isActive ? "text-black font-semibold" : "hover:text-gray-800"
                 }
               >
-                Contact Us
+                {t.contact}
               </NavLink>
             </li>
             <li>
@@ -358,7 +359,7 @@ const Navbar = ({ isAuthenticated }) => {
                   isActive ? "text-black font-semibold" : "hover:text-gray-800"
                 }
               >
-                My Business
+                {t.myBusiness}
               </NavLink>
             </li>
           </ul>

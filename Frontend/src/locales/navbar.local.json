@@ -1,0 +1,51 @@
+{
+    "English": {
+      "home": "Home",
+      "category": "Category",
+      "about": "About",
+      "contact": "Contact Us",
+      "myBusiness": "My Business",
+      "login": "Login",
+      "search_city": "Search City",
+      "search_category": "Search Category...",
+      "language": "Language",
+      "select_language": "Select Language",
+      "city": "City",
+      "category_selection": "Category",
+      "profile": "Profile",
+      "logout": "Logout"
+    },
+    "Hindi": {
+      "home": "मुख्य पृष्ठ",
+      "category": "श्रेणी",
+      "about": "हमारे बारे में",
+      "contact": "संपर्क करें",
+      "myBusiness": "मेरा व्यवसाय",
+      "login": "लॉगिन करें",
+      "search_city": "शहर खोजें",
+      "search_category": "श्रेणी खोजें...",
+      "language": "भाषा",
+      "select_language": "भाषा चुनें",
+      "city": "शहर",
+      "category_selection": "श्रेणी",
+      "profile": "प्रोफ़ाइल",
+      "logout": "लॉगआउट"
+    },
+    "Gujarati": {
+      "home": "મુખપૃષ્ઠ",
+      "category": "શ્રેણી",
+      "about": "અમારા વિશે",
+      "contact": "અમારો સંપર્ક કરો",
+      "myBusiness": "મારું વ્યવસાય",
+      "login": "લૉગિન",
+      "search_city": "શહેર શોધો",
+      "search_category": "શ્રેણી શોધો...",
+      "language": "ભાષા",
+      "select_language": "ભાષા પસંદ કરો",
+      "city": "શહેર",
+      "category_selection": "શ્રેણી",
+      "profile": "પ્રોફાઇલ",
+      "logout": "લૉગઆઉટ"
+    }
+  }
+  
