@@ -14,7 +14,10 @@ const Card = ({ businessList = [] }) => {
   return businessList.map((business, index) => (
     <motion.div
       key={index}
-      onClick={() => navigate(`/business/${business._id}`)}
+      onClick={() => {
+        navigate(`/business/${business._id}`);
+        scrollTo(0, 0);
+      }}
       className="relative p-5 bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer"
       whileHover={{
         scale: 1.05,

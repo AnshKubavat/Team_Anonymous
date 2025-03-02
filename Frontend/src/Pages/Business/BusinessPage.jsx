@@ -19,7 +19,7 @@ const BusinessPage = () => {
 
   const fetchReviews = async () => {
     try {
-      const { data } = await axiosClient.get(`/review/${id}`); // Adjust endpoint as per your backend
+      const { data } = await axiosClient.get(`/review/get/${id}`); // Adjust endpoint as per your backend
       if (data.success) {
         setReviews(data.reviews);
       } else {

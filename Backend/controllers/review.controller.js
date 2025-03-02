@@ -6,7 +6,7 @@ export const addReview = async (req, res) => {
   try {
     const { comment, rating } = req.body;
     console.log(req.body);
-    
+
     const { businessId } = req.params;
     const user = req.user;
 
@@ -94,4 +94,10 @@ export const deleteReview = async (req, res) => {
       .status(500)
       .json({ message: "Internal Server Error", success: false });
   }
+};
+
+export const getReview = async (req, res) => {
+  const { id } = req.params;
+  const reviews = await Review.find({ businessId: id });
+  res.json({ success: true, reviews });
 };

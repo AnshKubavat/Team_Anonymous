@@ -92,7 +92,7 @@ const ReviewSection = ({ reviews, onAddReview }) => {
                     </span>
                   ))}
                 </div>
-                <p className="text-gray-700">{review.comment}</p>
+                <p className="text-gray-700 font-semibold text-xl mb-2" >{review.comment}</p>
                 <span>{review.createdAt ? new Date(review.createdAt).toLocaleString() : "Date of Review"}</span>
 
               </div>
